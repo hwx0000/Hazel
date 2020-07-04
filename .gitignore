@@ -1,6 +1,6 @@
 # Binaries
-**/bin/
-bin-int/
+/bin/
+/bin-int/
 
 # Hazel files
 *.log
