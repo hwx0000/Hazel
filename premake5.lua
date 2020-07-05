@@ -13,17 +13,19 @@ project "Hazel"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
 
-    
+    pchheader "hzpch.h"
+    pchsource "%{prj.name}/Src/hzpch.cpp"
+
 	files
 	{
 		"%{prj.name}/Src/**.h",
-		"%{prj.name}/Src/**.cpp"
+		"%{prj.name}/Src/**.cpp",
 	}
 
 	includedirs
 	{
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/Src"
+		"%{prj.name}/Src",
 	}
 
 
