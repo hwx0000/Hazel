@@ -7,3 +7,15 @@
 	#define HAZEL_API _declspec (dllimport)
 	#endif // HZ_BUILD_DLL
 #endif
+
+
+#ifdef HZ_ENABLE_ASSERTS
+	#define HAZEL_ASSERT(x, ...) if(!x) {LOG_ERROR("Assertion Failed At: {0}", __VA_ARGS__);\
+	__debugbreak();}
+	#define HAZEL_CORE_ASSERT(x, ...) if(!x) {CORE_LOG_ERROR("Assertion Failed At: {0}", __VA_ARGS__);\
+	__debugbreak();}
+#else
+	#define HAZEL_ASSERT(x, ...)
+	#define HAZEL_CORE_ASSERT(x, ...)
+#endif
+
