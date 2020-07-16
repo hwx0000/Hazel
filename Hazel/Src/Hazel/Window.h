@@ -1,4 +1,5 @@
 #pragma once
+#include "hzpch.h"
 #include "Core.h"
 
 class HAZEL_API Window
