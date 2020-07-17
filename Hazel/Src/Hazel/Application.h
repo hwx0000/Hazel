@@ -1,5 +1,7 @@
 #pragma once
 #include "Core.h"
+#include "Event/ApplicationEvent.h"
+#include "Log.h"
 
 namespace Hazel
 {

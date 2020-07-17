@@ -1,3 +1,4 @@
+#include "hzpch.h"
 #include "WindowsWindow.h"
 
 static bool m_initialized = false;
