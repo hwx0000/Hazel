@@ -7,13 +7,21 @@ namespace Hazel
 	class HAZEL_API WindowCloseEvent :public Event
 	{
 	public:
-		WindowCloseEvent(float height, float width):m_height(height), m_width(width) {}
+		WindowCloseEvent(float height, float width):
+			m_Height(height), m_Width(width) {}
+		
+		std::string ToString() const override
+		{
+			std::stringstream a;
+			a << "Window Close";
+			return a.str();
+		}
 
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
 	
 	protected:
-		float m_height, m_width;
+		float m_Height, m_Width;
 	};
 
 	class HAZEL_API  WindowResizeEvent :public Event

@@ -7,11 +7,11 @@ extern Hazel::Application *CreateApplication();
 
 int main()
 {
+	Hazel::Log::Init();
 	auto app = CreateApplication();
 	app->Run();
 	delete app;
 
-	Hazel::Log::Init();
 	LOG("My Engine Log Msg");
 	LOG_WARNING("My Engine Warnning Msg");
 	LOG_ERROR("My Engine Error Msg");
