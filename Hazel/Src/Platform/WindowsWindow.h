@@ -4,11 +4,11 @@
 
 namespace Hazel
 {
-	class WindowsWindows : public Window
+	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindows(const WindowProps& props);
-		~WindowsWindows() override;
+		WindowsWindow(const WindowProps& props);
+		~WindowsWindow() override;
 		void Init(const WindowProps& props);
 		float const& GetWindowHeight() const override { return m_Data.height; };
 		float const& GetWindowWidth() const override { return m_Data.width; };

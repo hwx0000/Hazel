@@ -9,6 +9,9 @@ namespace Hazel
 	public:
 		WindowCloseEvent(float height, float width):
 			m_Height(height), m_Width(width) {}
+		EVENT_CLASS_TYPE(WindowClose)
+		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
+	
 		
 		std::string ToString() const override
 		{
@@ -16,10 +19,6 @@ namespace Hazel
 			a << "Window Close";
 			return a.str();
 		}
-
-		EVENT_CLASS_TYPE(WindowClose)
-		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
-	
 	protected:
 		float m_Height, m_Width;
 	};

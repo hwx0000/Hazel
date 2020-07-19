@@ -4,12 +4,12 @@
 static bool m_initialized = false;
 
 
-Hazel::WindowsWindows::WindowsWindows(const WindowProps& props)
+Hazel::WindowsWindow::WindowsWindow(const WindowProps& props)
 {
 	Init(props);
 }
 
-Hazel::WindowsWindows::~WindowsWindows()
+Hazel::WindowsWindow::~WindowsWindow()
 {
 	if (m_initialized)
 	{
@@ -18,7 +18,7 @@ Hazel::WindowsWindows::~WindowsWindows()
 	}
 }
 
-void Hazel::WindowsWindows::Init(const WindowProps& props)
+void Hazel::WindowsWindow::Init(const WindowProps& props)
 {
 	if (!m_initialized)
 	{
@@ -37,7 +37,7 @@ void Hazel::WindowsWindows::Init(const WindowProps& props)
 	SetVsync(true);
 }
 
-void Hazel::WindowsWindows::SetVsync(bool enabled)
+void Hazel::WindowsWindow::SetVsync(bool enabled)
 {
 	if (enabled)
 		glfwSwapInterval(1);
