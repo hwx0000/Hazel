@@ -26,6 +26,6 @@ namespace Hazel
 		virtual bool IsVsync() const = 0;
 		virtual void SetVsync(bool) = 0;
 
-		static Window* Create(const WindowProps& WindowProps());
+		static Window* Create(const WindowProps& props = WindowProps());
 	};
 }

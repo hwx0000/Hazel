@@ -2,19 +2,23 @@
 #include "Core.h"
 #include "Event/ApplicationEvent.h"
 #include "Log.h"
+#include "Platform/WindowsWindow.h"
 
 namespace Hazel
 {
-	//_declspec(dllexport) class Application
 	class HAZEL_API Application
 	{
 	public:
-		Application() {};
+		Application();
 		virtual ~Application()
 		{
 
 		}
 
 		void Run();
+	private:
+		std::unique_ptr<Window>m_Window;
 	};
+
+	//Application* CreateApplication();
 }
