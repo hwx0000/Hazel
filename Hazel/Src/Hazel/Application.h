@@ -1,8 +1,6 @@
 #pragma once
 #include "Core.h"
-#include "Event/ApplicationEvent.h"
-#include "Log.h"
-#include "Platform/WindowsWindow.h"
+#include "Window.h"
 
 namespace Hazel
 {
@@ -20,5 +18,5 @@ namespace Hazel
 		std::unique_ptr<Window>m_Window;
 	};
 
-	//Application* CreateApplication();
+	Application* CreateApplication();
 }

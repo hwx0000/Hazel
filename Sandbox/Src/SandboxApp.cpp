@@ -8,7 +8,7 @@ public:
 private:
 };
 
-Hazel::Application* CreateApplication() 
+Hazel::Application* Hazel::CreateApplication() 
 {
 	Sandbox *s = new Sandbox();
 	return s;
