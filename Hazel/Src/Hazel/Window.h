@@ -4,7 +4,7 @@
 
 namespace Hazel
 {
-	class HAZEL_API WindowProps //TODO£º¸Ä³Éstruct
+	struct HAZEL_API WindowProps
 	{
 	public:
 		std::string title;
@@ -25,6 +25,7 @@ namespace Hazel
 		virtual float const& GetWindowWidth() const = 0;
 		virtual bool IsVsync() const = 0;
 		virtual void SetVsync(bool) = 0;
+		virtual void OnUpdate() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

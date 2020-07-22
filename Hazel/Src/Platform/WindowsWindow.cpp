@@ -49,6 +49,13 @@ namespace Hazel
 		m_Data.isVsync = enabled;
 	}
 
+	void WindowsWindow::OnUpdate()
+	{
+		glClearColor(1, 0, 1, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(m_Window);
+	}
+
 	// only close windown, not terminate glfw
 	void WindowsWindow::Shutdown()
 	{

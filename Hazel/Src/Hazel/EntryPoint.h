@@ -10,6 +10,7 @@ int main()
 	Hazel::Log::Init();
 	auto app = Hazel::CreateApplication();
 	app->Run();
+	
 	delete app;
 
 

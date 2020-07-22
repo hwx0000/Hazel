@@ -13,6 +13,7 @@ namespace Hazel
 		float const& GetWindowWidth() const override { return m_Data.width; };
 		bool IsVsync() const override { return m_Data.isVsync; };
 		void SetVsync(bool) override;
+		void OnUpdate()override;
 
 	private:
 		virtual void Shutdown();
