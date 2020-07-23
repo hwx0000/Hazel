@@ -10,6 +10,10 @@ namespace Hazel
 		return new WindowsWindow(props);
 	}
 
+	void Hazel::WindowsWindow::SetEventCallback()
+	{
+	}
+
 	Hazel::WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		Init(props);
@@ -49,7 +53,7 @@ namespace Hazel
 		m_Data.isVsync = enabled;
 	}
 
-	void WindowsWindow::OnUpdate()
+	void Hazel::WindowsWindow::OnUpdate()
 	{
 		glClearColor(1, 0, 1, 1);
 		glClear(GL_COLOR_BUFFER_BIT);

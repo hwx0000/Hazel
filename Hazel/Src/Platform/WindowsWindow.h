@@ -14,6 +14,7 @@ namespace Hazel
 		bool IsVsync() const override { return m_Data.isVsync; };
 		void SetVsync(bool) override;
 		void OnUpdate()override;
+		void SetEventCallback()override;
 
 	private:
 		virtual void Shutdown();

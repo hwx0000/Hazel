@@ -1,6 +1,7 @@
 #pragma once
 #include "hzpch.h"
 #include "Core.h"
+#include "Event/Event.h"
 
 namespace Hazel
 {
@@ -20,12 +21,14 @@ namespace Hazel
 	class HAZEL_API Window
 	{
 	public:
+		//using EventCallbackFn = std::function<void(Event&)>(Event&);
 		virtual ~Window() {};
 		virtual float const& GetWindowHeight() const = 0;
 		virtual float const& GetWindowWidth() const = 0;
 		virtual bool IsVsync() const = 0;
 		virtual void SetVsync(bool) = 0;
 		virtual void OnUpdate() = 0;
+		virtual void SetEventCallback() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};
