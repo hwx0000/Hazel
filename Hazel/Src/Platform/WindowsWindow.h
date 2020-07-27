@@ -14,7 +14,7 @@ namespace Hazel
 		bool IsVsync() const override { return m_Data.isVsync; };
 		void SetVsync(bool) override;
 		void OnUpdate()override;
-		void SetEventCallback()override;
+		inline void SetEventCallback(const EventCallbackFn& callback)override {/* m_Data.callback = &callback; */};
 
 	private:
 		virtual void Shutdown();
@@ -29,6 +29,7 @@ namespace Hazel
 			unsigned int height, width;
 			bool isVsync;
 			//TODO: Add Event Callback
+			EventCallbackFn callback;
 		};
 		WindowData m_Data;
 	};

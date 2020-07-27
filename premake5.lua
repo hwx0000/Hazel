@@ -15,7 +15,7 @@ project "Hazel"
     language "C++"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
-	links {"GLFW"}
+	links {"GLFW", "opengl32.lib"}
 
     pchheader "hzpch.h"
     pchsource "%{prj.name}/Src/hzpch.cpp"
