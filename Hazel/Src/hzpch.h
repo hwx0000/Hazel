@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <set>
 #include <functional>
+#include "Hazel/Log.h"
 
 
 

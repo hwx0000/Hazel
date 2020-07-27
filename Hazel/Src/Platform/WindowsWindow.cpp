@@ -38,10 +38,23 @@ namespace Hazel
 		glfwMakeContextCurrent(m_Window);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		// 这个lambda函数是交给glfw调用的，所以不能在里面写std::cout，也不能在里面直接赋值
+		// glfw规定的回调函数里，不能传入m_Data的指针，所以只能通过glfw的API设置数据的指针
+		// 下面函数会把m_Window传进去，然后又把m_Window作为lambda的参数输入进去
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* m_Window1, int width, int height)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window1);
+			data.height = height;
+			data.width = width;
+			LOG(height);
+			LOG(width);
+		}
+		);
+
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow*)
 		{
-			std::cout << "Close Window"; // 这样写是错误的
+			WindowCloseEvent closeEvent;
+			LOG(closeEvent.ToString());
+			//std::cout << "Close Window"; // 这样写是错误的
 		});
 
 
