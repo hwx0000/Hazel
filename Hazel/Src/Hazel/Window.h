@@ -22,12 +22,12 @@ namespace Hazel
 	{
 	public:
 		// Window自带一个回调函数，用来处理从glfw库收到的callback
-		using EventCallbackFn = std::function<void(Event&)>();
+		using EventCallbackFn = std::function<void(Event&)>;
 		virtual ~Window() {};
 		virtual float const& GetWindowHeight() const = 0;
 		virtual float const& GetWindowWidth() const = 0;
-		virtual bool IsVsync() const = 0;
-		virtual void SetVsync(bool) = 0;
+		virtual bool IsVSync() const = 0;
+		virtual void SetVSync(bool) = 0;
 		virtual void OnUpdate() = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 

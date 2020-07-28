@@ -11,10 +11,10 @@ namespace Hazel
 		~WindowsWindow() override;
 		float const& GetWindowHeight() const override { return m_Data.height; };
 		float const& GetWindowWidth() const override { return m_Data.width; };
-		bool IsVsync() const override { return m_Data.isVsync; };
-		void SetVsync(bool) override;
+		bool IsVSync() const override { return m_Data.isVSync; };
+		void SetVSync(bool) override;
 		void OnUpdate()override;
-		inline void SetEventCallback(const EventCallbackFn& callback)override {/* m_Data.callback = &callback; */};
+		inline void SetEventCallback(const EventCallbackFn& callback)override { m_Data.eventCallback = callback; };
 
 	private:
 		virtual void Shutdown();
@@ -27,10 +27,10 @@ namespace Hazel
 		{
 			std::string title;
 			unsigned int height, width;
-			bool isVsync;
-			//TODO: Add Event Callback
-			EventCallbackFn callback;
+			bool isVSync;
+			EventCallbackFn eventCallback;
 		};
+
 		WindowData m_Data;
 	};
 }

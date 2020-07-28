@@ -8,12 +8,16 @@ namespace Hazel
 	Application::Application()
 	{
 		m_Window = std::unique_ptr<Window>(Window::Create());
-		//m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 	}
 
 	void Application::OnEvent(Event& e)
 	{
-	
+		//if (e.GetEventType() == EventType::WindowResize)
+		//{
+		//	LOG("WindoeResize Event Occures");
+		//}
+		LOG(e.ToString());
 	}
 
 	void Application::Run() 

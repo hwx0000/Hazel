@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "WindowsWindow.h"
 #include "Hazel/Event/ApplicationEvent.h"
+#include "Hazel/Event/KeyEvent.h"
+#include "Hazel/Event/MouseEvent.h"
 
 namespace Hazel
 {
@@ -40,36 +42,59 @@ namespace Hazel
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		// glfw规定的回调函数里，不能传入m_Data的指针，所以只能通过glfw的API设置数据的指针
 		// 下面函数会把m_Window传进去，然后又把m_Window作为lambda的参数输入进去
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* m_Window1, int width, int height)
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(m_Window1);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.height = height;
 			data.width = width;
-			LOG(height);
-			LOG(width);
+			// 创建对应的Hazel Event，然后传入Window的callback函数里，以供外部调用
+			WindowResizeEvent e(height, width);
+			data.eventCallback(e);
 		}
 		);
 
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow*)
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
+			WindowData &data = *(WindowData*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent closeEvent;
-			LOG(closeEvent.ToString());
-			//std::cout << "Close Window"; // 这样写是错误的
+			data.eventCallback(closeEvent);
 		});
 
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+		{
+			switch (action)
+			{
 
-		//TODO: glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVsync(true);
+				case GLFW_PRESS:
+				{
+					WindowData &data = *(WindowData *)glfwGetWindowUserPointer(window);
+					MouseButtonPressed e(button);
+					data.eventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					WindowData &data = *(WindowData *)glfwGetWindowUserPointer(window);
+					MouseButtonReleased e(button);
+					data.eventCallback(e);
+					break;
+				}
+				default:
+					break;
+			}
+		});
+
+		SetVSync(true);
 	}
 
-	void Hazel::WindowsWindow::SetVsync(bool enabled)
+	void Hazel::WindowsWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
 
-		m_Data.isVsync = enabled;
+		m_Data.isVSync = enabled;
 	}
 
 	void Hazel::WindowsWindow::OnUpdate()

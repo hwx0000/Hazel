@@ -1,6 +1,6 @@
 #pragma once
-#include "Hazel/Core.h"
 #include "hzpch.h"
+#include "Hazel/Core.h"
 
 #define EVENT_CLASS_TYPE(type) \
 static EventType GetStaticType() { return EventType::##type; }\
