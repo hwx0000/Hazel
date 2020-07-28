@@ -66,7 +66,7 @@ namespace Hazel
 			if (m_Event.m_Handled)
 				return;
 
-			if (m_Event.GetEventType() == handler::GetStaticType()) 
+			if (m_Event.GetEventType() == T::GetStaticType()) 
 			{
 				m_Event.m_Handled = handler(*(T*)&m_Event); //使用(T*)把m_Event转换成输入事件的指针类型
 			}

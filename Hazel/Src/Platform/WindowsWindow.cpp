@@ -53,6 +53,8 @@ namespace Hazel
 		}
 		);
 
+
+
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
 			WindowData &data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -60,22 +62,28 @@ namespace Hazel
 			data.eventCallback(closeEvent);
 		});
 
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
+		{
+			WindowData &data = *(WindowData*)glfwGetWindowUserPointer(window);
+			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			data.eventCallback(event);
+		});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			switch (action)
 			{
-
 				case GLFW_PRESS:
 				{
 					WindowData &data = *(WindowData *)glfwGetWindowUserPointer(window);
-					MouseButtonPressed e(button);
+					MouseButtonPressedEvent e(button);
 					data.eventCallback(e);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					WindowData &data = *(WindowData *)glfwGetWindowUserPointer(window);
-					MouseButtonReleased e(button);
+					MouseButtonReleasedEvent e(button);
 					data.eventCallback(e);
 					break;
 				}

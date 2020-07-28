@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GLFW/glfw3.h"
 #include "Window.h"
+#include "Event/MouseEvent.h"
 
 namespace Hazel
 {
@@ -9,15 +10,21 @@ namespace Hazel
 	{
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		//m_Window->SetEventCallback([](Event& e)->void
+		//{
+		//	if (e.GetEventType() == EventType::MouseScrolled)
+		//	{
+		//		MouseScrolledEvent ee = (MouseScrolledEvent&)e;
+		//		LOG( "xOffset:{0} and yOffset:{1}", ee.GetXOffset(), ee.GetYOffset());
+		//	}
+		//}
+		//);
 	}
 
 	void Application::OnEvent(Event& e)
 	{
-		//if (e.GetEventType() == EventType::WindowResize)
-		//{
-		//	LOG("WindoeResize Event Occures");
-		//}
-		LOG(e.ToString());
+		//CORE_LOG("{0}", e);
+		CORE_LOG(e.ToString());
 	}
 
 	void Application::Run() 
