@@ -3,6 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "Window.h"
 #include "Event/MouseEvent.h"
+#include "Event/ApplicationEvent.h"
 
 namespace Hazel
 {
@@ -25,7 +26,11 @@ namespace Hazel
 	{
 		//CORE_LOG("{0}", e);
 		CORE_LOG(e.ToString());
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch(std::function<bool(Event&)>(OnWindowClose(e)));
+
 	}
+
 
 	void Application::Run() 
 	{
@@ -38,5 +43,9 @@ namespace Hazel
 		}
 
 		//LOG(w.ToString());
+	}
+	bool Application::OnWindowClose(WindowCloseEvent &e)
+	{
+		m_Running = false;
 	}
 }

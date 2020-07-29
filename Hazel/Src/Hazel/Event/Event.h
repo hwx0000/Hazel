@@ -35,7 +35,7 @@ namespace Hazel
 
 	class HAZEL_API Event
 	{
-		//friend EventDispatcher;
+		friend EventDispatcher;
 	public:
 		virtual const char* GetName() const = 0;
 		virtual const EventType GetEventType() const = 0;

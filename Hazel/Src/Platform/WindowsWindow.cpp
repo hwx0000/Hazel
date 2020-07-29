@@ -53,7 +53,12 @@ namespace Hazel
 		}
 		);
 
-
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow *window, double xPos, double yPos)
+		{
+			LOG(xPos);
+			LOG(yPos);
+		}
+		);
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 		{
@@ -91,6 +96,38 @@ namespace Hazel
 					break;
 			}
 		});
+
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			switch (action)
+			{
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent e(key, 0);
+					data.eventCallback(e);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent e(key, 1);
+					data.eventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent e(key);
+					data.eventCallback(e);
+					break;
+				}
+				default:
+					break;
+			}
+		
+		}
+		);
+
+
 
 		SetVSync(true);
 	}
