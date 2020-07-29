@@ -27,7 +27,7 @@ namespace Hazel
 		//CORE_LOG("{0}", e);
 		CORE_LOG(e.ToString());
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch(std::function<bool(Event&)>(OnWindowClose(e)));
+		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 
 	}
 
@@ -44,8 +44,10 @@ namespace Hazel
 
 		//LOG(w.ToString());
 	}
+
 	bool Application::OnWindowClose(WindowCloseEvent &e)
 	{
 		m_Running = false;
+		return true;
 	}
 }
