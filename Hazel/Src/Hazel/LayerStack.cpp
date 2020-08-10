@@ -1,34 +1,43 @@
+#include "hzpch.h"
 #include "LayerStack.h"
 
-LayerStack::LayerStack()
+namespace Hazel
 {
-	curStackItr = stack.begin();
-}
-
-LayerStack::~LayerStack()
-{
-	for (Layer* i: stack)
+	LayerStack::LayerStack()
 	{
-		delete i;
+		curStackItr = m_Stack.begin();
 	}
-}
 
-// 用vector模拟stack，vector[0]为栈顶
-void LayerStack::PushLayer(Layer *layer)
-{
-	stack.emplace(stack.begin(), layer);
-}
+	LayerStack::~LayerStack()
+	{
+		for (Layer* i : m_Stack)
+		{
+			delete i;
+		}
+	}
 
-// overlay应该放在数组的最后，也就是栈顶
-void LayerStack::PushOverlay(Layer *overlay)
-{
-	stack.emplace_back(overlay);
-}
+	// 用vector模拟m_Stack，vector[0]为栈顶
+	void LayerStack::PushLayer(Layer *layer)
+	{
+		m_Stack.emplace(m_Stack.begin(), layer);
+	}
 
-Layer* LayerStack::PopStack(Layer *)
-{
-	if (stack.size() > 0)
-		stack.
+	// 保证加入的layer放在最后，overlay应该放在数组的最后，也就是栈顶
+	void LayerStack::PushOverlay(Layer *overlay)
+	{
+		m_Stack.emplace_back(overlay);
+	}
 
-	return nullptr;
+	// pop数组的第一个元素
+	Layer* LayerStack::PopLayer()
+	{
+		if (m_Stack.size() > 0)
+		{
+			Layer* top = m_Stack[0];
+			m_Stack.erase(m_Stack.begin(), m_Stack.begin() + 1);
+			return top;
+		}
+		else
+			return nullptr;
+	}
 }

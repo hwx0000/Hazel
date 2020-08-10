@@ -22,13 +22,20 @@ namespace Hazel
 		//);
 	}
 
+	Application::~Application()
+	{
+	}
+
 	void Application::OnEvent(Event& e)
 	{
 		//CORE_LOG("{0}", e);
 		CORE_LOG(e.ToString());
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
-
+		for (Layer* layer : m_LayerStack)
+		{
+			layer->OnEvent(e);
+		}
 	}
 
 
@@ -40,6 +47,10 @@ namespace Hazel
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 			// 所以创建完window后，可以直接调用其loop开始渲染
 			m_Window->OnUpdate();
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate();
+			}
 		}
 
 		//LOG(w.ToString());
@@ -49,5 +60,14 @@ namespace Hazel
 	{
 		m_Running = false;
 		return true;
+	}
+	void Application::PushLayer(Layer * layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	Layer* Application::PopLayer()
+	{
+		return m_LayerStack.PopLayer();
 	}
 }
