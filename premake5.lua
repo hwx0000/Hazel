@@ -52,13 +52,13 @@ project "Hazel"
         symbols "On"
 		runtime "Debug" -- 运行时链接的dll是debug类型的
 
-    filter { "configurations:Release", "HZ_BUILD_DLL"}
-        defines { "NDEBUG" }
+    filter { "configurations:Release"}
+        defines { "NDEBUG", "HZ_BUILD_DLL"}
         optimize "On"
 		runtime "Release" -- 运行时链接的dll是release类型的
 
-    filter { "configurations:Dist", "HZ_BUILD_DLL"}
-    defines { "NDEBUG" }
+    filter { "configurations:Dist"}
+    defines { "NDEBUG", "HZ_BUILD_DLL"}
     optimize "On"
 
 
