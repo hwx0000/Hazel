@@ -49,17 +49,20 @@ project "Hazel"
 
     filter { "configurations:Debug" }
         defines { "DEBUG", "HZ_BUILD_DLL"}
+		buildoptions {"/MDd"}
         symbols "On"
 		runtime "Debug" -- 运行时链接的dll是debug类型的
 
     filter { "configurations:Release"}
         defines { "NDEBUG", "HZ_BUILD_DLL"}
+		buildoptions {"/MD"}
         optimize "On"
 		runtime "Release" -- 运行时链接的dll是release类型的
 
     filter { "configurations:Dist"}
-    defines { "NDEBUG", "HZ_BUILD_DLL"}
-    optimize "On"
+		defines { "NDEBUG", "HZ_BUILD_DLL"}
+		buildoptions {"/MD"}
+	    optimize "On"
 
 
 project "Sandbox"
@@ -92,7 +95,7 @@ project "Sandbox"
         optimize "On"
 
     filter { "configurations:Dist"}
-    defines { "NDEBUG"}
-    optimize "On"
+		defines { "NDEBUG"}
+		optimize "On"
 
 
