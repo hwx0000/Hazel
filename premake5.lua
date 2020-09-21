@@ -31,7 +31,7 @@ project "Hazel"
 	{
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/Src",
-		"%{prj.name}/vendor/GLFW/include"
+		"%{prj.name}/vendor/GLFW/include",
 		"%{prj.name}/vendor/Glad/include"
 	}
 
