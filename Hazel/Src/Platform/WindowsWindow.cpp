@@ -3,6 +3,7 @@
 #include "Hazel/Event/ApplicationEvent.h"
 #include "Hazel/Event/KeyEvent.h"
 #include "Hazel/Event/MouseEvent.h"
+#include "glad/glad.h"
 
 namespace Hazel
 {
