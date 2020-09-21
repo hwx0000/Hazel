@@ -7,6 +7,7 @@ workspace "Hazel"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "Hazel/vendor/GLFW"
+include "Hazel/vendor/Glad"
 
 
 project "Hazel"
@@ -15,7 +16,7 @@ project "Hazel"
     language "C++"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
-	links {"GLFW", "opengl32.lib"}
+	links {"GLFW", "opengl32.lib", "Glad"}
 
     pchheader "hzpch.h"
     pchsource "%{prj.name}/Src/hzpch.cpp"
@@ -31,6 +32,7 @@ project "Hazel"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/Src",
 		"%{prj.name}/vendor/GLFW/include"
+		"%{prj.name}/vendor/Glad/include"
 	}
 
 
