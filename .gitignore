@@ -1,9 +1,13 @@
 # Binaries
-/bin/
-/bin-int/
+bin/
+bin-int/
 
 # Hazel files
 *.log
 
 # Visual Studio files and folder
 .vs/
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln

@@ -40,7 +40,7 @@ project "Hazel"
 	    systemversion "latest"
 		cppdialect "C++17"
 	    staticruntime "on"
-		defines {"HZ_PLATFORM_WINDOWS"}
+		defines {"HZ_PLATFORM_WINDOWS", "GLFW_INCLUDE_NONE", "HZ_ENABLE_ASSERTS"}
 		
 		postbuildcommands
 		{

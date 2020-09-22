@@ -40,6 +40,9 @@ namespace Hazel
 		HAZEL_ASSERT(m_Window, "Failed to create Windows Window!");
 		glfwMakeContextCurrent(m_Window);
 
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		HAZEL_ASSERT(status, "Failed to init glad");
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		// glfw规定的回调函数里，不能传入m_Data的指针，所以只能通过glfw的API设置数据的指针
 		// 下面函数会把m_Window传进去，然后又把m_Window作为lambda的参数输入进去
@@ -128,8 +131,6 @@ namespace Hazel
 		
 		}
 		);
-
-
 
 		SetVSync(true);
 	}
