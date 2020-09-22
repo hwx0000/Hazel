@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Event/MouseEvent.h"
 #include "Event/ApplicationEvent.h"
+#include "glad/glad.h"
 
 namespace Hazel
 {
@@ -11,6 +12,9 @@ namespace Hazel
 	{
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		unsigned int buffer;
+		glGenBuffers(1, &buffer);
+		
 		//m_Window->SetEventCallback([](Event& e)->void
 		//{
 		//	if (e.GetEventType() == EventType::MouseScrolled)
