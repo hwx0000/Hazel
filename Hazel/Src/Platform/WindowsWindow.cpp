@@ -14,6 +14,7 @@ namespace Hazel
 		return new WindowsWindow(props);
 	}
 
+
 	Hazel::WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		Init(props);
