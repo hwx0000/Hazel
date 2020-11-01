@@ -11,6 +11,7 @@ namespace Hazel
 		~LayerStack();
 		void PushLayer(Layer*); // lay代表普通的layer, Overlay代表离屏幕最近的layer
 		void PushOverlay(Layer*);
+		void PopOverlay(Layer* overlay);
 		Layer* PopLayer();
 
 		std::vector<Layer*>::iterator begin() {	return m_Stack.begin(); }

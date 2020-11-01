@@ -10,3 +10,5 @@
 //----------------------------------
 
 #include "Hazel/Log.h"
+
+#include "Hazel/ImGui/ImGuiLayer.h"

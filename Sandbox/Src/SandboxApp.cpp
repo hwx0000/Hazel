@@ -32,6 +32,7 @@ public:
 	Sandbox()
 	{
 		m_LayerStack.PushLayer(new ExampleLayer());
+		m_LayerStack.PushOverlay(new Hazel::ImGuiLayer());
 	};
 	~Sandbox(){};
 private:

@@ -11,15 +11,20 @@ namespace Hazel
 	public:
 		Application();
 		virtual ~Application();
+		inline static Application& Get() { return *s_Instance;  }
 
 		void OnEvent(Event& e);
 		void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
 		void PushLayer(Layer* layer);
 		Layer* PopLayer();
+		const Window& GetWindow()const { return *m_Window; }
+	private:
+		static Application* s_Instance;
+
 	protected:
-		LayerStack m_LayerStack;
 		std::unique_ptr<Window>m_Window;
+		LayerStack m_LayerStack;
 		bool m_Running = true;
 	};
 
