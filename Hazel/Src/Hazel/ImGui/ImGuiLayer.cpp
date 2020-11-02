@@ -61,10 +61,15 @@ void Hazel::ImGuiLayer::OnDettach()
 	ImGui::DestroyContext();
 }
 
-void Hazel::ImGuiLayer::OnEvent(Event &)
+void Hazel::ImGuiLayer::OnEvent(Event &e)
 {
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<MouseButtonPressedEvent>(std::bind(&ImGuiLayer::OnMouseButtonPressed, this, std::placeholders::_1));
+	dispatcher.Dispatch<MouseButtonReleasedEvent>(std::bind(&ImGuiLayer::OnMouseButtonReleased, this, std::placeholders::_1));
+	dispatcher.Dispatch<MouseMovedEvent>(std::bind(&ImGuiLayer::OnMouseCursorMoved, this, std::placeholders::_1));
+	dispatcher.Dispatch<KeyPressedEvent>(std::bind(&ImGuiLayer::OnKeyPressedEvent, this, std::placeholders::_1));
+	dispatcher.Dispatch<KeyReleasedEvent>(std::bind(&ImGuiLayer::OnKeyReleasedEvent, this, std::placeholders::_1));
 }
-
 
 void Hazel::ImGuiLayer::OnUpdate()
 {
@@ -89,10 +94,47 @@ void Hazel::ImGuiLayer::OnUpdate()
 	io.DeltaTime = m_Time > 0.0 ? (float)(current_time - m_Time) : (float)(1.0f / 60.0f);
 	m_Time = current_time;
 
+	// todo： 在这里设置每次Loop的Callback
+	// 先设置鼠标的Movement
+
+
+
 	ImGui::NewFrame();
 	static bool showWindow = true;
 	ImGui::ShowDemoWindow(&showWindow);
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+bool Hazel::ImGuiLayer::OnMouseCursorMoved(MouseMovedEvent &e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.MousePos = ImVec2((float)e.GetXPos(), (float)e.GetYPos());
+	return true;
+}
+
+bool Hazel::ImGuiLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[e.GetMouseButton()] = 1;
+	return true;
+}
+
+bool Hazel::ImGuiLayer::OnMouseButtonReleased(MouseButtonReleasedEvent &e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[e.GetMouseButton()] = 0;
+	return true;
+}
+
+bool Hazel::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
+{
+
+	return false;
+}
+
+bool Hazel::ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& e)
+{
+	return false;
 }

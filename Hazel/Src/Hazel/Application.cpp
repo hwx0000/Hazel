@@ -71,6 +71,7 @@ namespace Hazel
 		m_Running = false;
 		return true;
 	}
+
 	void Application::PushLayer(Layer * layer)
 	{
 		m_LayerStack.PushLayer(layer);

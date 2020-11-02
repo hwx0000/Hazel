@@ -43,11 +43,3 @@ Hazel::Application* Hazel::CreateApplication()
 	Sandbox *s = new Sandbox();
 	return s;
 }
-
-
-
-//int main()
-//{
-//	CreateApplication();
-//	return 0;
-//}
