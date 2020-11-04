@@ -1,10 +1,10 @@
 #include "hzpch.h"
 #include "Application.h"
-#include "GLFW/glfw3.h"
 #include "Window.h"
 #include "Event/MouseEvent.h"
 #include "Event/ApplicationEvent.h"
-#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Hazel
 {

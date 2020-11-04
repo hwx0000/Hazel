@@ -6,8 +6,8 @@
 #include "Hazel/Application.h"
 
 // Temporary
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 Hazel::ImGuiLayer::ImGuiLayer()
 {
