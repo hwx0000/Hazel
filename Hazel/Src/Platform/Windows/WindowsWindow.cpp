@@ -160,6 +160,11 @@ namespace Hazel
 		glfwPollEvents();
 	}
 
+	void* WindowsWindow::GetNativeWindow() const
+	{
+		return m_Window;
+	}
+
 	// only close windown, not terminate glfw
 	void WindowsWindow::Shutdown()
 	{

@@ -24,11 +24,12 @@ namespace Hazel
 		// Window自带一个回调函数，用来处理从glfw库收到的callback
 		using EventCallbackFn = std::function<void(Event&)>;
 		virtual ~Window() {};
-		virtual float const& GetWindowHeight() const = 0;
-		virtual float const& GetWindowWidth() const = 0;
+		virtual int const& GetWindowHeight() const = 0;
+		virtual int const& GetWindowWidth() const = 0;
 		virtual bool IsVSync() const = 0;
 		virtual void SetVSync(bool) = 0;
 		virtual void OnUpdate() = 0;
+		virtual void* GetNativeWindow() const = 0;
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());

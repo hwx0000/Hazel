@@ -27,8 +27,8 @@ namespace Hazel
 		EVENT_CLASS_TYPE(WindowResized)
 		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
 
-		inline float GetWindowHeight() { return m_Height; }
-		inline float GetWindowWidth() { return m_Width; }
+		inline int GetWindowHeight() { return m_Height; }
+		inline int GetWindowWidth() { return m_Width; }
 		std::string ToString() const override
 		{
 			std::stringstream a;
@@ -37,7 +37,7 @@ namespace Hazel
 		}
 
 	protected:
-		float m_Height, m_Width;
+		int m_Height, m_Width;
 	};
 
 	class HAZEL_API AppTickEvent : public Event

@@ -18,7 +18,7 @@ namespace Hazel
 		bool OnWindowClose(WindowCloseEvent& e);
 		void PushLayer(Layer* layer);
 		Layer* PopLayer();
-		const Window& GetWindow()const { return *m_Window; }
+		Window& GetWindow()const { return *m_Window; }
 	private:
 		static Application* s_Instance;
 
