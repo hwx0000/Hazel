@@ -53,7 +53,7 @@ namespace Hazel
 			data.height = height;
 			data.width = width;
 			// 创建对应的Hazel Event，然后传入Window的callback函数里，以供外部调用
-			WindowResizeEvent e(height, width);
+			WindowResizedEvent e(height, width);
 			data.eventCallback(e);
 		}
 		);
@@ -130,6 +130,14 @@ namespace Hazel
 					break;
 			}
 		
+		}
+		);
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int s)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			KeyTypedEvent e(s);
+			data.eventCallback(e);
 		}
 		);
 

@@ -15,9 +15,9 @@ namespace Hazel
 	enum class HAZEL_API EventType
 	{
 		None = 0,
-		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+		WindowClose, WindowResized, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
@@ -69,6 +69,7 @@ namespace Hazel
 			if (m_Event.GetEventType() == T::GetStaticType()) 
 			{
 				m_Event.m_Handled = handler(*(T*)&m_Event); //使用(T*)把m_Event转换成输入事件的指针类型
+				m_Event.m_Handled = true;// Temporary: 现在不会直接对应的Handler里都返回true
 			}
 		}
 

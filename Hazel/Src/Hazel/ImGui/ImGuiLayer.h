@@ -3,6 +3,7 @@
 #include "Hazel/Layer.h"
 #include "Hazel/Event/MouseEvent.h"
 #include "Hazel/Event/KeyEvent.h"
+#include "Hazel/Event/ApplicationEvent.h"
 
 namespace Hazel 
 {
@@ -16,11 +17,15 @@ namespace Hazel
 		void OnEvent(Event&) override;
 		void OnUpdate() override;
 
+	private:
 		bool OnMouseCursorMoved(MouseMovedEvent&);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent&);
 		bool OnMouseButtonReleased(MouseButtonReleasedEvent&);
-		bool OnKeyPressedEvent(KeyPressedEvent&);
-		bool OnKeyReleasedEvent(KeyReleasedEvent&);
+		bool OnMouseScrolled(MouseScrolledEvent&);
+		bool OnKeyPressed(KeyPressedEvent&);
+		bool OnKeyReleased(KeyReleasedEvent&);
+		bool OnKeyTyped(KeyTypedEvent&);
+		bool OnWindowResized(WindowResizedEvent&);
 	private:
 		float m_Time = 0.0f;
 	};

@@ -1,10 +1,13 @@
 #include "hzpch.h"
 #include "ImGuiLayer.h"
 #include "imgui.h"
-#include "GLFW/glfw3.h"
-#include "Platform/OpenGL//ImGuiOpenGLRenderer.h"
+#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
 #include <stdio.h>
 #include "Hazel/Application.h"
+
+// Temporary
+#include "GLFW/glfw3.h"
+#include "glad/glad.h"
 
 Hazel::ImGuiLayer::ImGuiLayer()
 {
@@ -67,8 +70,10 @@ void Hazel::ImGuiLayer::OnEvent(Event &e)
 	dispatcher.Dispatch<MouseButtonPressedEvent>(std::bind(&ImGuiLayer::OnMouseButtonPressed, this, std::placeholders::_1));
 	dispatcher.Dispatch<MouseButtonReleasedEvent>(std::bind(&ImGuiLayer::OnMouseButtonReleased, this, std::placeholders::_1));
 	dispatcher.Dispatch<MouseMovedEvent>(std::bind(&ImGuiLayer::OnMouseCursorMoved, this, std::placeholders::_1));
-	dispatcher.Dispatch<KeyPressedEvent>(std::bind(&ImGuiLayer::OnKeyPressedEvent, this, std::placeholders::_1));
-	dispatcher.Dispatch<KeyReleasedEvent>(std::bind(&ImGuiLayer::OnKeyReleasedEvent, this, std::placeholders::_1));
+	dispatcher.Dispatch<MouseScrolledEvent>(std::bind(&ImGuiLayer::OnMouseScrolled, this, std::placeholders::_1));
+	dispatcher.Dispatch<KeyPressedEvent>(std::bind(&ImGuiLayer::OnKeyPressed, this, std::placeholders::_1));
+	dispatcher.Dispatch<KeyReleasedEvent>(std::bind(&ImGuiLayer::OnKeyReleased, this, std::placeholders::_1));
+	dispatcher.Dispatch<KeyTypedEvent>(std::bind(&ImGuiLayer::OnKeyTyped, this, std::placeholders::_1));
 }
 
 void Hazel::ImGuiLayer::OnUpdate()
@@ -97,8 +102,6 @@ void Hazel::ImGuiLayer::OnUpdate()
 	// todo： 在这里设置每次Loop的Callback
 	// 先设置鼠标的Movement
 
-
-
 	ImGui::NewFrame();
 	static bool showWindow = true;
 	ImGui::ShowDemoWindow(&showWindow);
@@ -111,30 +114,83 @@ bool Hazel::ImGuiLayer::OnMouseCursorMoved(MouseMovedEvent &e)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	io.MousePos = ImVec2((float)e.GetXPos(), (float)e.GetYPos());
-	return true;
+	return false;
 }
 
 bool Hazel::ImGuiLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 {
 	ImGuiIO& io = ImGui::GetIO();
-	io.MouseDown[e.GetMouseButton()] = 1;
-	return true;
+	io.MouseDown[e.GetMouseButton()] = true;
+	return false;
 }
 
 bool Hazel::ImGuiLayer::OnMouseButtonReleased(MouseButtonReleasedEvent &e)
 {
 	ImGuiIO& io = ImGui::GetIO();
-	io.MouseDown[e.GetMouseButton()] = 0;
-	return true;
+	io.MouseDown[e.GetMouseButton()] = false;
+	return false;
 }
 
-bool Hazel::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
+bool Hazel::ImGuiLayer::OnMouseScrolled(MouseScrolledEvent &e)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseWheelH += (float)e.GetXOffset();
+	io.MouseWheel += (float)e.GetYOffset();
+	return false;
+}
+
+bool Hazel::ImGuiLayer::OnKeyPressed(KeyPressedEvent& e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[e.GetKeycode()] = true;
+
+	// 以下键可以共享，所以额外处理
+	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 
 	return false;
 }
 
-bool Hazel::ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& e)
+bool Hazel::ImGuiLayer::OnKeyReleased(KeyReleasedEvent& e)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	io.KeysDown[e.GetKeycode()] = false;
+
+	// 以下键可以共享，所以额外处理
+	io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+	io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+	io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+	io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+	return false;
+}
+
+bool Hazel::ImGuiLayer::OnKeyTyped(KeyTypedEvent &e)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	io.AddInputCharacter(e.GetKeycode());
+	return false;
+}
+
+bool Hazel::ImGuiLayer::OnWindowResized(WindowResizedEvent &e)
+{
+	// 每次Window窗口大小改变的时候，也会调用此函数，ImGui的Demo实际上没有采用这种方法
+	// 它是在每帧去Get窗口的大小，然后重新设置，代码如下注释所示
+	// Setup display size (every frame to accommodate for window resizing)
+	/*int w, h;
+	int display_w, display_h;
+	glfwGetWindowSize(g_Window, &w, &h);
+	glfwGetFramebufferSize(g_Window, &display_w, &display_h);
+	io.DisplaySize = ImVec2((float)w, (float)h);
+	if (w > 0 && h > 0)
+		io.DisplayFramebufferScale = ImVec2((float)display_w / w, (float)display_h / h);*/
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(e.GetWindowWidth(), e.GetWindowHeight());
+	io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+	glViewport(0, 0, e.GetWindowWidth(), e.GetWindowHeight());
+
 	return false;
 }

@@ -20,22 +20,24 @@ namespace Hazel
 	protected:
 	};
 
-	class HAZEL_API  WindowResizeEvent :public Event
+	class HAZEL_API  WindowResizedEvent :public Event
 	{
 	public:
-		WindowResizeEvent(float height, float width):m_height(height), m_width(width) {}
-		EVENT_CLASS_TYPE(WindowResize)
+		WindowResizedEvent(float height, float width) :m_Height(height), m_Width(width) {}
+		EVENT_CLASS_TYPE(WindowResized)
 		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
 
+		inline float GetWindowHeight() { return m_Height; }
+		inline float GetWindowWidth() { return m_Width; }
 		std::string ToString() const override
 		{
 			std::stringstream a;
-			a << "Window Resize: width = " << m_width << ", height = " << m_height;
+			a << "Window Resize: width = " << m_Width << ", height = " << m_Height;
 			return a.str();
 		}
 
 	protected:
-		float m_height, m_width;
+		float m_Height, m_Width;
 	};
 
 	class HAZEL_API AppTickEvent : public Event
