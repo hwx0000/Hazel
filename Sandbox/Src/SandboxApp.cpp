@@ -15,13 +15,18 @@ class ExampleLayer : public Hazel::Layer
 
 	void OnEvent(Hazel::Event& e) override
 	{
-		std::string s = e.ToString();
+		//if (e.GetEventType() == Hazel::EventType::KeyPressed)
+		//{
+		//	Hazel::KeyPressedEvent* ep = dynamic_cast<Hazel::KeyPressedEvent*>(&e);
+		//	LOG("{0}{1}", (char)ep->GetKeycode(), "Is Pressed");
+		//}
+		//LOG("{0}", s);
 		//LOG("{0}", s);
 		//LOG("{0}", "SampleLayer: ");//, e.ToString());
 	}
 	void OnUpdate() override
 	{
-		//LOG("Example Layer: On Update");
+		LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
 	}
 
 };
