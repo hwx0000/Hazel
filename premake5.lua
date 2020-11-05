@@ -26,6 +26,7 @@ project "Hazel"
 	{
 		"%{prj.name}/Src/**.h",
 		"%{prj.name}/Src/**.cpp",
+		"%{prj.name}/vendor/**.hpp",
 	}
 
 	includedirs
@@ -81,7 +82,8 @@ project "Sandbox"
     includedirs
 	{
 		"Hazel/vendor/spdlog/include",
-		"Hazel/Src"
+		"Hazel/Src",
+		"Hazel/vendor/glm"
 	}
 
 	links { "Hazel" }
