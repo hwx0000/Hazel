@@ -21,7 +21,7 @@ class ExampleLayer : public Hazel::Layer
 	}
 	void OnUpdate() override
 	{
-		LOG("Example Layer: On Update");
+		//LOG("Example Layer: On Update");
 	}
 
 };

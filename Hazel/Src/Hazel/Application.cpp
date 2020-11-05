@@ -5,6 +5,7 @@
 #include "Event/ApplicationEvent.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include "Input.h"
 
 namespace Hazel
 {
@@ -35,7 +36,7 @@ namespace Hazel
 	void Application::OnEvent(Event& e)
 	{
 		//CORE_LOG("{0}", e);
-		CORE_LOG(e.ToString());
+		//CORE_LOG(e.ToString());
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 		for (Layer* layer : m_LayerStack)
@@ -61,6 +62,7 @@ namespace Hazel
 			}
 			// 每帧结束调用glSwapBuffer
 			m_Window->OnUpdate();
+			//LOG("{0}{1}", "Is Key K Pressed", Input::IsKeyPressed(75));
 		}
 
 		//LOG(w.ToString());

@@ -85,7 +85,7 @@ void Hazel::ImGuiLayer::OnUpdate()
 
 
 	ImGuiIO& io = ImGui::GetIO();
-	LOG(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer backend. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
+	//LOG(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer backend. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
 
 	// Setup display size (every frame to accommodate for window resizing)
 	io.DisplaySize = ImVec2((float)Application::Get().GetWindow().GetWindowWidth()
