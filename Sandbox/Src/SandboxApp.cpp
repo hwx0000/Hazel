@@ -1,11 +1,5 @@
 #include "Hazel.h"
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
-#include <glm/ext/matrix_clip_space.hpp> // glm::perspective
-#include <glm/ext/scalar_constants.hpp> // glm::pi
-
+#include "../imgui/imgui.h"
 
 class ExampleLayer : public Hazel::Layer
 {
@@ -33,6 +27,13 @@ class ExampleLayer : public Hazel::Layer
 	void OnUpdate() override
 	{
 		LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 };

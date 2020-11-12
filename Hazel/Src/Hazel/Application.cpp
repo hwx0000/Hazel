@@ -37,19 +37,12 @@ namespace Hazel
 
 	void Application::OnEvent(Event& e)
 	{
-		//CORE_LOG("{0}", e);
-		//CORE_LOG(e.ToString());
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 		for (Layer* layer : m_LayerStack)
 		{
 			layer->OnEvent(e);
 		}
-
-		//for (ImGuiLayer* layer : m_ImGuiLayerStack) 
-		//{
-		//	layer->OnImGuiRender();
-		//}
 	}
 
 
@@ -71,9 +64,10 @@ namespace Hazel
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 			{
+				// 每一个Layer都在调用ImGuiRender函数
+				// 目前有两个Layer, Sandbox定义的ExampleLayer和构造函数添加的ImGuiLayer
 				layer->OnImGuiRender();
 			}
-
 			m_ImGuiLayer->End();
 			
 			// 每帧结束调用glSwapBuffer
