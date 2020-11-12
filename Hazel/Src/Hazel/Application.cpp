@@ -27,6 +27,8 @@ namespace Hazel
 		//	}
 		//}
 		//);
+		m_ImGuiLayer = new ImGuiLayer();
+		m_LayerStack.PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -43,6 +45,11 @@ namespace Hazel
 		{
 			layer->OnEvent(e);
 		}
+
+		//for (ImGuiLayer* layer : m_ImGuiLayerStack) 
+		//{
+		//	layer->OnImGuiRender();
+		//}
 	}
 
 
@@ -60,6 +67,15 @@ namespace Hazel
 			{
 				layer->OnUpdate();
 			}
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnImGuiRender();
+			}
+
+			m_ImGuiLayer->End();
+			
 			// 每帧结束调用glSwapBuffer
 			m_Window->OnUpdate();
 			//LOG("{0}{1}", "Is Key K Pressed", Input::IsKeyPressed(75));

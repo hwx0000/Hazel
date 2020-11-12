@@ -14,18 +14,10 @@ namespace Hazel
 		~ImGuiLayer();
 		void OnAttach() override; //当layer添加到layer stack的时候会调用此函数，相当于Init函数
 		void OnDettach() override; //当layer从layer stack移除的时候会调用此函数，相当于Shutdown函数
-		void OnEvent(Event&) override;
-		void OnUpdate() override;
+		void OnImGuiRender() override; //当layer从layer stack移除的时候会调用此函数，相当于Shutdown函数
 
-	private:
-		bool OnMouseCursorMoved(MouseMovedEvent&);
-		bool OnMouseButtonPressed(MouseButtonPressedEvent&);
-		bool OnMouseButtonReleased(MouseButtonReleasedEvent&);
-		bool OnMouseScrolled(MouseScrolledEvent&);
-		bool OnKeyPressed(KeyPressedEvent&);
-		bool OnKeyReleased(KeyReleasedEvent&);
-		bool OnKeyTyped(KeyTypedEvent&);
-		bool OnWindowResized(WindowResizedEvent&);
+		void Begin();// 把原来的OnUpdate函数分解成了两部分
+		void End();
 	private:
 		float m_Time = 0.0f;
 	};
