@@ -23,7 +23,7 @@ namespace Hazel
 	class HAZEL_API  WindowResizedEvent :public Event
 	{
 	public:
-		WindowResizedEvent(float height, float width) :m_Height(height), m_Width(width) {}
+		WindowResizedEvent(int height, int width) :m_Height(height), m_Width(width) {}
 		EVENT_CLASS_TYPE(WindowResized)
 		EVENT_CLASS_GET_CATEGORY(EventCategoryApplication)
 

@@ -13,8 +13,10 @@ include "Hazel/vendor/imgui"
 
 project "Hazel"
     location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+	staticruntime "on"
+	cppdialect "C++17"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
 	links {"GLFW", "opengl32.lib", "Glad", "imgui"}
@@ -22,6 +24,10 @@ project "Hazel"
     pchheader "hzpch.h"
     pchsource "%{prj.name}/Src/hzpch.cpp"
 
+	defines
+	{
+	    "_CRT_SECURE_NO_WARNINGS"
+	}
 	files
 	{
 		"%{prj.name}/Src/**.h",
@@ -41,8 +47,6 @@ project "Hazel"
 
 	filter { "system:windows" }
 	    systemversion "latest"
-		cppdialect "C++17"
-	    staticruntime "on"
 		defines {"HZ_PLATFORM_WINDOWS", "GLFW_INCLUDE_NONE", "HZ_ENABLE_ASSERTS"}
 		
 		postbuildcommands
@@ -54,26 +58,25 @@ project "Hazel"
 
     filter { "configurations:Debug" }
         defines { "DEBUG", "HZ_BUILD_DLL"}
-		buildoptions {"/MDd"}
         symbols "On"
 		runtime "Debug" -- 运行时链接的dll是debug类型的
 
     filter { "configurations:Release"}
         defines { "NDEBUG", "HZ_BUILD_DLL"}
-		buildoptions {"/MD"}
         optimize "On"
 		runtime "Release" -- 运行时链接的dll是release类型的
 
     filter { "configurations:Dist"}
 		defines { "NDEBUG", "HZ_BUILD_DLL"}
-		buildoptions {"/MD"}
 	    optimize "On"
 
 
 project "Sandbox"
-    location "%{prj.name}"
-    kind "ConsoleApp"
-    language "C++"
+	location "%{prj.name}"
+	kind "ConsoleApp"
+	language "C++"
+	staticruntime "on"
+
 	targetdir  ("bin/"..outputdir.."/%{prj.name}")
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
     
@@ -81,7 +84,7 @@ project "Sandbox"
 
     includedirs
 	{
-		"Hazel/vendor/spdlog/include",
+        "Hazel/vendor/spdlog/include",
 		"Hazel/Src",
 		"Hazel/vendor/glm"
 	}
