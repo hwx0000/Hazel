@@ -3,7 +3,8 @@
 #include "Hazel/Event/ApplicationEvent.h"
 #include "Hazel/Event/KeyEvent.h"
 #include "Hazel/Event/MouseEvent.h"
-#include "glad/glad.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
 
 namespace Hazel
 {
@@ -39,10 +40,9 @@ namespace Hazel
 		m_Data.width = props.width;
 		m_Window = glfwCreateWindow(m_Data.width, m_Data.height, m_Data.title.c_str(), NULL, NULL);
 		HAZEL_ASSERT(m_Window, "Failed to create Windows Window!");
-		glfwMakeContextCurrent(m_Window);
-
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		HAZEL_ASSERT(status, "Failed to init glad");
+		
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		// glfw规定的回调函数里，不能传入m_Data的指针，所以只能通过glfw的API设置数据的指针
@@ -156,8 +156,8 @@ namespace Hazel
 
 	void Hazel::WindowsWindow::OnUpdate()
 	{
-		glfwSwapBuffers(m_Window);
 		glfwPollEvents();
+		m_Context->SwapBuffer();
 	}
 
 	void* WindowsWindow::GetNativeWindow() const

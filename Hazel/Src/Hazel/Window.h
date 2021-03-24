@@ -2,6 +2,7 @@
 #include "hzpch.h"
 #include "Core.h"
 #include "Event/Event.h"
+#include "Renderer/GraphicsContext.h"
 
 namespace Hazel
 {
@@ -33,5 +34,6 @@ namespace Hazel
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
+		GraphicsContext* m_Context;
 	};
 }
