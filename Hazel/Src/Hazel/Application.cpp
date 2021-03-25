@@ -10,6 +10,7 @@
 namespace Hazel
 {
 	Application* Application::s_Instance = nullptr;
+	int indices[3] = { 0,1,2 };
 
 	Application::Application()
 	{
@@ -29,6 +30,27 @@ namespace Hazel
 		//);
 		m_ImGuiLayer = new ImGuiLayer();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
+
+
+		float vertices[3 * 3] = {
+			-0.5, -0.5, 0,
+			0.5, -0.5, 0,
+			0, 0.5, 0
+		};
+
+		glGenBuffers(1, &m_VertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//从CPU传入了GPU
+
+		glGenVertexArrays(1, &m_VertexArray);
+		glBindVertexArray(m_VertexArray);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+		glGenBuffers(1, &m_IndexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);//从CPU传入了GPU
+
 	}
 
 	Application::~Application()
@@ -52,8 +74,12 @@ namespace Hazel
 		while (m_Running)
 		{
 			// 每帧开始Clear
-			glClearColor(1, 0, 1, 1);
+			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			glBindVertexArray(m_VertexArray);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 			// 所以创建完window后，可以直接调用其loop开始渲染
 			for (Layer* layer : m_LayerStack)
