@@ -51,6 +51,24 @@ namespace Hazel
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);//从CPU传入了GPU
 
+		std::string vertexSource = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+void main()
+{
+	gl_Position = vec4(aPos, 1.0);
+}
+		)";
+
+		std::string fragmentSource = R"(
+#version 330 core
+out vec4 color;
+void main()
+{
+	color = vec4(0.8,0.2,0.3,1.0);
+}
+		)";
+		m_Shader.reset(new Shader(vertexSource, fragmentSource));
 	}
 
 	Application::~Application()
@@ -77,6 +95,7 @@ namespace Hazel
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			m_Shader->Bind();
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 

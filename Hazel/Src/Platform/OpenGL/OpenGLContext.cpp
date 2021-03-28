@@ -8,10 +8,10 @@ namespace Hazel
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		HAZEL_ASSERT(status, "Failed to init glad");
 
-		LOG("OpenGL Info:");
-		LOG("    Vendor: {0}", glGetString(GL_VENDOR));//打印厂商
-		LOG("    Renderer: {0}", glGetString(GL_RENDERER));
-		LOG("    Version: {0}", glGetString(GL_VERSION));
+		CORE_LOG("OpenGL Info:");
+		CORE_LOG("    Vendor: {0}", glGetString(GL_VENDOR));//打印厂商
+		CORE_LOG("    Renderer: {0}", glGetString(GL_RENDERER));
+		CORE_LOG("    Version: {0}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffer() {

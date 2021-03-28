@@ -5,12 +5,12 @@ class ExampleLayer : public Hazel::Layer
 {
 	void OnAttach() override
 	{
-		LOG("Init Layer");
+		CORE_LOG("Init Layer");
 	}
 
 	void OnDettach() override
 	{
-		LOG("Close Layer");
+		CORE_LOG("Close Layer");
 	}
 
 	void OnEvent(Hazel::Event& e) override
@@ -26,7 +26,7 @@ class ExampleLayer : public Hazel::Layer
 	}
 	void OnUpdate() override
 	{
-		LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
+		CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
 	}
 
 	void OnImGuiRender() override

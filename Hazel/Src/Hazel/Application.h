@@ -4,6 +4,7 @@
 #include "LayerStack.h"
 #include "Event/ApplicationEvent.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Renderer/Shader.h"
 
 namespace Hazel
 {
@@ -28,6 +29,7 @@ namespace Hazel
 
 	protected:
 		std::unique_ptr<Window>m_Window;
+		std::unique_ptr<Shader>m_Shader;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
