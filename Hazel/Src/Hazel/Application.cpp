@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include "Input.h"
+#include "Renderer/Buffer.h"
 
 namespace Hazel
 {
@@ -30,7 +31,7 @@ namespace Hazel
 		//);
 		m_ImGuiLayer = new ImGuiLayer();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
-
+		
 
 		float vertices[3 * 3] = {
 			-0.5, -0.5, 0,
@@ -38,9 +39,8 @@ namespace Hazel
 			0, 0.5, 0
 		};
 
-		glGenBuffers(1, &m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//从CPU传入了GPU
+		VertexBuffer* buffer = VertexBuffer::Create(vertices, sizeof(vertices));
+		buffer->Bind();
 
 		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
