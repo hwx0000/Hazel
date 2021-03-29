@@ -5,6 +5,7 @@
 #include "Event/ApplicationEvent.h"
 #include "ImGui/ImGuiLayer.h"
 #include "Renderer/Shader.h"
+#include "Renderer/Buffer.h"
 
 namespace Hazel
 {
@@ -33,6 +34,8 @@ namespace Hazel
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
+		VertexBuffer* buffer;
+		unsigned int cd = 0;
 	};
 
 	Application* CreateApplication();

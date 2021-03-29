@@ -39,7 +39,7 @@ namespace Hazel
 			0, 0.5, 0
 		};
 
-		VertexBuffer* buffer = VertexBuffer::Create(vertices, sizeof(vertices));
+		buffer = VertexBuffer::Create(vertices, sizeof(vertices));
 		buffer->Bind();
 
 		glGenVertexArrays(1, &m_VertexArray);
@@ -96,6 +96,8 @@ void main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_Shader->Bind();
+			buffer->Bind();
+
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 

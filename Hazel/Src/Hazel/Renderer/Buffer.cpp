@@ -6,7 +6,7 @@
 
 VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 {
-	std::unique_ptr< VertexBuffer> buffer;
+	VertexBuffer* buffer = nullptr;
 	switch (Renderer::GetAPI())
 	{
 	case RendererAPI::None:
@@ -17,15 +17,16 @@ VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	}
 	case RendererAPI::OpenGL:
 	{
-		buffer.reset(new OpenGLVertexBuffer());
+		buffer = (new OpenGLVertexBuffer());
 		glGenBuffers(1, &buffer->m_VertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer->m_VertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//从CPU传入了GPU
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);//从CPU传入了GPU
+
 		break;
 	}
 	default:
 		break;
 	}
 
-	return &(*buffer);
+	return buffer;
 }

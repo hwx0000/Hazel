@@ -4,7 +4,7 @@
 class OpenGLVertexBuffer : public VertexBuffer 
 {
 public:
-	virtual ~OpenGLVertexBuffer() override {}
+	virtual ~OpenGLVertexBuffer() override;
 	void Bind()const override;// ±ğÍüÁË¼Óconst
 	void Unbind() const override;
 };

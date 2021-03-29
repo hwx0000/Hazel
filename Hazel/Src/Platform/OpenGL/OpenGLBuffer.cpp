@@ -2,6 +2,11 @@
 #include "OpenGLBuffer.h"
 #include "glad/glad.h"
 
+OpenGLVertexBuffer::~OpenGLVertexBuffer()
+{
+	int a = 5;
+}
+
 void OpenGLVertexBuffer::Bind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
