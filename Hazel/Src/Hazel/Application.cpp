@@ -39,17 +39,16 @@ namespace Hazel
 			0, 0.5, 0
 		};
 
-		buffer = VertexBuffer::Create(vertices, sizeof(vertices));
-		buffer->Bind();
+		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VertexBuffer->Bind();
 
 		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-		glGenBuffers(1, &m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);//从CPU传入了GPU
+		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
+		m_IndexBuffer->Bind();
 
 		std::string vertexSource = R"(
 #version 330 core
@@ -96,7 +95,6 @@ void main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_Shader->Bind();
-			buffer->Bind();
 
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
