@@ -4,7 +4,6 @@
 
 OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
-	int a = 5;
 }
 
 void OpenGLVertexBuffer::Bind() const

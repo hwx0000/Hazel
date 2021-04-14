@@ -4,6 +4,8 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 #include "Glad/glad.h"
 
+
+
 VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 {
 	VertexBuffer* buffer = nullptr;
@@ -57,4 +59,14 @@ IndexBuffer* IndexBuffer::Create(int* indices, uint32_t size)
 	}
 
 	return buffer;
+}
+
+void BufferLayout::CalculateElementsOffsets()
+{
+	m_Stride = 0;
+	for (auto &element : m_Elements)
+	{
+		element.SetOffset(m_Stride);
+		m_Stride += element.GetSize();
+	}
 }

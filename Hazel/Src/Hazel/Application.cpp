@@ -13,6 +13,19 @@ namespace Hazel
 	Application* Application::s_Instance = nullptr;
 	int indices[3] = { 0,1,2 };
 
+	static GLenum GetShaderDataTypeToOpenGL(const ShaderDataType& type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::FLOAT: return GL_FLOAT;
+		case ShaderDataType::FLOAT2:return GL_FLOAT;
+		case ShaderDataType::FLOAT3:return GL_FLOAT;
+		case ShaderDataType::FLOAT4:return GL_FLOAT;
+		}
+		HAZEL_ASSERT(false, "Unknown Shader Data Type");
+		return GL_FALSE;
+	}
+
 	Application::Application()
 	{
 		HAZEL_ASSERT(!s_Instance, "Already Exists an application instance");
@@ -31,12 +44,12 @@ namespace Hazel
 		//);
 		m_ImGuiLayer = new ImGuiLayer();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
-		
 
-		float vertices[3 * 3] = {
-			-0.5, -0.5, 0,
-			0.5, -0.5, 0,
-			0, 0.5, 0
+
+		float vertices[] = {
+			-0.5, -0.5, 0, 1.0, 0.0, 0.0, 1.0f,
+			0.5, -0.5, 0,  0.0, 1.0, 0.0, 1.0f,
+			0, 0.5, 0.0	,   0.0, 0.0, 1.0, 1.0f
 		};
 
 		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
@@ -44,8 +57,29 @@ namespace Hazel
 
 		glGenVertexArrays(1, &m_VertexArray);
 		glBindVertexArray(m_VertexArray);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+		{
+			BufferLayout layout = {
+			{ShaderDataType::FLOAT3, "a_Pos" },
+			{ShaderDataType::FLOAT4, "a_Color" }
+			};
+			m_VertexBuffer->SetBufferLayout(layout);
+		}
+
+		BufferLayout layout = m_VertexBuffer->GetBufferLayout();
+		int index = 0;
+		for (const BufferElement& element : layout)
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index,
+				GetShaderTypeDataCount(element.GetType()),
+				GetShaderDataTypeToOpenGL(element.GetType()), 
+				element.IsNormalized()? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
+				(const void*)(element.GetOffset()));
+			index++;
+		}
+
 
 		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
 		m_IndexBuffer->Bind();
@@ -53,18 +87,24 @@ namespace Hazel
 		std::string vertexSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec4 aColor;
+
+out vec4 o_color;
 void main()
 {
 	gl_Position = vec4(aPos, 1.0);
+	o_color = aColor;
 }
 		)";
 
 		std::string fragmentSource = R"(
 #version 330 core
+in vec4 o_color;
 out vec4 color;
 void main()
 {
-	color = vec4(0.8,0.2,0.3,1.0);
+	//color = vec4(0.8,0.2,0.3,1.0);
+	color = o_color;
 }
 		)";
 		m_Shader.reset(new Shader(vertexSource, fragmentSource));
