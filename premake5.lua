@@ -2,7 +2,7 @@ workspace "Hazel"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
 
---当前路径为premake5.lua所在的路径
+--当前路径为premake5.lua所在路径
 --create outputdir macro
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
