@@ -14,5 +14,5 @@ public:
 
 	static VertexArray* Create();
 protected:
-		uint32_t m_Index;
+	uint32_t m_Index;
 };

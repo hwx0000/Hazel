@@ -16,7 +16,6 @@ void OpenGLVertexBuffer::Unbind()const
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-
 void OpenGLIndexBuffer::Bind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
