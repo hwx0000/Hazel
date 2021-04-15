@@ -2,8 +2,9 @@
 #include "VertexArray.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 #include "Renderer.h"
+#include "glad/glad.h"
 
-VertexArray* Create()
+VertexArray* VertexArray::Create()
 {
 	VertexArray* buffer = nullptr;
 	switch (Renderer::GetAPI())
@@ -17,7 +18,8 @@ VertexArray* Create()
 	case RendererAPI::OpenGL:
 	{
 		buffer = (new OpenGLVertexArray());
-		buffer->Bind();
+		glGenVertexArrays(1, &buffer->m_Index);
+		glBindVertexArray(buffer->m_Index);
 
 		break;
 	}

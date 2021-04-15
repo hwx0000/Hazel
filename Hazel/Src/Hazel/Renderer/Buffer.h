@@ -73,9 +73,11 @@ public:
 	}
 
 	uint32_t GetStride() const { return m_Stride; }
-
+	size_t GetCount() const { return m_Elements.size(); }
+	
 	std::vector<BufferElement>::iterator begin() { return m_Elements.begin();}
 	std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
+
 private:
 	std::vector<BufferElement> m_Elements;
 	uint32_t m_Stride;

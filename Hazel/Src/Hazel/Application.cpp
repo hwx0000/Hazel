@@ -13,19 +13,6 @@ namespace Hazel
 	Application* Application::s_Instance = nullptr;
 	int indices[3] = { 0,1,2 };
 
-	static GLenum GetShaderDataTypeToOpenGL(const ShaderDataType& type)
-	{
-		switch (type)
-		{
-		case ShaderDataType::FLOAT: return GL_FLOAT;
-		case ShaderDataType::FLOAT2:return GL_FLOAT;
-		case ShaderDataType::FLOAT3:return GL_FLOAT;
-		case ShaderDataType::FLOAT4:return GL_FLOAT;
-		}
-		HAZEL_ASSERT(false, "Unknown Shader Data Type");
-		return GL_FALSE;
-	}
-
 	Application::Application()
 	{
 		HAZEL_ASSERT(!s_Instance, "Already Exists an application instance");
@@ -45,41 +32,28 @@ namespace Hazel
 		m_ImGuiLayer = new ImGuiLayer();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
 
-
 		float vertices[] = {
 			-0.5, -0.5, 0, 1.0, 0.0, 0.0, 1.0f,
 			0.5, -0.5, 0,  0.0, 1.0, 0.0, 1.0f,
 			0, 0.5, 0.0	,   0.0, 0.0, 1.0, 1.0f
 		};
 
+		// 创建VBO
 		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
 		m_VertexBuffer->Bind();
 
+		// 创建Layout，会计算好Stride和Offset
 		BufferLayout layout = {
-		{ShaderDataType::FLOAT3, "a_Pos" },
-		{ShaderDataType::FLOAT4, "a_Color" }
+			{ShaderDataType::FLOAT3, "a_Pos" },
+			{ShaderDataType::FLOAT4, "a_Color" }
 		};
-		m_VertexBuffer->SetBufferLayout(layout);
 
+		m_VertexBuffer->SetBufferLayout(layout);
 		
+		// 创建Vertex Array，把前面算好的东西传入VAO
 		m_VertexArray.reset(VertexArray::Create());
 		m_VertexArray->Bind();
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
-
-		//BufferLayout layout = m_VertexBuffer->GetBufferLayout();
-		//int index = 0;
-		//for (const BufferElement& element : layout)
-		//{
-		//	glEnableVertexAttribArray(index);
-		//	glVertexAttribPointer(index,
-		//		GetShaderTypeDataCount(element.GetType()),
-		//		GetShaderDataTypeToOpenGL(element.GetType()), 
-		//		element.IsNormalized()? GL_TRUE : GL_FALSE,
-		//		layout.GetStride(),
-		//		(const void*)(element.GetOffset()));
-		//	index++;
-		//}
-
 
 		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
 		m_IndexBuffer->Bind();
@@ -135,8 +109,8 @@ void main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_Shader->Bind();
-
-			glBindVertexArray(m_VertexArray);
+			
+			m_VertexArray->Bind();
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
