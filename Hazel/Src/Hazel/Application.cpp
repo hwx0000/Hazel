@@ -55,30 +55,30 @@ namespace Hazel
 		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
 		m_VertexBuffer->Bind();
 
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		BufferLayout layout = {
+		{ShaderDataType::FLOAT3, "a_Pos" },
+		{ShaderDataType::FLOAT4, "a_Color" }
+		};
+		m_VertexBuffer->SetBufferLayout(layout);
 
-		{
-			BufferLayout layout = {
-			{ShaderDataType::FLOAT3, "a_Pos" },
-			{ShaderDataType::FLOAT4, "a_Color" }
-			};
-			m_VertexBuffer->SetBufferLayout(layout);
-		}
+		
+		m_VertexArray.reset(VertexArray::Create());
+		m_VertexArray->Bind();
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		BufferLayout layout = m_VertexBuffer->GetBufferLayout();
-		int index = 0;
-		for (const BufferElement& element : layout)
-		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
-				GetShaderTypeDataCount(element.GetType()),
-				GetShaderDataTypeToOpenGL(element.GetType()), 
-				element.IsNormalized()? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				(const void*)(element.GetOffset()));
-			index++;
-		}
+		//BufferLayout layout = m_VertexBuffer->GetBufferLayout();
+		//int index = 0;
+		//for (const BufferElement& element : layout)
+		//{
+		//	glEnableVertexAttribArray(index);
+		//	glVertexAttribPointer(index,
+		//		GetShaderTypeDataCount(element.GetType()),
+		//		GetShaderDataTypeToOpenGL(element.GetType()), 
+		//		element.IsNormalized()? GL_TRUE : GL_FALSE,
+		//		layout.GetStride(),
+		//		(const void*)(element.GetOffset()));
+		//	index++;
+		//}
 
 
 		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));

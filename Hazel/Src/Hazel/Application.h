@@ -6,6 +6,7 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Buffer.h"
+#include "Renderer/VertexArray.h"
 
 namespace Hazel
 {
@@ -24,16 +25,15 @@ namespace Hazel
 		Window& GetWindow()const { return *m_Window; }
 	private:
 		static Application* s_Instance;
-		unsigned int m_VertexArray = 0;
 	protected:
 		std::unique_ptr<Window>m_Window;
 		std::unique_ptr<Shader>m_Shader;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer = nullptr;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
 		std::unique_ptr<IndexBuffer> m_IndexBuffer;
-		unsigned int cd = 0;
+		std::unique_ptr<VertexArray> m_VertexArray;
 	};
 
 	Application* CreateApplication();
