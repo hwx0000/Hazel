@@ -1,11 +1,13 @@
 #include "hzpch.h"
 #include "Buffer.h"
 #include "Renderer.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"// 基类的cpp引用了派生类的头文件
 #include "Glad/glad.h"
 
 
-
+// 注意声明为static的函数，在定义的时候不需要写static关键字
+// 而且这个Create函数是在基类定义的，因为创建的窗口对象应该包含多种平台的派生类对象，所以放到了基类里
+// 而且这个基类的cpp引用了相关的派生类的头文件
 VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 {
 	VertexBuffer* buffer = nullptr;

@@ -95,6 +95,7 @@ public:
 	virtual BufferLayout& GetBufferLayout() = 0;
 	virtual void SetBufferLayout(const BufferLayout&) = 0;
 
+	// 注意这个static函数是在基类定义的
 	static VertexBuffer* Create(float* vertices, uint32_t size);
 protected:
 	uint32_t m_VertexBuffer;

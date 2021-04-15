@@ -26,7 +26,7 @@ class ExampleLayer : public Hazel::Layer
 	}
 	void OnUpdate() override
 	{
-		CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
+		//CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
 	}
 
 	void OnImGuiRender() override
