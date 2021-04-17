@@ -15,6 +15,11 @@ static GLenum GetShaderDataTypeToOpenGL(const ShaderDataType& type)
 	return GL_FALSE;
 }
 
+OpenGLVertexArray::OpenGLVertexArray()
+{
+	glGenVertexArrays(1, &m_Index);
+}
+
 void OpenGLVertexArray::Bind() const
 {
 	glBindVertexArray(m_Index);
@@ -28,6 +33,10 @@ void OpenGLVertexArray::Unbind() const
 void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
 	HAZEL_CORE_ASSERT(vertexBuffer->GetBufferLayout().GetCount(), "Empty Layout in VertexBuffer!");
+	// 挖VBO的数据到VAO时，要记得先Bind Vertex Array
+	glBindVertexArray(m_Index);
+	vertexBuffer->Bind();
+
 	BufferLayout layout = vertexBuffer->GetBufferLayout();
 	int index = 0;
 	for (const BufferElement& element : layout)
@@ -41,8 +50,13 @@ void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertexBuf
 			(const void*)(element.GetOffset()));
 		index++;
 	}
+	m_VertexBuffers.push_back(vertexBuffer);
 }
 
-void OpenGLVertexArray::AddIndexBuffer(std::shared_ptr<IndexBuffer>&)
+void OpenGLVertexArray::AddIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer)
 {
+	// 先确保Bind
+	glBindVertexArray(m_Index);
+	indexBuffer->Bind();
+	m_IndexBuffer = indexBuffer;
 }

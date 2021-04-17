@@ -20,15 +20,7 @@ namespace Hazel
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		//m_Window->SetEventCallback([](Event& e)->void
-		//{
-		//	if (e.GetEventType() == EventType::MouseScrolled)
-		//	{
-		//		MouseScrolledEvent ee = (MouseScrolledEvent&)e;
-		//		LOG( "xOffset:{0} and yOffset:{1}", ee.GetXOffset(), ee.GetYOffset());
-		//	}
-		//}
-		//);
+		
 		m_ImGuiLayer = new ImGuiLayer();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
 
@@ -131,7 +123,6 @@ void main()
 			
 			// 每帧结束调用glSwapBuffer
 			m_Window->OnUpdate();
-			//LOG("{0}{1}", "Is Key K Pressed", Input::IsKeyPressed(75));
 		}
 
 		//LOG(w.ToString());

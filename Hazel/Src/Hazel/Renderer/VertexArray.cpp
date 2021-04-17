@@ -18,8 +18,7 @@ VertexArray* VertexArray::Create()
 	case RendererAPI::OpenGL:
 	{
 		buffer = (new OpenGLVertexArray());
-		glGenVertexArrays(1, &buffer->m_Index);
-		glBindVertexArray(buffer->m_Index);
+
 
 		break;
 	}
