@@ -53,7 +53,7 @@ void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertexBuf
 	m_VertexBuffers.push_back(vertexBuffer);
 }
 
-void OpenGLVertexArray::AddIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer)
+void OpenGLVertexArray::SetIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer)
 {
 	// œ»»∑±£Bind
 	glBindVertexArray(m_Index);

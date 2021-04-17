@@ -21,11 +21,8 @@ VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	}
 	case RendererAPI::OpenGL:
 	{
-		buffer = (new OpenGLVertexBuffer());
-		glGenBuffers(1, &buffer->m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, buffer->m_VertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);//从CPU传入了GPU
-
+		buffer = (new OpenGLVertexBuffer(vertices, size));
+		
 		break;
 	}
 	default:
@@ -49,11 +46,8 @@ IndexBuffer* IndexBuffer::Create(int* indices, uint32_t size)
 	}
 	case RendererAPI::OpenGL:
 	{
-		buffer = (new OpenGLIndexBuffer());
-		glGenBuffers(1, &buffer->m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->m_IndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);//从CPU传入了GPU
-
+		buffer = (new OpenGLIndexBuffer(indices, size));
+		
 		break;
 	}
 	default:

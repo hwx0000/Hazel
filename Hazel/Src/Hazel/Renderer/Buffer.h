@@ -109,6 +109,7 @@ public:
 	virtual ~IndexBuffer() {};
 	virtual void Bind() const = 0;// ±ğÍüÁË¼Óconst
 	virtual void Unbind() const = 0;
+	virtual uint32_t GetCount() const = 0;
 	static IndexBuffer* Create(int* indices, uint32_t size);
 protected:
 	uint32_t m_IndexBuffer;

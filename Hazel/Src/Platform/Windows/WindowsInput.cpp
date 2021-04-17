@@ -10,10 +10,7 @@ namespace Hazel
 	{
 		GLFWwindow* w = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto r = glfwGetKey(w, keycode);
-		if (r)
-		{
-			int c = 3;
-		}
+		
 		return r == GLFW_PRESS || r == GLFW_REPEAT;
 	}
 

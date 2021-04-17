@@ -10,7 +10,7 @@ public:
 	virtual void Unbind()const = 0;
 
 	virtual void AddVertexBuffer(std::shared_ptr<VertexBuffer>&) = 0;
-	virtual void AddIndexBuffer(std::shared_ptr<IndexBuffer>&) = 0;
+	virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer>&) = 0;
 
 	static VertexArray* Create();
 protected:

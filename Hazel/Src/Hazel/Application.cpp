@@ -49,6 +49,7 @@ namespace Hazel
 
 		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
 		m_IndexBuffer->Bind();
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		std::string vertexSource = R"(
 #version 330 core
@@ -101,9 +102,9 @@ void main()
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			m_Shader->Bind();
-			
 			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
+			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 			// 所以创建完window后，可以直接调用其loop开始渲染

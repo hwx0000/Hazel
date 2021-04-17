@@ -8,7 +8,7 @@ public:
 	void Bind() const override;
 	void Unbind() const override;
 	void AddVertexBuffer(std::shared_ptr<VertexBuffer>&) override;
-	void AddIndexBuffer(std::shared_ptr<IndexBuffer>&) override;
+	void SetIndexBuffer(std::shared_ptr<IndexBuffer>&) override;
 
 private:
 	// 一个VAO可以挖取多个VBO里的数据(VAO存的是引用)
