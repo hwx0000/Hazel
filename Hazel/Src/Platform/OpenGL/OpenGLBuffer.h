@@ -27,7 +27,7 @@ class OpenGLIndexBuffer : public IndexBuffer
 {
 public:
 	OpenGLIndexBuffer(int* vertices, uint32_t size);
-	virtual ~OpenGLIndexBuffer() override {}
+	virtual ~OpenGLIndexBuffer() override;
 	uint32_t GetCount() const override;
 	void Bind()const override;// ±ğÍüÁË¼Óconst
 	void Unbind() const override;

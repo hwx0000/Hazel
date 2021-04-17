@@ -31,7 +31,7 @@ namespace Hazel
 		};
 
 		// 创建VBO
-		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
+		std::shared_ptr<VertexBuffer>m_VertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
 		m_VertexBuffer->Bind();
 
 		// 创建Layout，会计算好Stride和Offset
@@ -47,7 +47,7 @@ namespace Hazel
 		m_VertexArray->Bind();
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
+		std::shared_ptr<IndexBuffer> m_IndexBuffer = std::shared_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices)));
 		m_IndexBuffer->Bind();
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
@@ -155,7 +155,7 @@ void main()
 
 			m_Shader->Bind();
 			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面

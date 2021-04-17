@@ -20,6 +20,11 @@ OpenGLVertexArray::OpenGLVertexArray()
 	glGenVertexArrays(1, &m_Index);
 }
 
+OpenGLVertexArray::~OpenGLVertexArray()
+{
+	glDeleteVertexArrays(1, &m_Index);
+}
+
 void OpenGLVertexArray::Bind() const
 {
 	glBindVertexArray(m_Index);

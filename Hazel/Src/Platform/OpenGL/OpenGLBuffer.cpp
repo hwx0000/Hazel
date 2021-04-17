@@ -11,6 +11,7 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 
 OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
+	glDeleteBuffers(1, &m_VertexBuffer);
 }
 
 void OpenGLVertexBuffer::Bind() const
@@ -29,6 +30,11 @@ OpenGLIndexBuffer::OpenGLIndexBuffer(int* indices, uint32_t size)
 	glGenBuffers(1, &m_IndexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);//从CPU传入了GPU
+}
+
+OpenGLIndexBuffer::~OpenGLIndexBuffer()
+{
+	glDeleteBuffers(1, &m_IndexBuffer);
 }
 
 void OpenGLIndexBuffer::Bind() const
