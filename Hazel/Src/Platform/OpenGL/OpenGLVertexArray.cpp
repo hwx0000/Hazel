@@ -60,3 +60,13 @@ void OpenGLVertexArray::SetIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer
 	indexBuffer->Bind();
 	m_IndexBuffer = indexBuffer;
 }
+
+const std::vector<std::shared_ptr<VertexBuffer>>& OpenGLVertexArray::GetVertexBuffers() const
+{
+	return m_VertexBuffers;
+}
+
+const std::shared_ptr<IndexBuffer>& OpenGLVertexArray::GetIndexBuffer() const
+{
+	return m_IndexBuffer;
+}

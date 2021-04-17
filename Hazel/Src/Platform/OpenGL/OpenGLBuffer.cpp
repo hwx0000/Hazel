@@ -25,7 +25,7 @@ void OpenGLVertexBuffer::Unbind()const
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(int* indices, uint32_t size)
 {
-	m_Count = size;
+	m_Count = size/sizeof(int);
 	glGenBuffers(1, &m_IndexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);//从CPU传入了GPU

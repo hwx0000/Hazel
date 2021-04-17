@@ -28,12 +28,15 @@ namespace Hazel
 	protected:
 		std::unique_ptr<Window>m_Window;
 		std::unique_ptr<Shader>m_Shader;
+		std::unique_ptr<Shader>m_BlueShader;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
 		std::shared_ptr<VertexBuffer> m_VertexBuffer;
 		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 		std::shared_ptr<VertexArray> m_VertexArray;
+
+		std::shared_ptr<VertexArray> m_QuadVertexArray;
 	};
 
 	Application* CreateApplication();

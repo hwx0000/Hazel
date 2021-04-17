@@ -75,6 +75,54 @@ void main()
 }
 		)";
 		m_Shader.reset(new Shader(vertexSource, fragmentSource));
+
+		float quadVertices[] = {
+			-0.75f, -0.75f, 0,
+			0.75f, -0.75f,0,
+			-0.75f, 0.75f,0,
+			0.75f, 0.75f, 0
+		};
+
+		int quadIndices[] = { 0,1,2,2,1,3 };
+
+		// 创建Vertex Array，把前面算好的东西传入VAO
+		m_QuadVertexArray.reset(VertexArray::Create());
+		//m_QuadVertexArray->Bind();
+		
+		std::shared_ptr<VertexBuffer> quadVertexBufer;
+		quadVertexBufer.reset(VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
+		
+		quadVertexBufer->SetBufferLayout(
+			{
+				{ShaderDataType::FLOAT3, "aPos"}
+			});
+		m_QuadVertexArray->AddVertexBuffer(quadVertexBufer);
+
+		std::shared_ptr<IndexBuffer> quadIndexBufer;
+		quadIndexBufer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(quadIndices, sizeof(quadIndices)));
+		quadIndexBufer->Bind();
+		m_QuadVertexArray->SetIndexBuffer(quadIndexBufer);
+
+		std::string blueVertexSource = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+
+void main()
+{
+	gl_Position = vec4(aPos, 1.0);
+}
+		)";
+
+		std::string blueFragmentSource = R"(
+#version 330 core
+out vec4 color;
+
+void main()
+{
+	color = vec4(0.2,0.3,0.8,1.0);
+}
+		)";
+		m_BlueShader.reset(new Shader(blueVertexSource, blueFragmentSource));
 	}
 
 	Application::~Application()
@@ -101,10 +149,14 @@ void main()
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			m_BlueShader->Bind();
+			m_QuadVertexArray->Bind();
+			glDrawElements(GL_TRIANGLES, m_QuadVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
 			m_Shader->Bind();
 			m_VertexArray->Bind();
-
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+
 
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 			// 所以创建完window后，可以直接调用其loop开始渲染

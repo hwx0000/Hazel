@@ -19,7 +19,6 @@ VertexArray* VertexArray::Create()
 	{
 		buffer = (new OpenGLVertexArray());
 
-
 		break;
 	}
 	default:
