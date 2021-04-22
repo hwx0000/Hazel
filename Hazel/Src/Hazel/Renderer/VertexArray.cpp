@@ -9,12 +9,12 @@ VertexArray* VertexArray::Create()
 	VertexArray* buffer = nullptr;
 	switch (Renderer::GetAPI())
 	{
-		case RendererAPI::None:
+		case RendererAPI::APIType::None:
 		{
 			CORE_LOG_ERROR("No RendererAPI selected");
 			HAZEL_ASSERT(false, "Error, please choose a Renderer API");
 		}
-		case RendererAPI::OpenGL:
+		case RendererAPI::APIType::OpenGL:
 		{
 			buffer = (new OpenGLVertexArray());
 		}
