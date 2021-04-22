@@ -2,7 +2,7 @@ workspace "Hazel"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
 
---µ±Ç°Â·¾¶Îªpremake5.luaËùÔÚÂ·¾¶
+--ï¿½ï¿½Ç°Â·ï¿½ï¿½Îªpremake5.luaï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 --create outputdir macro
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -12,13 +12,13 @@ include "Hazel/vendor/imgui"
 
 
 project "Hazel"
-    location "%{prj.name}" -- ¹æ¶¨ÁËtargetdirºÍobjdir»¹ÐèÒªÕâ¸öÂð£¬ÐèÒª£¬ÕâÀïµÄlocationÊÇÉú³ÉµÄvcprojµÄÎ»ÖÃ
+    location "%{prj.name}" -- ï¿½æ¶¨ï¿½ï¿½targetdirï¿½ï¿½objdirï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½locationï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½vcprojï¿½ï¿½Î»ï¿½ï¿½
     kind "StaticLib"
     language "C++"
 	staticruntime "on"
 	cppdialect "C++17"
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --¼ÇµÃÒª¼ÓÀ¨ºÅ
-	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --ÕâÀïµÄÖÐÓ¢ÎÄÀ¨ºÅ¿´ÉÏÈ¥ºÃÏñ
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --ï¿½Çµï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¢ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½
 	links {"GLFW", "opengl32.lib", "Glad", "imgui"}
 
     pchheader "hzpch.h"
@@ -41,7 +41,8 @@ project "Hazel"
 		"%{prj.name}/Src",
 		"%{prj.name}/vendor/GLFW/include",
 		"%{prj.name}/vendor/Glad/include",
-		"%{prj.name}/vendor/imgui"
+		"%{prj.name}/vendor/imgui",
+		"%{prj.name}/vendor/glm"
 	}
 
 
@@ -52,19 +53,19 @@ project "Hazel"
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
-			-- copy freom relative path to ... ×¢ÒâÕâÀïµÄCOPYÇ°ÃæÃ»ÓÐ%
+			-- copy freom relative path to ... ×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½COPYÇ°ï¿½ï¿½Ã»ï¿½ï¿½%
 		    ("{COPY} %{cfg.buildtarget.relpath} ../bin/" ..outputdir.."\\Sandbox")
 		}
 
     filter { "configurations:Debug" }
         defines { "DEBUG", "HZ_BUILD_DLL"}
         symbols "On"
-		runtime "Debug" -- ÔËÐÐÊ±Á´½ÓµÄdllÊÇdebugÀàÐÍµÄ
+		runtime "Debug" -- ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Óµï¿½dllï¿½ï¿½debugï¿½ï¿½ï¿½Íµï¿½
 
     filter { "configurations:Release"}
         defines { "NDEBUG", "HZ_BUILD_DLL"}
         optimize "On"
-		runtime "Release" -- ÔËÐÐÊ±Á´½ÓµÄdllÊÇreleaseÀàÐÍµÄ
+		runtime "Release" -- ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Óµï¿½dllï¿½ï¿½releaseï¿½ï¿½ï¿½Íµï¿½
 
     filter { "configurations:Dist"}
 		defines { "NDEBUG", "HZ_BUILD_DLL"}
