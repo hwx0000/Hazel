@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include "Input.h"
 #include "Renderer/Buffer.h"
+#include "Hazel/Renderer/RenderCommand.h"
 
 namespace Hazel
 {
@@ -146,8 +147,8 @@ void main()
 		while (m_Running)
 		{
 			// Ã¿Ö¡¿ªÊ¼Clear
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::Clear();
+			RenderCommand::ClearColor(glm::vec4(1, 0, 1.0, 1));
 
 			m_BlueShader->Bind();
 			m_QuadVertexArray->Bind();
