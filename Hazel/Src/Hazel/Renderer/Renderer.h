@@ -12,5 +12,6 @@ public:
 
 	static void BeginScene();
 	static void EndScene();
+	// 绑定对应的VertexArray
 	static void Submit(const std::shared_ptr<VertexArray>&);
 };

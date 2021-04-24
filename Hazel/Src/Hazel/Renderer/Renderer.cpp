@@ -9,6 +9,7 @@ void Renderer::EndScene()
 {
 }
 
-void Renderer::Submit(const std::shared_ptr<VertexArray>&)
+void Renderer::Submit(const std::shared_ptr<VertexArray>& va)
 {
+	va->Bind();
 }

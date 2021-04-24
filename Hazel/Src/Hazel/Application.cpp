@@ -3,8 +3,6 @@
 #include "Window.h"
 #include "Event/MouseEvent.h"
 #include "Event/ApplicationEvent.h"
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
 #include "Input.h"
 #include "Renderer/Buffer.h"
 #include "Hazel/Renderer/RenderCommand.h"
@@ -150,15 +148,17 @@ void main()
 			RenderCommand::Clear();
 			RenderCommand::ClearColor(glm::vec4(1, 0, 1.0, 1));
 
+			Renderer::BeginScene();
 			m_BlueShader->Bind();
-			m_QuadVertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_QuadVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_QuadVertexArray);
+			RenderCommand::DrawIndexed(m_QuadVertexArray);
 
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_VertexArray);
+			RenderCommand::DrawIndexed(m_VertexArray);
 
-
+			Renderer::EndScene();
+			
 			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 			// 所以创建完window后，可以直接调用其loop开始渲染
 			for (Layer* layer : m_LayerStack)
