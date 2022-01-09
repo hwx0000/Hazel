@@ -55,10 +55,12 @@ namespace Hazel
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec4 aColor;
 
+uniform mat4 m_ViewProjection;
+
 out vec4 o_color;
 void main()
 {
-	gl_Position = vec4(aPos, 1.0);
+	gl_Position = m_ViewProjection * vec4(aPos, 1.0);
 	o_color = aColor;
 }
 		)";
@@ -69,7 +71,6 @@ in vec4 o_color;
 out vec4 color;
 void main()
 {
-	//color = vec4(0.8,0.2,0.3,1.0);
 	color = o_color;
 }
 		)";

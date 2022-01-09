@@ -11,6 +11,12 @@
 
 namespace Hazel
 {
+	// Application类是Hazel引擎提供给外部使用引擎的接口类, 这里声明了一个全局函数
+	// Application* CreateApplication(); 但是没有定义它
+	// 会留给使用引擎的用户来定义这个函数, 返回对应用户自定义的继承Application的类对象
+	// 在main函数里, 会调用：
+	// auto app = Hazel::CreateApplication();
+	// app->Run();
 	class HAZEL_API Application
 	{
 	public:
