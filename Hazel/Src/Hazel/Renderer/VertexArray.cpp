@@ -4,11 +4,13 @@
 #include "Renderer.h"
 #include "glad/glad.h"
 
-VertexArray* VertexArray::Create()
+namespace Hazel
 {
-	VertexArray* buffer = nullptr;
-	switch (Renderer::GetAPI())
+	VertexArray* VertexArray::Create()
 	{
+		VertexArray* buffer = nullptr;
+		switch (Renderer::GetAPI())
+		{
 		case RendererAPI::APIType::None:
 		{
 			CORE_LOG_ERROR("No RendererAPI selected");
@@ -18,7 +20,8 @@ VertexArray* VertexArray::Create()
 		{
 			buffer = (new OpenGLVertexArray());
 		}
-	}
+		}
 
-	return buffer;
+		return buffer;
+	}
 }

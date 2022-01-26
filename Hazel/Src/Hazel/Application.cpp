@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Renderer/Buffer.h"
 #include "Hazel/Renderer/RenderCommand.h"
+#include "Hazel/Renderer/OrthographicCamera.h"
 
 namespace Hazel
 {
@@ -123,7 +124,9 @@ void main()
 }
 		)";
 		m_BlueShader.reset(new Shader(blueVertexSource, blueFragmentSource));
-	}
+	
+		m_Camera.reset(new OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f));
+}
 
 	Application::~Application()
 	{
@@ -143,19 +146,20 @@ void main()
 	void Application::Run() 
 	{
 		std::cout << "Run Application" << std::endl;
+
 		while (m_Running)
 		{
 			// Ã¿Ö¡¿ªÊ¼Clear
 			RenderCommand::Clear();
 			RenderCommand::ClearColor(glm::vec4(1, 0, 1.0, 1));
 
-			Renderer::BeginScene();
+			Renderer::BeginScene(*m_Camera);
 			m_BlueShader->Bind();
-			Renderer::Submit(m_QuadVertexArray);
+			Renderer::Submit(m_Shader, m_QuadVertexArray);
 			RenderCommand::DrawIndexed(m_QuadVertexArray);
 
 			m_Shader->Bind();
-			Renderer::Submit(m_VertexArray);
+			Renderer::Submit(m_BlueShader, m_VertexArray);
 			RenderCommand::DrawIndexed(m_VertexArray);
 
 			Renderer::EndScene();

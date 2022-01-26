@@ -34,8 +34,10 @@ namespace Hazel
 		static Application* s_Instance;
 	protected:
 		std::unique_ptr<Window>m_Window;
-		std::unique_ptr<Shader>m_Shader;
-		std::unique_ptr<Shader>m_BlueShader;
+		std::shared_ptr<Shader>m_Shader;
+		std::shared_ptr<Shader>m_BlueShader;
+		std::unique_ptr<OrthographicCamera>m_Camera;
+
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;

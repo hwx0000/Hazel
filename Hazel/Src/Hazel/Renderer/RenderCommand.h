@@ -1,13 +1,16 @@
 #pragma once
 #include "RendererAPI.h"
 
-class RenderCommand 
+namespace Hazel
 {
-public:
-	static void DrawIndexed(std::shared_ptr<VertexArray>&);
-	static void Clear();
-	static void ClearColor(const glm::vec4&);
+	class RenderCommand
+	{
+	public:
+		static void DrawIndexed(const std::shared_ptr<VertexArray>&);
+		static void Clear();
+		static void ClearColor(const glm::vec4&);
 
-private:
-	static RendererAPI* s_RendererAPI;
-};
+	private:
+		static Hazel::RendererAPI* s_RendererAPI;
+	};
+}

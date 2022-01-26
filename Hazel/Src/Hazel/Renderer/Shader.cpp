@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Shader.h"
 #include "glad/glad.h"
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& vertSource, const std::string& fragSource)
 {
@@ -124,4 +125,12 @@ void Shader::Bind()
 void Shader::Unbind()
 {
 	glUseProgram(0);
+}
+
+void Shader::UploadUniformMat4(const std::string& uniformName, glm::mat4 matrix)
+{
+	// glm::value_ptr返回的类型是GLfloat*, 应该是个数组
+	glUniformMatrix4fv(
+		glGetUniformLocation(m_RendererID, uniformName.c_str()),
+		1, GL_FALSE, glm::value_ptr(matrix));
 }
