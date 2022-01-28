@@ -10,14 +10,14 @@ namespace Hazel
 	public:
 		Layer (const std::string& name = "Layer");
 		virtual ~Layer ();
-		virtual void OnAttach() {}; //µ±layerÌí¼Óµ½layer stackµÄÊ±ºò»áµ÷ÓÃ´Ëº¯Êı£¬Ïàµ±ÓÚInitº¯Êı
-		virtual void OnDettach() {}; //µ±layer´Ólayer stackÒÆ³ıµÄÊ±ºò»áµ÷ÓÃ´Ëº¯Êı£¬Ïàµ±ÓÚShutdownº¯Êı
+		virtual void OnAttach() {}; //å½“layeræ·»åŠ åˆ°layer stackçš„æ—¶å€™ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œç›¸å½“äºInitå‡½æ•°
+		virtual void OnDettach() {}; //å½“layerä»layer stackç§»é™¤çš„æ—¶å€™ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œç›¸å½“äºShutdownå‡½æ•°
 		virtual void OnEvent(Event&) {};
 		virtual void OnUpdate() {};
 		virtual void OnImGuiRender() {};
 
 	protected:
-		bool isEnabled;	// ÖµÎªfasleÊ±£¬¸ÃLayer»á±»½ûÓÃ£¬²»»á»æÖÆ»­Ãæ£¬Ò²²»»á½ÓÊÕÊÂ¼ş
+		bool isEnabled;	// å€¼ä¸ºfasleæ—¶ï¼Œè¯¥Layerä¼šè¢«ç¦ç”¨ï¼Œä¸ä¼šç»˜åˆ¶ç”»é¢ï¼Œä¹Ÿä¸ä¼šæ¥æ”¶äº‹ä»¶
 		std::string m_DebugName;
 	};
 

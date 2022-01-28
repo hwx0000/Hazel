@@ -3,22 +3,22 @@
 
 namespace Hazel
 {
-	// ÕâÓ¦¸ÃÊÇÒ»¸öÓëäÖÈ¾Æ½Ì¨ÎŞ¹ØµÄÀà, ºóĞø»áÅÉÉúÎª²»Í¬µÄÆ½Ì¨¶ÔÓ¦µÄCamera?
-	// Ä¿Ç°°ÑËüÈÏÎªÊÇÒ»¸ö2DµÄCamera, ÒòÎªÄ¿Ç°Ïà»úµÄĞı×ªÖ»ÓĞÒ»¸öÎ¬¶È
+	// è¿™åº”è¯¥æ˜¯ä¸€ä¸ªä¸æ¸²æŸ“å¹³å°æ— å…³çš„ç±», åç»­ä¼šæ´¾ç”Ÿä¸ºä¸åŒçš„å¹³å°å¯¹åº”çš„Camera?
+	// ç›®å‰æŠŠå®ƒè®¤ä¸ºæ˜¯ä¸€ä¸ª2Dçš„Camera, å› ä¸ºç›®å‰ç›¸æœºçš„æ—‹è½¬åªæœ‰ä¸€ä¸ªç»´åº¦
 	class OrthographicCamera
 	{
 	public:
-		// ¹¹Ôìº¯Êı, ÓÉÓÚÕı½»Í¶Ó°ÏÂ, ĞèÒªFrustum, Ä¬ÈÏnearÎª-1, farÎª1, ¾Í²»Ğ´ÁË
-		// ²»¹ıÕâ¸ö¹¹Ôìº¯ÊıÃ»ÓĞÖ¸¶¨CameraµÄÎ»ÖÃ, ËùÒÔÓ¦¸ÃÊÇÄ¬ÈÏÎ»ÖÃ
+		// æ„é€ å‡½æ•°, ç”±äºæ­£äº¤æŠ•å½±ä¸‹, éœ€è¦Frustum, é»˜è®¤nearä¸º-1, farä¸º1, å°±ä¸å†™äº†
+		// ä¸è¿‡è¿™ä¸ªæ„é€ å‡½æ•°æ²¡æœ‰æŒ‡å®šCameraçš„ä½ç½®, æ‰€ä»¥åº”è¯¥æ˜¯é»˜è®¤ä½ç½®
 		OrthographicCamera(float left, float right, float bottom, float top);
 
-		// ¶ÁĞ´CameraµÄÎ»ÖÃºÍ³¯Ïò, ÕâĞ©Êı¾İÊÇÓÃÓÚÉèÖÃView¾ØÕóµÄ
+		// è¯»å†™Cameraçš„ä½ç½®å’Œæœå‘, è¿™äº›æ•°æ®æ˜¯ç”¨äºè®¾ç½®ViewçŸ©é˜µçš„
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
 		float GetRotation()const { return m_Rotation; }
 		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
 
-		// ·µ»ØÈı¸ö¾ØÕóµÄ½Ó¿Ú, ÕâĞ©Êı¾İÓÃÓÚÉèÖÃProjection¾ØÕó
+		// è¿”å›ä¸‰ä¸ªçŸ©é˜µçš„æ¥å£, è¿™äº›æ•°æ®ç”¨äºè®¾ç½®ProjectionçŸ©é˜µ
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
@@ -27,9 +27,9 @@ namespace Hazel
 	private:
 		glm::mat4 m_ProjectionMatrix;
 		glm::mat4 m_ViewMatrix;
-		glm::mat4 m_ViewProjectionMatrix;// ×÷Îª¼ÆËãÊ±µÄCache
+		glm::mat4 m_ViewProjectionMatrix;// ä½œä¸ºè®¡ç®—æ—¶çš„Cache
 
-		glm::vec3 m_Position;	// Õı½»Í¶Ó°µÄÏà»úÎ»ÖÃºÃÏñÒ²²»ÖØÒª
-		float m_Rotation = 0.0f;// Õı½»Í¶Ó°ÏÂµÄÏà»úÖ»»áÓĞÈÆZÖáµÄĞı×ª
+		glm::vec3 m_Position = glm::vec3(0, 0, 0);	// æ­£äº¤æŠ•å½±çš„ç›¸æœºä½ç½®å¥½åƒä¹Ÿä¸é‡è¦
+		float m_Rotation = 0.0f;// æ­£äº¤æŠ•å½±ä¸‹çš„ç›¸æœºåªä¼šæœ‰ç»•Zè½´çš„æ—‹è½¬
 	};
 }

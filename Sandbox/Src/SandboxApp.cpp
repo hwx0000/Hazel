@@ -24,8 +24,13 @@ class ExampleLayer : public Hazel::Layer
 		//LOG("{0}", s);
 		//LOG("{0}", "SampleLayer: ");//, e.ToString());
 	}
+
 	void OnUpdate() override
 	{
+
+
+
+
 		//CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
 	}
 
