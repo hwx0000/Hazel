@@ -16,11 +16,11 @@ namespace Hazel
 
 		static void BeginScene(OrthographicCamera& camera);
 		static void EndScene();
-		// °ó¶¨¶ÔÓ¦µÄVertexArray, È»ºóµ÷ÓÃDrawCall
+		// ç»‘å®šå¯¹åº”çš„VertexArray, ç„¶åè°ƒç”¨DrawCall
 		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 	private:
-		// ¶ÔÓÚ²»Í¬µÄÎïÌå, MVP¾ØÕóÀïµÄM¶¼ÊÇ²»Í¬µÄ, µ«ÊÇVP¾ØÕó¶¼ÊÇÏàÍ¬µÄ
-		// ËùÒÔÕâÀï¹éÀàÔÚ³¡¾°ĞÅÏ¢Àï
+		// å¯¹äºä¸åŒçš„ç‰©ä½“, MVPçŸ©é˜µé‡Œçš„Méƒ½æ˜¯ä¸åŒçš„, ä½†æ˜¯VPçŸ©é˜µéƒ½æ˜¯ç›¸åŒçš„
+		// æ‰€ä»¥è¿™é‡Œå½’ç±»åœ¨åœºæ™¯ä¿¡æ¯é‡Œ
 		struct SceneData
 		{
 			glm::mat4 ViewProjectionMatrix;

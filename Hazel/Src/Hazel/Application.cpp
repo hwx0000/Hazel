@@ -30,11 +30,11 @@ namespace Hazel
 			0, 0.5, 0.0	,   0.0, 0.0, 1.0, 1.0f
 		};
 
-		// ´´½¨VBO
+		// åˆ›å»ºVBO
 		std::shared_ptr<VertexBuffer>m_VertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
 		m_VertexBuffer->Bind();
 
-		// ´´½¨Layout£¬»á¼ÆËãºÃStrideºÍOffset
+		// åˆ›å»ºLayoutï¼Œä¼šè®¡ç®—å¥½Strideå’ŒOffset
 		BufferLayout layout = {
 			{ShaderDataType::FLOAT3, "a_Pos" },
 			{ShaderDataType::FLOAT4, "a_Color" }
@@ -42,7 +42,7 @@ namespace Hazel
 
 		m_VertexBuffer->SetBufferLayout(layout);
 		
-		// ´´½¨Vertex Array£¬°ÑÇ°ÃæËãºÃµÄ¶«Î÷´«ÈëVAO
+		// åˆ›å»ºVertex Arrayï¼ŒæŠŠå‰é¢ç®—å¥½çš„ä¸œè¥¿ä¼ å…¥VAO
 		m_VertexArray.reset(VertexArray::Create());
 		m_VertexArray->Bind();
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
@@ -86,7 +86,7 @@ void main()
 
 		int quadIndices[] = { 0,1,2,2,1,3 };
 
-		// ´´½¨Vertex Array£¬°ÑÇ°ÃæËãºÃµÄ¶«Î÷´«ÈëVAO
+		// åˆ›å»ºVertex Arrayï¼ŒæŠŠå‰é¢ç®—å¥½çš„ä¸œè¥¿ä¼ å…¥VAO
 		m_QuadVertexArray.reset(VertexArray::Create());
 		//m_QuadVertexArray->Bind();
 		
@@ -149,23 +149,23 @@ void main()
 
 		while (m_Running)
 		{
-			// Ã¿Ö¡¿ªÊ¼Clear
+			// æ¯å¸§å¼€å§‹Clear
 			RenderCommand::Clear();
-			RenderCommand::ClearColor(glm::vec4(1, 0, 1.0, 1));
+			RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
+			// æŠŠCameraé‡Œçš„VPçŸ©é˜µä¿¡æ¯ä¼ åˆ°Rendererçš„SceneDataé‡Œ
 			Renderer::BeginScene(*m_Camera);
-			m_BlueShader->Bind();
-			Renderer::Submit(m_Shader, m_QuadVertexArray);
-			RenderCommand::DrawIndexed(m_QuadVertexArray);
-
-			m_Shader->Bind();
-			Renderer::Submit(m_BlueShader, m_VertexArray);
-			RenderCommand::DrawIndexed(m_VertexArray);
-
+			{
+				// todo: åŽç»­æ“ä½œåº”è¯¥æœ‰Batch
+				// bind, ç„¶åŽè°ƒç”¨DrawCall
+				Renderer::Submit(m_BlueShader, m_VertexArray);
+				// bind, ç„¶åŽè°ƒç”¨DrawCall
+				Renderer::Submit(m_Shader, m_QuadVertexArray);
+			}
 			Renderer::EndScene();
 			
-			// Application²¢²»Ó¦¸ÃÖªµÀµ÷ÓÃµÄÊÇÄÄ¸öÆ½Ì¨µÄwindow£¬WindowµÄinit²Ù×÷·ÅÔÚWindow::CreateÀïÃæ
-			// ËùÒÔ´´½¨Íêwindowºó£¬¿ÉÒÔÖ±½Óµ÷ÓÃÆäloop¿ªÊ¼äÖÈ¾
+			// Applicationå¹¶ä¸åº”è¯¥çŸ¥é“è°ƒç”¨çš„æ˜¯å“ªä¸ªå¹³å°çš„windowï¼ŒWindowçš„initæ“ä½œæ”¾åœ¨Window::Createé‡Œé¢
+			// æ‰€ä»¥åˆ›å»ºå®ŒwindowåŽï¼Œå¯ä»¥ç›´æŽ¥è°ƒç”¨å…¶loopå¼€å§‹æ¸²æŸ“
 			for (Layer* layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -174,13 +174,13 @@ void main()
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 			{
-				// Ã¿Ò»¸öLayer¶¼ÔÚµ÷ÓÃImGuiRenderº¯Êý
-				// Ä¿Ç°ÓÐÁ½¸öLayer, Sandbox¶¨ÒåµÄExampleLayerºÍ¹¹Ôìº¯ÊýÌí¼ÓµÄImGuiLayer
+				// æ¯ä¸€ä¸ªLayeréƒ½åœ¨è°ƒç”¨ImGuiRenderå‡½æ•°
+				// ç›®å‰æœ‰ä¸¤ä¸ªLayer, Sandboxå®šä¹‰çš„ExampleLayerå’Œæž„é€ å‡½æ•°æ·»åŠ çš„ImGuiLayer
 				layer->OnImGuiRender();
 			}
 			m_ImGuiLayer->End();
 			
-			// Ã¿Ö¡½áÊøµ÷ÓÃglSwapBuffer
+			// æ¯å¸§ç»“æŸè°ƒç”¨glSwapBuffer
 			m_Window->OnUpdate();
 		}
 
