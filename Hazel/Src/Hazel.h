@@ -17,3 +17,6 @@
 #include "Hazel/MouseButtonCode.h"
 #include "Hazel/Event/Event.h"
 #include "Hazel/Input.h"
+
+#include "Hazel/Renderer/RenderCommand.h"
+#include "Hazel/Renderer/OrthographicCamera.h"

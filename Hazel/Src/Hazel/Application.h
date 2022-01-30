@@ -25,7 +25,7 @@ namespace Hazel
 		inline static Application& Get() { return *s_Instance;  }
 
 		void OnEvent(Event& e);
-		void Run();
+		virtual void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
 		void PushLayer(Layer* layer);
 		Layer* PopLayer();
