@@ -20,7 +20,7 @@ Hazel::ImGuiLayer::~ImGuiLayer()
 
 void Hazel::ImGuiLayer::OnAttach()
 {
-	// 这里的函数，参考了ImGui上的docking分支给的例子：example_glfw_opengl3的文件里的main函数
+	// 杩欓噷鐨勫嚱鏁帮紝鍙傝�冧簡ImGui涓婄殑docking鍒嗘敮缁欑殑渚嬪瓙锛歟xample_glfw_opengl3鐨勬枃浠堕噷鐨刴ain鍑芥暟
  // Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -66,7 +66,7 @@ void Hazel::ImGuiLayer::OnImGuiRender()
 
 void Hazel::ImGuiLayer::Begin()
 {
-	// 下面这一部分原本属于Update函数里，现在这部分抽出来作为了接口，可以在exe选择性的进行Render
+	// 涓嬮潰杩欎竴閮ㄥ垎鍘熸湰灞炰簬Update鍑芥暟閲岋紝鐜板湪杩欓儴鍒嗘娊鍑烘潵浣滀负浜嗘帴鍙ｏ紝鍙互鍦╡xe閫夋嫨鎬х殑杩涜Render
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();

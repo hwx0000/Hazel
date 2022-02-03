@@ -2,7 +2,7 @@ workspace "Hazel"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
 
---��ǰ·��Ϊpremake5.lua����·��
+--当前路径为premake5.lua所在路径
 --create outputdir macro
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -12,13 +12,13 @@ include "Hazel/vendor/imgui"
 
 
 project "Hazel"
-    location "%{prj.name}" -- �涨��targetdir��objdir����Ҫ�������Ҫ�������location�����ɵ�vcproj��λ��
+    location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
     kind "StaticLib"
     language "C++"
 	staticruntime "on"
 	cppdialect "C++17"
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --�ǵ�Ҫ������
-	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --�������Ӣ�����ſ���ȥ����
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
+	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
 	links {"GLFW", "opengl32.lib", "Glad", "imgui"}
 
     pchheader "hzpch.h"
@@ -53,19 +53,20 @@ project "Hazel"
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
-			-- copy freom relative path to ... ע�������COPYǰ��û��%
+			-- copy freom relative path to ... 注意这里的COPY前面没有%
 		    ("{COPY} %{cfg.buildtarget.relpath} ../bin/" ..outputdir.."\\Sandbox")
 		}
 
     filter { "configurations:Debug" }
         defines { "DEBUG", "HZ_BUILD_DLL"}
         symbols "On"
-		runtime "Debug" -- ����ʱ���ӵ�dll��debug���͵�
+		runtime "Debug" -- 运行时链接的dll是debug类型的	
 
     filter { "configurations:Release"}
         defines { "NDEBUG", "HZ_BUILD_DLL"}
         optimize "On"
-		runtime "Release" -- ����ʱ���ӵ�dll��release���͵�
+		runtime "Release" -- 运行时链接的dll是release类型的
+
 
     filter { "configurations:Dist"}
 		defines { "NDEBUG", "HZ_BUILD_DLL"}
@@ -87,7 +88,8 @@ project "Sandbox"
 	{
         "Hazel/vendor/spdlog/include",
 		"Hazel/Src",
-		"Hazel/vendor/glm"
+		"Hazel/vendor/glm",
+		"Hazel/vendor/imgui"
 	}
 
 	links { "Hazel" }

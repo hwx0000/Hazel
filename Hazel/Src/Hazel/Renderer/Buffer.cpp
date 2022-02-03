@@ -1,14 +1,14 @@
 #include "hzpch.h"
 #include "Buffer.h"
 #include "Renderer.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"// »ùÀàµÄcppÒıÓÃÁËÅÉÉúÀàµÄÍ·ÎÄ¼ş
+#include "Platform/OpenGL/OpenGLBuffer.h"// åŸºç±»çš„cppå¼•ç”¨äº†æ´¾ç”Ÿç±»çš„å¤´æ–‡ä»¶
 #include "Glad/glad.h"
 
 namespace Hazel
 {
-	// ×¢ÒâÉùÃ÷ÎªstaticµÄº¯Êı£¬ÔÚ¶¨ÒåµÄÊ±ºò²»ĞèÒªĞ´static¹Ø¼ü×Ö
-	// ¶øÇÒÕâ¸öCreateº¯ÊıÊÇÔÚ»ùÀà¶¨ÒåµÄ£¬ÒòÎª´´½¨µÄ´°¿Ú¶ÔÏóÓ¦¸Ã°üº¬¶àÖÖÆ½Ì¨µÄÅÉÉúÀà¶ÔÏó£¬ËùÒÔ·Åµ½ÁË»ùÀàÀï
-	// ¶øÇÒÕâ¸ö»ùÀàµÄcppÒıÓÃÁËÏà¹ØµÄÅÉÉúÀàµÄÍ·ÎÄ¼ş
+	// æ³¨æ„å£°æ˜ä¸ºstaticçš„å‡½æ•°ï¼Œåœ¨å®šä¹‰çš„æ—¶å€™ä¸éœ€è¦å†™staticå…³é”®å­—
+	// è€Œä¸”è¿™ä¸ªCreateå‡½æ•°æ˜¯åœ¨åŸºç±»å®šä¹‰çš„ï¼Œå› ä¸ºåˆ›å»ºçš„çª—å£å¯¹è±¡åº”è¯¥åŒ…å«å¤šç§å¹³å°çš„æ´¾ç”Ÿç±»å¯¹è±¡ï¼Œæ‰€ä»¥æ”¾åˆ°äº†åŸºç±»é‡Œ
+	// è€Œä¸”è¿™ä¸ªåŸºç±»çš„cppå¼•ç”¨äº†ç›¸å…³çš„æ´¾ç”Ÿç±»çš„å¤´æ–‡ä»¶
 	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		VertexBuffer* buffer = nullptr;

@@ -14,21 +14,21 @@ namespace Hazel
 			delete layer;
 	}
 
-	// ÓÃvectorÄ£Äâm_Stack£¬vector[0]ÎªÕ»¶¥
+	// ç”¨vectoræ¨¡æ‹Ÿm_Stackï¼Œvector[0]ä¸ºæ ˆé¡¶
 	void LayerStack::PushLayer(Layer *layer)
 	{
 		m_Stack.emplace(m_Stack.begin(), layer);
 		layer->OnAttach();
 	}
 
-	// ±£Ö¤¼ÓÈëµÄlayer·ÅÔÚ×îºó£¬overlayÓ¦¸Ã·ÅÔÚÊý×éµÄ×îºó£¬Ò²¾ÍÊÇÕ»¶¥
+	// ä¿è¯åŠ å…¥çš„layeræ”¾åœ¨æœ€åŽï¼Œoverlayåº”è¯¥æ”¾åœ¨æ•°ç»„çš„æœ€åŽï¼Œä¹Ÿå°±æ˜¯æ ˆé¡¶
 	void LayerStack::PushOverlay(Layer *overlay)
 	{
 		m_Stack.emplace_back(overlay);
 		overlay->OnAttach();
 	}
 
-	// popÊý×éµÄµÚÒ»¸öÔªËØ
+	// popæ•°ç»„çš„ç¬¬ä¸€ä¸ªå…ƒç´ 
 	Layer* LayerStack::PopLayer()
 	{
 		if (m_Stack.size() > 0)

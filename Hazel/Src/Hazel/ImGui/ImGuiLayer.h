@@ -12,11 +12,11 @@ namespace Hazel
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
-		void OnAttach() override; //µ±layerÌí¼Óµ½layer stackµÄÊ±ºò»áµ÷ÓÃ´Ëº¯Êı£¬Ïàµ±ÓÚInitº¯Êı
-		void OnDettach() override; //µ±layer´Ólayer stackÒÆ³ıµÄÊ±ºò»áµ÷ÓÃ´Ëº¯Êı£¬Ïàµ±ÓÚShutdownº¯Êı
-		void OnImGuiRender() override; //µ±layer´Ólayer stackÒÆ³ıµÄÊ±ºò»áµ÷ÓÃ´Ëº¯Êı£¬Ïàµ±ÓÚShutdownº¯Êı
+		void OnAttach() override; //å½“layeræ·»åŠ åˆ°layer stackçš„æ—¶å€™ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œç›¸å½“äºInitå‡½æ•°
+		void OnDettach() override; //å½“layerä»layer stackç§»é™¤çš„æ—¶å€™ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œç›¸å½“äºShutdownå‡½æ•°
+		void OnImGuiRender() override; //å½“layerä»layer stackç§»é™¤çš„æ—¶å€™ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œç›¸å½“äºShutdownå‡½æ•°
 
-		void Begin();// °ÑÔ­À´µÄOnUpdateº¯Êı·Ö½â³ÉÁËÁ½²¿·Ö
+		void Begin();// æŠŠåŸæ¥çš„OnUpdateå‡½æ•°åˆ†è§£æˆäº†ä¸¤éƒ¨åˆ†
 		void End();
 	private:
 		float m_Time = 0.0f;

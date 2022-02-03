@@ -2,6 +2,7 @@
 #include "hzpch.h"
 #include "Hazel/Core.h"
 #include "Event/Event.h"
+#include "Timestep.h"
 
 namespace Hazel
 {
@@ -13,7 +14,7 @@ namespace Hazel
 		virtual void OnAttach() {}; //当layer添加到layer stack的时候会调用此函数，相当于Init函数
 		virtual void OnDettach() {}; //当layer从layer stack移除的时候会调用此函数，相当于Shutdown函数
 		virtual void OnEvent(Event&) {};
-		virtual void OnUpdate() {};
+		virtual void OnUpdate(const Timestep&) {};
 		virtual void OnImGuiRender() {};
 
 	protected:

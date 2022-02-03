@@ -46,14 +46,14 @@ namespace Hazel
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 
-		// glfw¹æ¶¨µÄ»Øµ÷º¯ÊıÀï£¬²»ÄÜ´«Èëm_DataµÄÖ¸Õë£¬ËùÒÔÖ»ÄÜÍ¨¹ıglfwµÄAPIÉèÖÃÊı¾İµÄÖ¸Õë
-		// ÏÂÃæº¯Êı»á°Ñm_Window´«½øÈ¥£¬È»ºóÓÖ°Ñm_Window×÷ÎªlambdaµÄ²ÎÊıÊäÈë½øÈ¥
+		// glfwè§„å®šçš„å›è°ƒå‡½æ•°é‡Œï¼Œä¸èƒ½ä¼ å…¥m_Dataçš„æŒ‡é’ˆï¼Œæ‰€ä»¥åªèƒ½é€šè¿‡glfwçš„APIè®¾ç½®æ•°æ®çš„æŒ‡é’ˆ
+		// ä¸‹é¢å‡½æ•°ä¼šæŠŠm_Windowä¼ è¿›å»ï¼Œç„¶ååˆæŠŠm_Windowä½œä¸ºlambdaçš„å‚æ•°è¾“å…¥è¿›å»
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.height = height;
 			data.width = width;
-			// ´´½¨¶ÔÓ¦µÄHazel Event£¬È»ºó´«ÈëWindowµÄcallbackº¯ÊıÀï£¬ÒÔ¹©Íâ²¿µ÷ÓÃ
+			// åˆ›å»ºå¯¹åº”çš„Hazel Eventï¼Œç„¶åä¼ å…¥Windowçš„callbackå‡½æ•°é‡Œï¼Œä»¥ä¾›å¤–éƒ¨è°ƒç”¨
 			WindowResizedEvent e(height, width);
 			data.eventCallback(e);
 		}

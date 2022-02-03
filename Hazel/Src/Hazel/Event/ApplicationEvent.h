@@ -1,7 +1,7 @@
 #pragma once
 #include "Event.h"
 
-// Windows和APP相关的Event都在这里处理
+// Windows鍜孉PP鐩稿叧鐨凟vent閮藉湪杩欓噷澶勭悊
 namespace Hazel
 {
 	class HAZEL_API WindowCloseEvent :public Event

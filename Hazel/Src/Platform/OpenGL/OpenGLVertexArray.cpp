@@ -40,7 +40,7 @@ namespace Hazel
 	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
 		HAZEL_CORE_ASSERT(vertexBuffer->GetBufferLayout().GetCount(), "Empty Layout in VertexBuffer!");
-		// 挖VBO的数据到VAO时，要记得先Bind Vertex Array
+		// 鎸朧BO鐨勬暟鎹埌VAO鏃讹紝瑕佽寰楀厛Bind Vertex Array
 		glBindVertexArray(m_Index);
 		vertexBuffer->Bind();
 
@@ -62,7 +62,7 @@ namespace Hazel
 
 	void OpenGLVertexArray::SetIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer)
 	{
-		// 先确保Bind
+		// 鍏堢‘淇滲ind
 		glBindVertexArray(m_Index);
 		indexBuffer->Bind();
 		m_IndexBuffer = indexBuffer;

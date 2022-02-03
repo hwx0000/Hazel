@@ -22,7 +22,7 @@ namespace Hazel
 	class HAZEL_API Window
 	{
 	public:
-		// Window自带一个回调函数，用来处理从glfw库收到的callback
+		// Window鑷甫涓�涓洖璋冨嚱鏁帮紝鐢ㄦ潵澶勭悊浠巊lfw搴撴敹鍒扮殑callback
 		using EventCallbackFn = std::function<void(Event&)>;
 		virtual ~Window() {};
 		virtual int const GetWindowHeight() const = 0;

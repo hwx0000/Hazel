@@ -1,5 +1,5 @@
 #include "hzpch.h"
 #include "RendererAPI.h"
 
-//这个参数可以在Runtime更改的，只要提供SetAPI函数就可以了
+//杩欎釜鍙傛暟鍙互鍦≧untime鏇存敼鐨勶紝鍙鎻愪緵SetAPI鍑芥暟灏卞彲浠ヤ簡
 Hazel::RendererAPI::APIType Hazel::RendererAPI::s_CurType = RendererAPI::APIType::OpenGL;

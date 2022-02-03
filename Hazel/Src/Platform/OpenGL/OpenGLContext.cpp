@@ -9,7 +9,7 @@ namespace Hazel
 		HAZEL_ASSERT(status, "Failed to init glad");
 
 		CORE_LOG("OpenGL Info:");
-		CORE_LOG("    Vendor: {0}", glGetString(GL_VENDOR));//¥Ú”°≥ß…Ã
+		CORE_LOG("    Vendor: {0}", glGetString(GL_VENDOR));//ÊâìÂç∞ÂéÇÂïÜ
 		CORE_LOG("    Renderer: {0}", glGetString(GL_RENDERER));
 		CORE_LOG("    Version: {0}", glGetString(GL_VERSION));
 	}

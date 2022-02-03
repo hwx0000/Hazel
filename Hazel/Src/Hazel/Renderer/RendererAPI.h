@@ -9,11 +9,11 @@ namespace Hazel
 	public:
 		enum class APIType
 		{
-			None = 0, OpenGL//ºóÃæ»áÔÙ¼Ó
+			None = 0, OpenGL//åé¢ä¼šå†åŠ 
 		};
 	public:
-		// °ÑÏà¹Ø´úÂë³éÏó³ÉÒÔÏÂÈı¸ö½Ó¿Ú£¬·ÅÔÚRenderAPIÀàÀï, ÕâĞ©¶¼ÊÇ³éÏó½Ó¿Ú, ¾ßÌå»áÍ¨¹ı´´½¨Ò»¸öÓëÆ½Ì¨Ïà¹ØµÄ×ÓÀàµÄ
-		// RendererAPIµÄ¾²Ì¬¶ÔÏó, ±ÈÈçOpenGLRenderer, È»ºó°ÑRenderCommand×÷ÎªÒ»¸öWrapper, ½«Æä½Ó¿Ú±©Â¶³öÀ´
+		// æŠŠç›¸å…³ä»£ç æŠ½è±¡æˆä»¥ä¸‹ä¸‰ä¸ªæ¥å£ï¼Œæ”¾åœ¨RenderAPIç±»é‡Œ, è¿™äº›éƒ½æ˜¯æŠ½è±¡æ¥å£, å…·ä½“ä¼šé€šè¿‡åˆ›å»ºä¸€ä¸ªä¸å¹³å°ç›¸å…³çš„å­ç±»çš„
+		// RendererAPIçš„é™æ€å¯¹è±¡, æ¯”å¦‚OpenGLRenderer, ç„¶åæŠŠRenderCommandä½œä¸ºä¸€ä¸ªWrapper, å°†å…¶æ¥å£æš´éœ²å‡ºæ¥
 		virtual void Clear() const = 0;
 		virtual void SetClearColor(const glm::vec4&) const = 0;
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>&) const = 0;

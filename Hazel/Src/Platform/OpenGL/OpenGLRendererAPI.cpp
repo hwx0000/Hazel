@@ -6,7 +6,7 @@ namespace Hazel
 {
 	void OpenGLRendererAPI::Clear() const
 	{
-		// TODO: 后期会添加flag
+		// TODO: 鍚庢湡浼氭坊鍔爁lag
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 

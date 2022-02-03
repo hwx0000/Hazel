@@ -1,6 +1,5 @@
 #pragma once
 
-//
 #include "Hazel/Core.h"
 
 #include "Hazel/Application.h"
@@ -20,3 +19,6 @@
 
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/Renderer/VertexArray.h"
+
+#include "Hazel/Timestep.h"

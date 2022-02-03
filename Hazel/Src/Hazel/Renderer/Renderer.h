@@ -14,7 +14,7 @@ namespace Hazel
 	public:
 		static inline RendererAPI::APIType GetAPI() { return RendererAPI::GetAPIType(); }
 
-		static void BeginScene(OrthographicCamera& camera);
+		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 		// 绑定对应的VertexArray, 然后调用DrawCall
 		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);

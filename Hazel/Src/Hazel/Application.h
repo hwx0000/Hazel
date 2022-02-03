@@ -8,6 +8,7 @@
 #include "Renderer/Buffer.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Renderer.h"
+#include "Timestep.h"
 
 namespace Hazel
 {
@@ -33,17 +34,11 @@ namespace Hazel
 	private:
 		static Application* s_Instance;
 	protected:
-		std::unique_ptr<Window>m_Window;
-		std::shared_ptr<Shader>m_Shader;
-		std::shared_ptr<Shader>m_BlueShader;
-		std::unique_ptr<OrthographicCamera>m_Camera;
+		std::unique_ptr<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
-
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<VertexArray> m_QuadVertexArray;
 	};
 
 	Application* CreateApplication();

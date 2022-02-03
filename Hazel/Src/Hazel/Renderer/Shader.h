@@ -2,15 +2,18 @@
 #include "hzpch.h"
 #include "glm/glm.hpp"
 
-class Shader
+namespace Hazel
 {
-public:
-	Shader(const std::string& vertSource, const std::string& fragSource);
-	~Shader(){} // Î´À´»áÓĞOpenGLShader¡¢DirectXShader£¬ËùÒÔÎ´À´Ğéº¯Êı¿ÉÄÜÊÇvirtualµÄ
-	void Bind();
-	void Unbind();//ÆäÊµÕâ¸öº¯ÊıÒ»°ãÔËĞĞÊ±²»»áÓÃµ½£¬Ò»°ãÓÃÓÚDebug£¬ÒòÎªÊ¹ÓÃµÄÊ±ºò»áÖ±½ÓBindĞÂµÄ£¬¾Í»á×Ô¶¯UnbindÕâ¸ö
-	void UploadUniformMat4(const std::string& uniformName, glm::mat4 matrix);
+	class Shader
+	{
+	public:
+		Shader(const std::string& vertSource, const std::string& fragSource);
+		~Shader() {} // æœªæ¥ä¼šæœ‰OpenGLShaderã€DirectXShaderï¼Œæ‰€ä»¥æœªæ¥è™šå‡½æ•°å¯èƒ½æ˜¯virtualçš„
+		void Bind();
+		void Unbind();//å…¶å®è¿™ä¸ªå‡½æ•°ä¸€èˆ¬è¿è¡Œæ—¶ä¸ä¼šç”¨åˆ°ï¼Œä¸€èˆ¬ç”¨äºDebugï¼Œå› ä¸ºä½¿ç”¨çš„æ—¶å€™ä¼šç›´æ¥Bindæ–°çš„ï¼Œå°±ä¼šè‡ªåŠ¨Unbindè¿™ä¸ª
+		void UploadUniformMat4(const std::string& uniformName, glm::mat4 matrix);
 
-private:
-	unsigned int m_RendererID;//ÆäÊµ¾ÍÊÇprogram¶ÔÓ¦µÄid£¬programÀï´æ·ÅÁËÒ»Ì×äÖÈ¾¹ÜÏßµÄshader
-};
+	private:
+		unsigned int m_RendererID;//å…¶å®å°±æ˜¯programå¯¹åº”çš„idï¼Œprogramé‡Œå­˜æ”¾äº†ä¸€å¥—æ¸²æŸ“ç®¡çº¿çš„shader
+	};
+}

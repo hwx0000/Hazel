@@ -16,7 +16,7 @@ namespace Hazel
 		const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const override;
 		const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override;
 	private:
-		// Ò»¸öVAO¿ÉÒÔÍÚÈ¡¶à¸öVBOÀïµÄÊı¾İ(VAO´æµÄÊÇÒıÓÃ)
+		// ä¸€ä¸ªVAOå¯ä»¥æŒ–å–å¤šä¸ªVBOé‡Œçš„æ•°æ®(VAOå­˜çš„æ˜¯å¼•ç”¨)
 		std::vector<std::shared_ptr<VertexBuffer>>m_VertexBuffers;
 		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 		unsigned int m_Index;

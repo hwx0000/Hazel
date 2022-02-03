@@ -1,42 +1,28 @@
 #pragma once
-#include "../imgui/imgui.h"
-#include "Hazel.h"
+#include "Hazel/Layer.h"
+#include "Hazel/Renderer/Shader.h"
+#include "Hazel/Renderer/VertexArray.h"
+#include "Hazel/Renderer/OrthographicCamera.h"
 
+// 这里的Camera是属于Layer的, 没有存在Application或Sandbox类里
 class ExampleLayer : public Hazel::Layer
 {
-	void OnAttach() override
-	{
-		CORE_LOG("Init Layer");
-	}
+public:
+	ExampleLayer();
 
-	void OnDettach() override
-	{
-		CORE_LOG("Close Layer");
-	}
+private:
+	void OnAttach() override;
+	void OnDettach() override;
+	void OnEvent(Hazel::Event& e) override;
+	void OnUpdate(const Timestep& step) override;
+	void OnImGuiRender() override;
 
-	void OnEvent(Hazel::Event& e) override
-	{
-		//if (e.GetEventType() == Hazel::EventType::KeyPressed)
-		//{
-		//	Hazel::KeyPressedEvent* ep = dynamic_cast<Hazel::KeyPressedEvent*>(&e);
-		//	LOG("{0}{1}", (char)ep->GetKeycode(), "Is Pressed");
-		//}
-		//LOG("{0}", s);
-		//LOG("{0}", s);
-		//LOG("{0}", "SampleLayer: ");//, e.ToString());
-	}
+private:
+	Hazel::OrthographicCamera m_Camera;
+	std::shared_ptr<Hazel::Shader> m_Shader;
+	std::shared_ptr<Hazel::Shader> m_BlueShader;
 
-	void OnUpdate() override
-	{
-
-
-		//CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
-	}
-
-	void OnImGuiRender() override
-	{
-		ImGui::Begin("Test");
-		ImGui::Text("Hello World");
-		ImGui::End();
-	}
+	std::shared_ptr<Hazel::VertexArray> m_VertexArray;
+	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
+	Timestep m_LastTimestep;
 };

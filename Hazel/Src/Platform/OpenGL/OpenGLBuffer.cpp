@@ -8,7 +8,7 @@ namespace Hazel
 	{
 		glGenBuffers(1, &m_VertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);//从CPU传入了GPU
+		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);//浠嶤PU浼犲叆浜咷PU
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -31,7 +31,7 @@ namespace Hazel
 		m_Count = size / sizeof(int);
 		glGenBuffers(1, &m_IndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);//从CPU传入了GPU
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);//浠嶤PU浼犲叆浜咷PU
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()

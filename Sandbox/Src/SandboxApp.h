@@ -1,15 +1,12 @@
 #pragma once
 #include "Hazel.h"
-#include "ExampleLayer.h"
 
-class Sandbox : public Hazel::Application
+class SandboxApp : public Hazel::Application
 {
 public:
-	Sandbox();
-	//{
-	//	m_LayerStack.PushLayer(new ExampleLayer());
-	//};
+	SandboxApp();
 	virtual void Run() override;
-	~Sandbox() {};
+	~SandboxApp() {};
 private:
+	Timestep m_Timestep;
 };

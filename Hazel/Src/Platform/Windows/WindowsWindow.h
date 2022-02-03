@@ -23,7 +23,7 @@ namespace Hazel
 	private:
 		GLFWwindow *m_Window;
 
-		// WindowData与WindowProp不同，这个创建这个类是为了方便和glfw交互
+		// WindowData涓嶹indowProp涓嶅悓锛岃繖涓垱寤鸿繖涓被鏄负浜嗘柟渚垮拰glfw浜や簰
 		struct WindowData
 		{
 			std::string title;

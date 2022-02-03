@@ -11,7 +11,7 @@ const char* GetName() const override { return #type; }
 
 namespace Hazel
 {
-	// ÊÂ¼şµÄÏêÏ¸ÀàĞÍ
+	// äº‹ä»¶çš„è¯¦ç»†ç±»å‹
 	enum class HAZEL_API EventType
 	{
 		None = 0,
@@ -21,7 +21,7 @@ namespace Hazel
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
-	// ÊÂ¼şµÄ´ÖÂÔÖÖÀà
+	// äº‹ä»¶çš„ç²—ç•¥ç§ç±»
 	enum EventCategory
 	{
 		None = 0,
@@ -47,19 +47,19 @@ namespace Hazel
 		}
 
 	protected:
-		bool m_Handled = false;//ÓÃÀ´±ê¼ÇÕâ¸öÊÂ¼şÊÇ·ñ±»´¦ÀíÁË
+		bool m_Handled = false;//ç”¨æ¥æ ‡è®°è¿™ä¸ªäº‹ä»¶æ˜¯å¦è¢«å¤„ç†äº†
 	};
 
-	// µ±ÊÕµ½EventÊ±£¬´´½¨¶ÔÓ¦µÄEventDispatcher
+	// å½“æ”¶åˆ°Eventæ—¶ï¼Œåˆ›å»ºå¯¹åº”çš„EventDispatcher
 	class HAZEL_API EventDispatcher 
 	{
 		template<typename T>
-		using EventHandler = std::function<bool(T&)>;//EventHandler´æ´¢ÁËÒ»¸öÊäÈëÎªÈÎÒâÀàĞÍµÄÒıÓÃ£¬·µ»ØÖµÎªboolµÄº¯ÊıÖ¸Õë
+		using EventHandler = std::function<bool(T&)>;//EventHandlerå­˜å‚¨äº†ä¸€ä¸ªè¾“å…¥ä¸ºä»»æ„ç±»å‹çš„å¼•ç”¨ï¼Œè¿”å›å€¼ä¸ºboolçš„å‡½æ•°æŒ‡é’ˆ
 	public:
 		EventDispatcher(Event& event):
 			m_Event(event){}
 
-		// TÖ¸µÄÊÇÊÂ¼şÀàĞÍ, Èç¹ûÊäÈëµÄÀàĞÍÃ»ÓĞGetStaticType»á±¨´í
+		// TæŒ‡çš„æ˜¯äº‹ä»¶ç±»å‹, å¦‚æœè¾“å…¥çš„ç±»å‹æ²¡æœ‰GetStaticTypeä¼šæŠ¥é”™
 		template<typename T>
 		void Dispatch(EventHandler<T> handler)
 		{
@@ -68,12 +68,12 @@ namespace Hazel
 
 			if (m_Event.GetEventType() == T::GetStaticType()) 
 			{
-				m_Event.m_Handled = handler(*(T*)&m_Event); //Ê¹ÓÃ(T*)°Ñm_Event×ª»»³ÉÊäÈëÊÂ¼şµÄÖ¸ÕëÀàĞÍ
-				m_Event.m_Handled = true;// Temporary: ÏÖÔÚ²»»áÖ±½Ó¶ÔÓ¦µÄHandlerÀï¶¼·µ»Øtrue
+				m_Event.m_Handled = handler(*(T*)&m_Event); //ä½¿ç”¨(T*)æŠŠm_Eventè½¬æ¢æˆè¾“å…¥äº‹ä»¶çš„æŒ‡é’ˆç±»å‹
+				m_Event.m_Handled = true;// Temporary: ç°åœ¨ä¸ä¼šç›´æ¥å¯¹åº”çš„Handleré‡Œéƒ½è¿”å›true
 			}
 		}
 
 	private:
-		Event& m_Event;//±ØĞëÊÇÒıÓÃ£¬²»¿ÉÒÔÊÇEventµÄÊµÀı£¬ÒòÎªEvent´øÓĞ´¿Ğéº¯Êı
+		Event& m_Event;//å¿…é¡»æ˜¯å¼•ç”¨ï¼Œä¸å¯ä»¥æ˜¯Eventçš„å®ä¾‹ï¼Œå› ä¸ºEventå¸¦æœ‰çº¯è™šå‡½æ•°
 	};
 }

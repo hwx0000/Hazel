@@ -8,7 +8,7 @@ namespace Hazel
 	public:
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
 		virtual ~OpenGLVertexBuffer() override;
-		void Bind()const override;// 别忘了加const
+		void Bind()const override;// 鍒繕浜嗗姞const
 		void Unbind() const override;
 		BufferLayout& GetBufferLayout() override
 		{
@@ -31,7 +31,7 @@ namespace Hazel
 		OpenGLIndexBuffer(int* vertices, uint32_t size);
 		virtual ~OpenGLIndexBuffer() override;
 		uint32_t GetCount() const override;
-		void Bind()const override;// 别忘了加const
+		void Bind()const override;// 鍒繕浜嗗姞const
 		void Unbind() const override;
 	private:
 		uint32_t m_Count;

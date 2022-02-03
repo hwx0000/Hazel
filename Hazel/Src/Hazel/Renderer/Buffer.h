@@ -8,7 +8,7 @@ namespace Hazel
 		FLOAT, FLOAT2, FLOAT3, FLOAT4
 	};
 
-	// Õı³£µÄº¯ÊıÔÚ¶à¸öcppÀï»á³öÏÖÖØ¶¨Òå£¬µ«ÊÇÕâÀïÓĞstatic¾Í²»Ò»ÑùÁË£¬Ã¿Ò»¸öº¯Êı¶¼ÊÇ¸ÃcppµÄnamespace·¶Î§ÀïÊÊÓÃµÄ
+	// æ­£å¸¸çš„å‡½æ•°åœ¨å¤šä¸ªcppé‡Œä¼šå‡ºç°é‡å®šä¹‰ï¼Œä½†æ˜¯è¿™é‡Œæœ‰staticå°±ä¸ä¸€æ ·äº†ï¼Œæ¯ä¸€ä¸ªå‡½æ•°éƒ½æ˜¯è¯¥cppçš„namespaceèŒƒå›´é‡Œé€‚ç”¨çš„
 	static uint32_t GetShaderDataTypeSize(const ShaderDataType &type)
 	{
 		switch (type)
@@ -94,12 +94,12 @@ namespace Hazel
 	{
 	public:
 		virtual ~VertexBuffer() {};
-		virtual void Bind() const = 0;// ±ğÍüÁË¼Óconst
+		virtual void Bind() const = 0;// åˆ«å¿˜äº†åŠ const
 		virtual void Unbind() const = 0;
 		virtual BufferLayout& GetBufferLayout() = 0;
 		virtual void SetBufferLayout(const BufferLayout&) = 0;
 
-		// ×¢ÒâÕâ¸östaticº¯ÊıÊÇÔÚ»ùÀà¶¨ÒåµÄ
+		// æ³¨æ„è¿™ä¸ªstaticå‡½æ•°æ˜¯åœ¨åŸºç±»å®šä¹‰çš„
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	protected:
 		uint32_t m_VertexBuffer;
@@ -109,7 +109,7 @@ namespace Hazel
 	{
 	public:
 		virtual ~IndexBuffer() {};
-		virtual void Bind() const = 0;// ±ğÍüÁË¼Óconst
+		virtual void Bind() const = 0;// åˆ«å¿˜äº†åŠ const
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetCount() const = 0;
 		static IndexBuffer* Create(int* indices, uint32_t size);
