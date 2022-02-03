@@ -8,7 +8,7 @@
 
 ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 {
-	float vertices[] =
+	float triangleVertices[] =
 	{
 		-0.5, -0.5, 0, 1.0, 0.0, 0.0, 1.0f,
 		0.5, -0.5, 0, 0.0, 1.0, 0.0, 1.0f,
@@ -16,40 +16,42 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	};
 
 	// 创建VBO
-	std::shared_ptr<Hazel::VertexBuffer>m_VertexBuffer = std::shared_ptr<Hazel::VertexBuffer>(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
-	m_VertexBuffer->Bind();
+	std::shared_ptr<Hazel::VertexBuffer>m_TriangleVertexBuffer = std::shared_ptr<Hazel::VertexBuffer>(Hazel::VertexBuffer::Create(triangleVertices, sizeof(triangleVertices)));
+	m_TriangleVertexBuffer->Bind();
 
 	// 创建Layout，会计算好Stride和Offset
-	Hazel::BufferLayout layout = {
+	Hazel::BufferLayout layout = 
+	{
 		{Hazel::ShaderDataType::FLOAT3, "a_Pos" },
 		{Hazel::ShaderDataType::FLOAT4, "a_Color" }
 	};
 
-	m_VertexBuffer->SetBufferLayout(layout);
+	m_TriangleVertexBuffer->SetBufferLayout(layout);
 
 	// 创建Vertex Array，把前面算好的东西传入VAO
-	m_VertexArray.reset(Hazel::VertexArray::Create());
-	m_VertexArray->Bind();
-	m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+	m_TriangleVertexArray.reset(Hazel::VertexArray::Create());
+	m_TriangleVertexArray->Bind();
+	m_TriangleVertexArray->AddVertexBuffer(m_TriangleVertexBuffer);
 
-	int indices[3] = { 0,1,2 };
+	int triangleIndices[3] = { 0,1,2 };
 
-	std::shared_ptr<Hazel::IndexBuffer> m_IndexBuffer =
-		std::shared_ptr<Hazel::IndexBuffer>(Hazel::IndexBuffer::Create(indices, sizeof(indices)));
-	m_IndexBuffer->Bind();
-	m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+	std::shared_ptr<Hazel::IndexBuffer> m_TriangleIndexBuffer =
+		std::shared_ptr<Hazel::IndexBuffer>(Hazel::IndexBuffer::Create(triangleIndices, sizeof(triangleIndices)));
+	m_TriangleIndexBuffer->Bind();
+	m_TriangleVertexArray->SetIndexBuffer(m_TriangleIndexBuffer);
 
 	std::string vertexSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec4 aColor;
 
-uniform mat4 m_ViewProjection;
+//uniform mat4 u_Transform;
+uniform mat4 u_ViewProjection;
 
 out vec4 o_color;
 void main()
 {
-	gl_Position = m_ViewProjection * vec4(aPos, 1.0);
+	gl_Position = u_ViewProjection * vec4(aPos, 1.0);
 	o_color = aColor;
 }
 		)";
@@ -63,9 +65,10 @@ void main()
 	color = o_color;
 }
 		)";
-	m_Shader.reset(new Hazel::Shader(vertexSource, fragmentSource));
+	m_TriangleShader.reset(new Hazel::Shader(vertexSource, fragmentSource));
 
-	float quadVertices[] = {
+	float quadVertices[] = 
+	{
 		-0.75f, -0.75f, 0,
 		0.75f, -0.75f,0,
 		-0.75f, 0.75f,0,
@@ -95,6 +98,7 @@ void main()
 #version 330 core
 layout(location = 0) in vec3 aPos;
 
+//uniform mat4 u_Transform;
 uniform mat4 u_ViewProjection;
 
 void main()
@@ -167,7 +171,7 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 
 
 	// 1. 先执行引擎内部的循环逻辑
-		// 每帧开始Clear
+	// 每帧开始Clear
 	Hazel::RenderCommand::Clear();
 	Hazel::RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
@@ -175,10 +179,10 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	Hazel::Renderer::BeginScene(m_Camera);
 	{
 		// todo: 后续操作应该有Batch
-		// bind shader, 然后Upload VP矩阵到unifor,, 然后调用DrawCall
-		Hazel::Renderer::Submit(m_BlueShader, m_VertexArray);
-		// bind shader, 然后Upload VP矩阵到unifor,, 然后调用DrawCall
-		Hazel::Renderer::Submit(m_Shader, m_QuadVertexArray);
+		// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
+		Hazel::Renderer::Submit(m_BlueShader, m_QuadVertexArray);
+		// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
+		Hazel::Renderer::Submit( m_TriangleShader, m_TriangleVertexArray);
 	}
 	Hazel::Renderer::EndScene();
 }

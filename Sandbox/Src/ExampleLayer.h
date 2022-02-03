@@ -19,10 +19,10 @@ private:
 
 private:
 	Hazel::OrthographicCamera m_Camera;
-	std::shared_ptr<Hazel::Shader> m_Shader;
+	std::shared_ptr<Hazel::Shader> m_TriangleShader;
 	std::shared_ptr<Hazel::Shader> m_BlueShader;
 
-	std::shared_ptr<Hazel::VertexArray> m_VertexArray;
+	std::shared_ptr<Hazel::VertexArray> m_TriangleVertexArray;
 	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
 	Timestep m_LastTimestep;
 };
