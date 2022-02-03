@@ -26,19 +26,24 @@ namespace Hazel
 		inline static Application& Get() { return *s_Instance;  }
 
 		void OnEvent(Event& e);
-		virtual void Run();
+		void Run();						// 注意, Run不是虚函数, 用户的自定义类无法override此函数
 		bool OnWindowClose(WindowCloseEvent& e);
 		void PushLayer(Layer* layer);
 		Layer* PopLayer();
 		Window& GetWindow()const { return *m_Window; }
+
 	private:
 		static Application* s_Instance;
+
 	protected:
 		std::unique_ptr<Window> m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
+
+	private:
+		float m_LastTimestep;
 	};
 
 	Application* CreateApplication();

@@ -141,8 +141,6 @@ namespace Hazel
 			data.eventCallback(e);
 		}
 		);
-
-		SetVSync(true);
 	}
 
 	void Hazel::WindowsWindow::SetVSync(bool enabled)

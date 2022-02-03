@@ -138,28 +138,29 @@ void ExampleLayer::OnEvent(Hazel::Event & e)
 		//LOG("{0}", "SampleLayer: ");//, e.ToString());
 }
 
+// 这里的step相当于deltaTime
 void ExampleLayer::OnUpdate(const Timestep & step)
 {
 	auto m_CameraPosition = m_Camera.GetPosition();
 	auto m_CameraRotation = m_Camera.GetRotation();
-	float m_CameraMoveSpeed = 0.01f;
-	float m_CameraRotationSpeed = 1.0f;
+	float m_CameraMoveSpeed = 1.0f;
+	float m_CameraRotationSpeed = 10.0f;
 
 	if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-		m_CameraPosition.x -= m_CameraMoveSpeed;
+		m_CameraPosition.x -= m_CameraMoveSpeed * step;
 	else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-		m_CameraPosition.x += m_CameraMoveSpeed;
+		m_CameraPosition.x += m_CameraMoveSpeed * step;
 
 	if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-		m_CameraPosition.y += m_CameraMoveSpeed;
+		m_CameraPosition.y += m_CameraMoveSpeed * step;
 	else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-		m_CameraPosition.y -= m_CameraMoveSpeed;
+		m_CameraPosition.y -= m_CameraMoveSpeed * step;
 
 	// 由于是2D的Camera, 用一个绕Z轴的角度表示相机旋转即可
 	if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
-		m_CameraRotation += m_CameraRotationSpeed;
+		m_CameraRotation += m_CameraRotationSpeed * step;
 	if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
-		m_CameraRotation -= m_CameraRotationSpeed;
+		m_CameraRotation -= m_CameraRotationSpeed * step;
 
 	m_Camera.SetPosition(m_CameraPosition);
 	m_Camera.SetRotation(m_CameraRotation);
@@ -180,11 +181,6 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 		Hazel::Renderer::Submit(m_Shader, m_QuadVertexArray);
 	}
 	Hazel::Renderer::EndScene();
-
-	//m_LastTimestep = ;
-
-//CORE_LOG("{0}{1}", "Is Key Pressed :", Hazel::Input::IsKeyPressed(HZ_KEY_K));
-
 }
 
 void ExampleLayer::OnImGuiRender()

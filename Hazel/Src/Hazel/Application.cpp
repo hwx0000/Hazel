@@ -9,6 +9,9 @@
 #include "Hazel/Renderer/OrthographicCamera.h"
 #include "Hazel/KeyCode.h"
 
+// TODO: temp
+#include <GLFW/glfw3.h>
+
 namespace Hazel
 {
 	Hazel::Application* Hazel::Application::s_Instance = nullptr;
@@ -35,7 +38,33 @@ namespace Hazel
 
 	void Application::Run() 
 	{
-		std::cout << "Run Application" << std::endl;
+		while (m_Running)
+		{
+			float time = (float)glfwGetTime();
+			Timestep timestep = time - m_LastTimestep;
+			m_LastTimestep = time;
+
+			// 2. 再执行使用引擎的用户代码的循环
+			// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
+			// 所以创建完window后，可以直接调用其loop开始渲染
+			for (Hazel::Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate(timestep);
+			}
+			
+			// 3. 最后调用ImGUI的循环
+			m_ImGuiLayer->Begin();
+			for (Hazel::Layer* layer : m_LayerStack)
+			{
+				// 每一个Layer都在调用ImGuiRender函数
+				// 目前有两个Layer, Sandbox定义的ExampleLayer和构造函数添加的ImGuiLayer
+				layer->OnImGuiRender();
+			}
+			m_ImGuiLayer->End();
+
+			// 4. 每帧结束调用glSwapBuffer函数, 把画面显示到屏幕上
+			m_Window->OnUpdate();
+		}
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent &e)
