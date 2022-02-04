@@ -5,6 +5,8 @@
 #include "Hazel/Renderer/Renderer.h"
 #include "Hazel//KeyCode.h"
 #include "imgui.h"
+#include <glm/gtc/matrix_transform.hpp>
+
 
 ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 {
@@ -45,13 +47,13 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec4 aColor;
 
-//uniform mat4 u_Transform;
+uniform mat4 u_Transform;
 uniform mat4 u_ViewProjection;
 
 out vec4 o_color;
 void main()
 {
-	gl_Position = u_ViewProjection * vec4(aPos, 1.0);
+	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
 	o_color = aColor;
 }
 		)";
@@ -69,10 +71,10 @@ void main()
 
 	float quadVertices[] = 
 	{
-		-0.75f, -0.75f, 0,
-		0.75f, -0.75f,0,
-		-0.75f, 0.75f,0,
-		0.75f, 0.75f, 0
+		-0.5f, -0.5f, 0,
+		0.5f, -0.5f,0,
+		-0.5f, 0.5f,0,
+		0.5f, 0.5f, 0
 	};
 
 	int quadIndices[] = { 0,1,2,2,1,3 };
@@ -98,12 +100,12 @@ void main()
 #version 330 core
 layout(location = 0) in vec3 aPos;
 
-//uniform mat4 u_Transform;
+uniform mat4 u_Transform;
 uniform mat4 u_ViewProjection;
 
 void main()
 {
-	gl_Position = u_ViewProjection * vec4(aPos, 1.0);
+	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
 }
 		)";
 
@@ -178,11 +180,21 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	// 把Camera里的VP矩阵信息传到Renderer的SceneData里
 	Hazel::Renderer::BeginScene(m_Camera);
 	{
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		// 绘制400个quad, 每个的size为0.1, 屏幕是-1到1, 也就是20分之一的屏幕
+		for (int x = -20; x < 20; x++)
+		{
+			for (int y = -20; y < 20; y++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
+				Hazel::Renderer::Submit(m_BlueShader, m_QuadVertexArray, transform);
+			}
+		}
+
 		// todo: 后续操作应该有Batch
-		// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
-		Hazel::Renderer::Submit(m_BlueShader, m_QuadVertexArray);
-		// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
-		Hazel::Renderer::Submit( m_TriangleShader, m_TriangleVertexArray);
 	}
 	Hazel::Renderer::EndScene();
 }
