@@ -99,7 +99,7 @@ namespace Hazel
 		virtual BufferLayout& GetBufferLayout() = 0;
 		virtual void SetBufferLayout(const BufferLayout&) = 0;
 
-		// 注意这个static函数是在基类定义的
+		// 注意这个static函数是在基类声明的, 但是会根据Platform在派生类里被定义
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	protected:
 		uint32_t m_VertexBuffer;

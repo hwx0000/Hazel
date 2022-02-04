@@ -67,7 +67,7 @@ void main()
 	color = o_color;
 }
 		)";
-	m_TriangleShader.reset(new Hazel::Shader(vertexSource, fragmentSource));
+	m_TriangleShader.reset(Hazel::Shader::Create(vertexSource, fragmentSource));
 
 	float quadVertices[] = 
 	{
@@ -118,7 +118,7 @@ void main()
 	color = vec4(0.2, 0.3, 0.8, 1.0);
 }
 		)";
-	m_BlueShader.reset(new Hazel::Shader(blueVertexSource, blueFragmentSource));
+	m_BlueShader.reset(Hazel::Shader::Create(blueVertexSource, blueFragmentSource));
 
 }
 
