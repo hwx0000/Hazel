@@ -96,7 +96,7 @@ void main()
 	quadIndexBufer->Bind();
 	m_QuadVertexArray->SetIndexBuffer(quadIndexBufer);
 
-	std::string blueVertexSource = R"(
+	std::string flatShaderVertexSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 
@@ -109,17 +109,19 @@ void main()
 }
 		)";
 
-	std::string blueFragmentSource = R"(
+	std::string flatShaderFragmentSource = R"(
 #version 330 core
 out vec4 color;
 
+uniform vec4 u_color;
+
 void main()
 {
-	color = vec4(0.2, 0.3, 0.8, 1.0);
+	color = u_color;
 }
 		)";
 
-	m_BlueShader.reset(Hazel::Shader::Create(blueVertexSource, blueFragmentSource));
+	m_FlatColorShader.reset(Hazel::Shader::Create(flatShaderVertexSource, flatShaderFragmentSource));
 }
 
 void ExampleLayer::OnAttach()
@@ -187,10 +189,18 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 		{
 			for (int y = -20; y < 20; y++)
 			{
+				bool b = y & 1;
+
+				m_FlatColorShader->Bind();
+				if (b)
+					m_FlatColorShader->UploadUniformVec4("u_color", glm::vec4(0.8, 0.2, 0.2, 1.0));
+				else
+					m_FlatColorShader->UploadUniformVec4("u_color", glm::vec4(0.2, 0.3, 0.8,1.0));
+
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 				// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
-				Hazel::Renderer::Submit(m_BlueShader, m_QuadVertexArray, transform);
+				Hazel::Renderer::Submit(m_FlatColorShader, m_QuadVertexArray, transform);
 			}
 		}
 
