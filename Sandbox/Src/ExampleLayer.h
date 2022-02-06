@@ -24,5 +24,5 @@ private:
 
 	std::shared_ptr<Hazel::VertexArray> m_TriangleVertexArray;
 	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
-	Timestep m_LastTimestep;
+	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 };
