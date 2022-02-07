@@ -60,8 +60,10 @@ void main()
 
 	std::string fragmentSource = R"(
 #version 330 core
+
 in vec4 o_color;
 out vec4 color;
+
 void main()
 {
 	color = o_color;
@@ -192,7 +194,6 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 		{
 			for (int y = -20; y < 20; y++)
 			{
-
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 				// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
