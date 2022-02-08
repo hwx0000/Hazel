@@ -11,5 +11,8 @@ namespace Hazel
 		// Inherited via Texture2D
 		virtual unsigned int GetWidth() override;
 		virtual unsigned int GetHeight() override;
+	private:
+		int m_RendererID;
+		unsigned int m_TextureID;
 	};
 }

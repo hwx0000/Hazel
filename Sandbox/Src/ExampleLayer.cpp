@@ -73,10 +73,10 @@ void main()
 
 	float quadVertices[] = 
 	{
-		-0.5f, -0.5f, 0,
-		0.5f, -0.5f,0,
-		-0.5f, 0.5f,0,
-		0.5f, 0.5f, 0
+		-0.5f, -0.5f, 0, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0, 1.0f, 0.0f,
+		-0.5f,  0.5f, 0, 0.0f, 1.0f,
+		 0.5f,  0.5f, 0, 1.0f, 1.0f
 	};
 
 	int quadIndices[] = { 0,1,2,2,1,3 };
@@ -84,13 +84,16 @@ void main()
 	// 创建Vertex Array，把前面算好的东西传入VAO
 	m_QuadVertexArray.reset(Hazel::VertexArray::Create());
 
+	// 创建Vertex Buffer
 	std::shared_ptr<Hazel::VertexBuffer> quadVertexBufer;
 	quadVertexBufer.reset(Hazel::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
 
 	quadVertexBufer->SetBufferLayout(
 		{
-			{Hazel::ShaderDataType::FLOAT3, "aPos"}
+			{Hazel::ShaderDataType::FLOAT3, "aPos"},
+			{Hazel::ShaderDataType::FLOAT2, "aTex"}
 		});
+	// VAO从VBO里挖取数据
 	m_QuadVertexArray->AddVertexBuffer(quadVertexBufer);
 
 	std::shared_ptr<Hazel::IndexBuffer> quadIndexBufer;
@@ -101,6 +104,9 @@ void main()
 	std::string flatShaderVertexSource = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec2 aTex;
+
+out vec2 TexCoord;
 
 uniform mat4 u_Transform;
 uniform mat4 u_ViewProjection;
@@ -108,18 +114,23 @@ uniform mat4 u_ViewProjection;
 void main()
 {
 	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
+	TexCoord = aTex;
 }
 		)";
 
 	std::string flatShaderFragmentSource = R"(
 #version 330 core
-out vec4 color;
 
-uniform vec4 u_Color;
+in vec2 TexCoord;
+
+out vec4 color;
+uniform sampler2D u_Texture2D0;
 
 void main()
 {
-	color = u_Color;
+	//color = texture(u_Texture2D0, TexCoord);
+	color = vec4(TexCoord.x, TexCoord.y, 0, 1.0);
+	//color = u_Textre2D0;
 }
 		)";
 
