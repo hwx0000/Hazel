@@ -3,6 +3,7 @@
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/Renderer/Texture.h"
 
 // 这里的Camera是属于Layer的, 没有存在Application或Sandbox类里
 class ExampleLayer : public Hazel::Layer
@@ -19,10 +20,10 @@ private:
 
 private:
 	Hazel::OrthographicCamera m_Camera;
-	std::shared_ptr<Hazel::Shader> m_TriangleShader;
+	std::shared_ptr<Hazel::Shader> m_TextureShader;
 	std::shared_ptr<Hazel::Shader> m_FlatColorShader;
+	std::shared_ptr<Hazel::Texture2D> m_TextureOne;
 
-	std::shared_ptr<Hazel::VertexArray> m_TriangleVertexArray;
 	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 };

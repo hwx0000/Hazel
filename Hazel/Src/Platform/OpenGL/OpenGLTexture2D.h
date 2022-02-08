@@ -7,12 +7,16 @@ namespace Hazel
 	{
 	public:
 		OpenGLTexture2D(const std::string& path);
+		~OpenGLTexture2D();
 
 		// Inherited via Texture2D
 		virtual unsigned int GetWidth() override;
 		virtual unsigned int GetHeight() override;
+
+		virtual void Bind(uint32_t slot) override;
 	private:
-		int m_RendererID;
 		unsigned int m_TextureID;
+		int m_Width;
+		int m_Height;
 	};
 }

@@ -10,7 +10,7 @@ namespace Hazel
 		switch (RendererAPI::GetAPIType())
 		{
 		case RendererAPI::APIType::OpenGL:
-			return  std::make_shared<OpenGLTexture2D>(path);
+			return std::make_shared<OpenGLTexture2D>(path);
 		case RendererAPI::APIType::None:
 		{
 			CORE_LOG_ERROR("No RendererAPI selected");

@@ -6,72 +6,11 @@
 #include "Hazel//KeyCode.h"
 #include "imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <filesystem>
 
 ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 {
-	float triangleVertices[] =
-	{
-		-0.5, -0.5, 0, 1.0, 0.0, 0.0, 1.0f,
-		0.5, -0.5, 0, 0.0, 1.0, 0.0, 1.0f,
-		0, 0.5, 0.0, 0.0, 0.0, 1.0, 1.0f
-	};
-
-	// 创建VBO
-	std::shared_ptr<Hazel::VertexBuffer>m_TriangleVertexBuffer = std::shared_ptr<Hazel::VertexBuffer>(Hazel::VertexBuffer::Create(triangleVertices, sizeof(triangleVertices)));
-	m_TriangleVertexBuffer->Bind();
-
-	// 创建Layout，会计算好Stride和Offset
-	Hazel::BufferLayout layout = 
-	{
-		{Hazel::ShaderDataType::FLOAT3, "a_Pos" },
-		{Hazel::ShaderDataType::FLOAT4, "a_Color" }
-	};
-
-	m_TriangleVertexBuffer->SetBufferLayout(layout);
-
-	// 创建Vertex Array，把前面算好的东西传入VAO
-	m_TriangleVertexArray.reset(Hazel::VertexArray::Create());
-	m_TriangleVertexArray->Bind();
-	m_TriangleVertexArray->AddVertexBuffer(m_TriangleVertexBuffer);
-
-	int triangleIndices[3] = { 0,1,2 };
-
-	std::shared_ptr<Hazel::IndexBuffer> m_TriangleIndexBuffer =
-		std::shared_ptr<Hazel::IndexBuffer>(Hazel::IndexBuffer::Create(triangleIndices, sizeof(triangleIndices)));
-	m_TriangleIndexBuffer->Bind();
-	m_TriangleVertexArray->SetIndexBuffer(m_TriangleIndexBuffer);
-
-	std::string vertexSource = R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec4 aColor;
-
-uniform mat4 u_Transform;
-uniform mat4 u_ViewProjection;
-
-out vec4 o_color;
-void main()
-{
-	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
-	o_color = aColor;
-}
-		)";
-
-	std::string fragmentSource = R"(
-#version 330 core
-
-in vec4 o_color;
-out vec4 color;
-
-void main()
-{
-	color = o_color;
-}
-		)";
-	m_TriangleShader.reset(Hazel::Shader::Create(vertexSource, fragmentSource));
-
-	float quadVertices[] = 
+	float quadVertices[] =
 	{
 		-0.5f, -0.5f, 0, 0.0f, 0.0f,
 		 0.5f, -0.5f, 0, 1.0f, 0.0f,
@@ -81,27 +20,32 @@ void main()
 
 	int quadIndices[] = { 0,1,2,2,1,3 };
 
+	// 创建VBO
+	std::shared_ptr<Hazel::VertexBuffer>m_QuadVertexBuffer = 
+		std::shared_ptr<Hazel::VertexBuffer>(Hazel::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
+	m_QuadVertexBuffer->Bind();
+
+	// 创建Layout，会计算好Stride和Offset
+	Hazel::BufferLayout layout = 
+	{
+		{Hazel::ShaderDataType::FLOAT3, "a_Pos" },
+		{Hazel::ShaderDataType::FLOAT2, "a_Tex" }
+	};
+
+	m_QuadVertexBuffer->SetBufferLayout(layout);
+
 	// 创建Vertex Array，把前面算好的东西传入VAO
-	m_QuadVertexArray.reset(Hazel::VertexArray::Create());
-
-	// 创建Vertex Buffer
-	std::shared_ptr<Hazel::VertexBuffer> quadVertexBufer;
-	quadVertexBufer.reset(Hazel::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
-
-	quadVertexBufer->SetBufferLayout(
-		{
-			{Hazel::ShaderDataType::FLOAT3, "aPos"},
-			{Hazel::ShaderDataType::FLOAT2, "aTex"}
-		});
 	// VAO从VBO里挖取数据
-	m_QuadVertexArray->AddVertexBuffer(quadVertexBufer);
+	m_QuadVertexArray.reset(Hazel::VertexArray::Create());
+	m_QuadVertexArray->Bind();
+	m_QuadVertexArray->AddVertexBuffer(m_QuadVertexBuffer);
 
-	std::shared_ptr<Hazel::IndexBuffer> quadIndexBufer;
-	quadIndexBufer = std::unique_ptr<Hazel::IndexBuffer>(Hazel::IndexBuffer::Create(quadIndices, sizeof(quadIndices)));
-	quadIndexBufer->Bind();
-	m_QuadVertexArray->SetIndexBuffer(quadIndexBufer);
+	std::shared_ptr<Hazel::IndexBuffer> m_QuadIndexBuffer =
+		std::shared_ptr<Hazel::IndexBuffer>(Hazel::IndexBuffer::Create(quadIndices, sizeof(quadIndices)));
+	m_QuadIndexBuffer->Bind();
+	m_QuadVertexArray->SetIndexBuffer(m_QuadIndexBuffer);
 
-	std::string flatShaderVertexSource = R"(
+	std::string textureShaderVertexSource= R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec2 aTex;
@@ -118,23 +62,54 @@ void main()
 }
 		)";
 
-	std::string flatShaderFragmentSource = R"(
+	std::string textureShaderFragmentSource = R"(
 #version 330 core
 
 in vec2 TexCoord;
 
 out vec4 color;
-uniform sampler2D u_Texture2D0;
+uniform sampler2D u_Texture2;
 
 void main()
 {
-	//color = texture(u_Texture2D0, TexCoord);
-	color = vec4(TexCoord.x, TexCoord.y, 0, 1.0);
-	//color = u_Textre2D0;
+	color = texture(u_Texture2, TexCoord);
+}
+		)";
+	m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSource, textureShaderFragmentSource));
+
+
+	// 两个Shader共享VAO, VBO和EBO
+
+	std::string flatShaderVertexSource = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+
+uniform mat4 u_Transform;
+uniform mat4 u_ViewProjection;
+
+void main()
+{
+	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
 }
 		)";
 
+	std::string flatShaderFragmentSource = R"(
+#version 330 core
+
+uniform vec4 u_Color;
+out vec4 color;
+
+void main()
+{
+	color = u_Color;
+}
+		)";
 	m_FlatColorShader.reset(Hazel::Shader::Create(flatShaderVertexSource, flatShaderFragmentSource));
+
+	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
+	std::string path = std::filesystem::current_path().string();
+	path = path + "\\Resources\\HeadIcon.jpg";
+	m_TextureOne = Hazel::Texture2D::Create(path);
 }
 
 void ExampleLayer::OnAttach()
@@ -196,7 +171,7 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	Hazel::Renderer::BeginScene(m_Camera);
 	{
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-
+		
 		m_FlatColorShader->Bind();
 		m_FlatColorShader->UploadUniformVec4("u_Color", m_FlatColor);
 
@@ -207,12 +182,18 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+
 				// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
 				Hazel::Renderer::Submit(m_FlatColorShader, m_QuadVertexArray, transform);
 			}
 		}
 
-		// todo: 后续操作应该有Batch
+		scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+		glm::mat4 transform = scale;
+		m_TextureOne->Bind(0);
+		Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, transform);
+
+		// todo: 后续需要把上面代码改为Batch操作
 	}
 	Hazel::Renderer::EndScene();
 }
