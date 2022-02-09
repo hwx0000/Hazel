@@ -23,7 +23,19 @@ namespace Hazel
 		unsigned char* data = stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 0);
 		HAZEL_ASSERT(data, "Failed to load texture!")
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		switch (channels)
+		{
+		case 3:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			break;
+		case 4:
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			break;
+		default:
+			HAZEL_ASSERT(0, "Unsupported texture format!")
+			break;
+		}
+
 		//glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);

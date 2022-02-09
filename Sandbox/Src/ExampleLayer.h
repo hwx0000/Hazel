@@ -23,6 +23,7 @@ private:
 	std::shared_ptr<Hazel::Shader> m_TextureShader;
 	std::shared_ptr<Hazel::Shader> m_FlatColorShader;
 	std::shared_ptr<Hazel::Texture2D> m_TextureOne;
+	std::shared_ptr<Hazel::Texture2D> m_TextureTwo;
 
 	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);

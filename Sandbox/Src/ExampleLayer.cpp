@@ -108,8 +108,12 @@ void main()
 
 	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	std::string path = std::filesystem::current_path().string();
-	path = path + "\\Resources\\HeadIcon.jpg";
-	m_TextureOne = Hazel::Texture2D::Create(path);
+	
+	std::string path1 = path + "\\Resources\\HeadIcon.jpg";
+	m_TextureOne = Hazel::Texture2D::Create(path1);
+
+	std::string path2 = path + "\\Resources\\RedSquare.png";
+	m_TextureTwo = Hazel::Texture2D::Create(path2);
 }
 
 void ExampleLayer::OnAttach()
@@ -193,6 +197,9 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 		m_TextureOne->Bind(0);
 		Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, transform);
 
+		m_TextureTwo->Bind(0);
+		Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, transform);
+		//Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, glm::mat4(1.0f));
 		// todo: 后续需要把上面代码改为Batch操作
 	}
 	Hazel::Renderer::EndScene();
