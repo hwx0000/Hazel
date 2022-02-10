@@ -45,69 +45,20 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	m_QuadIndexBuffer->Bind();
 	m_QuadVertexArray->SetIndexBuffer(m_QuadIndexBuffer);
 
-	std::string textureShaderVertexSource= R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec2 aTex;
-
-out vec2 TexCoord;
-
-uniform mat4 u_Transform;
-uniform mat4 u_ViewProjection;
-
-void main()
-{
-	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
-	TexCoord = aTex;
-}
-		)";
-
-	std::string textureShaderFragmentSource = R"(
-#version 330 core
-
-in vec2 TexCoord;
-
-out vec4 color;
-uniform sampler2D u_Texture2;
-
-void main()
-{
-	color = texture(u_Texture2, TexCoord);
-}
-		)";
-	m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSource, textureShaderFragmentSource));
-
-
-	// 两个Shader共享VAO, VBO和EBO
-
-	std::string flatShaderVertexSource = R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-
-uniform mat4 u_Transform;
-uniform mat4 u_ViewProjection;
-
-void main()
-{
-	gl_Position = u_ViewProjection * u_Transform * vec4(aPos, 1.0);
-}
-		)";
-
-	std::string flatShaderFragmentSource = R"(
-#version 330 core
-
-uniform vec4 u_Color;
-out vec4 color;
-
-void main()
-{
-	color = u_Color;
-}
-		)";
-	m_FlatColorShader.reset(Hazel::Shader::Create(flatShaderVertexSource, flatShaderFragmentSource));
 
 	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	std::string path = std::filesystem::current_path().string();
+	std::string shaderPath1 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
+	m_TextureShader.reset(Hazel::Shader::Create(shaderPath1));
+	//m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSource, textureShaderFragmentSource));
+
+
+	// 两个Shader共享VAO, VBO和EBO
+	std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\FlatColorShader.glsl";
+	m_FlatColorShader.reset(Hazel::Shader::Create(shaderPath2));
+	//m_FlatColorShader.reset(Hazel::Shader::Create(flatShaderVertexSource, flatShaderFragmentSource));
+
+	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	
 	std::string path1 = path + "\\Resources\\HeadIcon.jpg";
 	m_TextureOne = Hazel::Texture2D::Create(path1);
