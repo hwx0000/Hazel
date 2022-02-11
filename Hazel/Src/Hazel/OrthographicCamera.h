@@ -12,6 +12,7 @@ namespace Hazel
 		// 不过这个构造函数没有指定Camera的位置, 所以应该是默认位置
 		OrthographicCamera(float left, float right, float bottom, float top);
 
+		void RecalculateMatrix(float left, float right, float bottom, float top);
 		// 读写Camera的位置和朝向, 这些数据是用于设置View矩阵的
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }

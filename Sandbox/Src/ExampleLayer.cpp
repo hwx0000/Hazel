@@ -28,8 +28,8 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	// 创建Layout，会计算好Stride和Offset
 	Hazel::BufferLayout layout = 
 	{
-		{Hazel::ShaderDataType::FLOAT3, "a_Pos" },
-		{Hazel::ShaderDataType::FLOAT2, "a_Tex" }
+		{ Hazel::ShaderDataType::FLOAT3, "a_Pos" },
+		{ Hazel::ShaderDataType::FLOAT2, "a_Tex" }
 	};
 
 	m_QuadVertexBuffer->SetBufferLayout(layout);
@@ -55,11 +55,11 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	auto m_TextureShader = m_ShaderLibrary->Get("TextureShader");
 
 	// 两个Shader共享VAO, VBO和EBO
+	// std::filesystem是C++17提供的库, 用于方便的获取Project的绝对路径
 	std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\FlatColorShader.glsl";
 	m_ShaderLibrary->Load(shaderPath2);
 	auto m_FlatColorShader = m_ShaderLibrary->Get("FlatColorShader");
 
-	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	
 	std::string path1 = path + "\\Resources\\HeadIcon.jpg";
 	m_TextureOne = Hazel::Texture2D::Create(path1);
@@ -93,29 +93,7 @@ void ExampleLayer::OnEvent(Hazel::Event & e)
 // 这里的step相当于deltaTime
 void ExampleLayer::OnUpdate(const Timestep & step)
 {
-	auto m_CameraPosition = m_Camera.GetPosition();
-	auto m_CameraRotation = m_Camera.GetRotation();
-	float m_CameraMoveSpeed = 1.0f;
-	float m_CameraRotationSpeed = 10.0f;
-
-	if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-		m_CameraPosition.x -= m_CameraMoveSpeed * step;
-	else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-		m_CameraPosition.x += m_CameraMoveSpeed * step;
-
-	if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-		m_CameraPosition.y += m_CameraMoveSpeed * step;
-	else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-		m_CameraPosition.y -= m_CameraMoveSpeed * step;
-
-	// 由于是2D的Camera, 用一个绕Z轴的角度表示相机旋转即可
-	if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
-		m_CameraRotation += m_CameraRotationSpeed * step;
-	if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
-		m_CameraRotation -= m_CameraRotationSpeed * step;
-
-	m_Camera.SetPosition(m_CameraPosition);
-	m_Camera.SetRotation(m_CameraRotation);
+	m_OrthoCameraController.OnUpdate(step);
 
 
 	// 1. 先执行引擎内部的循环逻辑
@@ -127,7 +105,7 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	auto textureShader = m_ShaderLibrary->Get("TextureShader");
 
 	// 把Camera里的VP矩阵信息传到Renderer的SceneData里
-	Hazel::Renderer::BeginScene(m_Camera);
+	Hazel::Renderer::BeginScene(m_OrthoCameraController);
 	{
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		

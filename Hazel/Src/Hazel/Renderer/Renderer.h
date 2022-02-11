@@ -3,7 +3,7 @@
 #include "VertexArray.h"
 #include <memory>
 #include "glm/glm.hpp"
-#include "OrthographicCamera.h"
+#include "Hazel/OrthographicCamera.h"
 #include "Shader.h"
 
 

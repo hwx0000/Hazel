@@ -18,7 +18,7 @@
 #include "Hazel/Input.h"
 
 #include "Hazel/Renderer/RenderCommand.h"
-#include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/OrthographicCamera.h"
 #include "Hazel/Renderer/VertexArray.h"
 
 #include "Hazel/Timestep.h"

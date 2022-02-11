@@ -6,7 +6,7 @@
 #include "Input.h"
 #include "Renderer/Buffer.h"
 #include "Hazel/Renderer/RenderCommand.h"
-#include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/OrthographicCamera.h"
 #include "Hazel/KeyCode.h"
 
 // TODO: temp

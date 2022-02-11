@@ -2,7 +2,7 @@
 #include "Hazel/Layer.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/VertexArray.h"
-#include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/OrthographicCameraController.h"
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/ShaderLibrary.h"
 
@@ -20,7 +20,7 @@ private:
 	void OnImGuiRender() override;
 
 private:
-	Hazel::OrthographicCamera m_Camera;
+	Hazel::OrthographicCameraController m_OrthoCameraController;
 	std::shared_ptr<Hazel::ShaderLibrary> m_ShaderLibrary;
 	std::shared_ptr<Hazel::Texture2D> m_TextureOne;
 	std::shared_ptr<Hazel::Texture2D> m_TextureTwo;
