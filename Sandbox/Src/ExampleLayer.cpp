@@ -46,17 +46,18 @@ ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	m_QuadVertexArray->SetIndexBuffer(m_QuadIndexBuffer);
 
 
+	m_ShaderLibrary = std::make_shared<Hazel::ShaderLibrary>();
 	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	std::string path = std::filesystem::current_path().string();
 	std::string shaderPath1 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
-	m_TextureShader.reset(Hazel::Shader::Create(shaderPath1));
-	//m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSource, textureShaderFragmentSource));
-
+	m_ShaderLibrary->Load(shaderPath1);
+	
+	auto m_TextureShader = m_ShaderLibrary->Get("TextureShader");
 
 	// 两个Shader共享VAO, VBO和EBO
 	std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\FlatColorShader.glsl";
-	m_FlatColorShader.reset(Hazel::Shader::Create(shaderPath2));
-	//m_FlatColorShader.reset(Hazel::Shader::Create(flatShaderVertexSource, flatShaderFragmentSource));
+	m_ShaderLibrary->Load(shaderPath2);
+	auto m_FlatColorShader = m_ShaderLibrary->Get("FlatColorShader");
 
 	// 这玩意儿是C++17提供的库, 用于方便的获取Project的绝对路径
 	
@@ -122,13 +123,16 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	Hazel::RenderCommand::Clear();
 	Hazel::RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
+	auto flatColorShader = m_ShaderLibrary->Get("FlatColorShader");
+	auto textureShader = m_ShaderLibrary->Get("TextureShader");
+
 	// 把Camera里的VP矩阵信息传到Renderer的SceneData里
 	Hazel::Renderer::BeginScene(m_Camera);
 	{
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		
-		m_FlatColorShader->Bind();
-		m_FlatColorShader->UploadUniformVec4("u_Color", m_FlatColor);
+		flatColorShader->Bind();
+		flatColorShader->UploadUniformVec4("u_Color", m_FlatColor);
 
 		// 绘制400个quad, 每个的size为0.1, 屏幕是-1到1, 也就是20分之一的屏幕
 		for (int x = -20; x < 20; x++)
@@ -139,17 +143,17 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 
 				// bind shader, 然后Upload VP矩阵到uniform, 然后调用DrawCall
-				Hazel::Renderer::Submit(m_FlatColorShader, m_QuadVertexArray, transform);
+				Hazel::Renderer::Submit(flatColorShader, m_QuadVertexArray, transform);
 			}
 		}
 
 		scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
 		glm::mat4 transform = scale;
 		m_TextureOne->Bind(0);
-		Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, transform);
+		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
 
 		m_TextureTwo->Bind(0);
-		Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, transform);
+		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
 		//Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, glm::mat4(1.0f));
 		// todo: 后续需要把上面代码改为Batch操作
 	}
