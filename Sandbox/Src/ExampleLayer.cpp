@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <filesystem>
 
-ExampleLayer::ExampleLayer() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+ExampleLayer::ExampleLayer() : m_OrthoCameraController(1.6667f, 1.0f)
 {
 	float quadVertices[] =
 	{
@@ -80,6 +80,7 @@ void ExampleLayer::OnDettach()
 
 void ExampleLayer::OnEvent(Hazel::Event & e)
 {
+	m_OrthoCameraController.OnEvent(e);
 	//if (e.GetEventType() == Hazel::EventType::KeyPressed)
 		//{
 		//	Hazel::KeyPressedEvent* ep = dynamic_cast<Hazel::KeyPressedEvent*>(&e);
@@ -95,7 +96,6 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 {
 	m_OrthoCameraController.OnUpdate(step);
 
-
 	// 1. 先执行引擎内部的循环逻辑
 	// 每帧开始Clear
 	Hazel::RenderCommand::Clear();
@@ -105,7 +105,7 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 	auto textureShader = m_ShaderLibrary->Get("TextureShader");
 
 	// 把Camera里的VP矩阵信息传到Renderer的SceneData里
-	Hazel::Renderer::BeginScene(m_OrthoCameraController);
+	Hazel::Renderer::BeginScene(m_OrthoCameraController.GetCamera());
 	{
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		
@@ -125,14 +125,13 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 			}
 		}
 
-		scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
-		glm::mat4 transform = scale;
+		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
 		m_TextureOne->Bind(0);
 		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
 
+		transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 		m_TextureTwo->Bind(0);
 		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
-		//Hazel::Renderer::Submit(m_TextureShader, m_QuadVertexArray, glm::mat4(1.0f));
 		// todo: 后续需要把上面代码改为Batch操作
 	}
 	Hazel::Renderer::EndScene();
