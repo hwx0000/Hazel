@@ -8,8 +8,7 @@
 namespace Hazel
 {
 	OrthographicCameraController::OrthographicCameraController(float radio, float zoom):
-		//m_Camera(-radio * zoom, radio * zoom, -zoom, zoom)
-		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+		m_Camera(-radio * zoom, radio * zoom, -zoom, zoom)
 	{
 
 	}
@@ -55,7 +54,7 @@ namespace Hazel
 
 	void OrthographicCameraController::OnZoomCamera(float scrollOffset)
 	{
-		m_ZoomLevel += scrollOffset;
+		m_ZoomLevel -= scrollOffset;
 		m_ZoomLevel = std::clamp(m_ZoomLevel, 0.15f, 3.0f);
 		m_Camera.RecalculateMatrix(-m_AspectRadio * m_ZoomLevel, m_AspectRadio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}

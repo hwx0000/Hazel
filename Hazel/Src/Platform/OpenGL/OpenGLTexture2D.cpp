@@ -59,9 +59,11 @@ namespace Hazel
 	void OpenGLTexture2D::Bind(uint32_t slot)
 	{
 		//// 老式的写法是这样
-		//glActiveTexture(GL_TEXTURE0);// todo, 多个Texture的时候有问题
-		//glBindTexture(GL_TEXTURE_2D, m_TextureID);
-
-		glBindTextureUnit(slot, m_TextureID);
+		glActiveTexture(GL_TEXTURE0);// todo, 多个Texture的时候有问题
+		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+		
+		// 下面这种写法是Cherno的写法, 但是好像我的台式可以运行这个代码
+		// 但是笔记本运行就会有问题...
+		//glBindTextureUnit(slot, m_TextureID);
 	}
 }

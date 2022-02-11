@@ -129,7 +129,6 @@ void ExampleLayer::OnUpdate(const Timestep & step)
 		m_TextureOne->Bind(0);
 		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
 
-		transform = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 		m_TextureTwo->Bind(0);
 		Hazel::Renderer::Submit(textureShader, m_QuadVertexArray, transform);
 		// todo: 后续需要把上面代码改为Batch操作
