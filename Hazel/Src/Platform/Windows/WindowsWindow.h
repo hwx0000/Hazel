@@ -13,7 +13,8 @@ namespace Hazel
 		int const GetWindowWidth() const override { return m_Data.width; };
 		bool IsVSync() const override { return m_Data.isVSync; };
 		void SetVSync(bool) override;
-		void OnUpdate()override;
+		void OnUpdate() override;
+		void OnResized(int width, int height) override;
 		void* GetNativeWindow() const override;
 		inline void SetEventCallback(const EventCallbackFn& callback)override { m_Data.eventCallback = callback; };
 

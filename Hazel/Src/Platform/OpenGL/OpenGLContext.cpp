@@ -15,6 +15,7 @@ namespace Hazel
 		CORE_LOG("    Renderer: {0}", glGetString(GL_RENDERER));
 		CORE_LOG("    Version: {0}", glGetString(GL_VERSION));
 
+		// TODO: 应该挪到Renderer::Init里, 在里面调用RenderCommand::Init()
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 	}

@@ -25,12 +25,15 @@ namespace Hazel
 		virtual ~Application();
 		inline static Application& Get() { return *s_Instance;  }
 
-		void OnEvent(Event& e);
 		void Run();						// 注意, Run不是虚函数, 用户的自定义类无法override此函数
-		bool OnWindowClose(WindowCloseEvent& e);
+		
 		void PushLayer(Layer* layer);
 		Layer* PopLayer();
 		Window& GetWindow()const { return *m_Window; }
+
+		void OnEvent(Event& e);			// 此函数绑定到了Window的各种事件上
+		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResized(WindowResizedEvent& e);
 
 	private:
 		static Application* s_Instance;
@@ -41,6 +44,7 @@ namespace Hazel
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 		bool m_Running = true;
+		bool m_Minimized = false;
 
 	private:
 		float m_LastTimestep;

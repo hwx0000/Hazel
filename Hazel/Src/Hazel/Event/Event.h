@@ -51,14 +51,17 @@ namespace Hazel
 	};
 
 	// 当收到Event时，创建对应的EventDispatcher
-	class HAZEL_API EventDispatcher 
+	// EventDispatcher本质上是一个产生的Event的Wrapper
+	// 根据wrap的Event类型产生了对应的Dispatch事件的函数
+	class HAZEL_API EventDispatcher
 	{
 		template<typename T>
 		using EventHandler = std::function<bool(T&)>;//EventHandler存储了一个输入为任意类型的引用，返回值为bool的函数指针
 	public:
-		EventDispatcher(Event& event):
-			m_Event(event){}
+		EventDispatcher(Event& e):
+			m_Event(e){}
 
+		// Dispatch会直接执行响应事件对应的函数指针对应的函数
 		// T指的是事件类型, 如果输入的类型没有GetStaticType会报错
 		template<typename T>
 		void Dispatch(EventHandler<T> handler)
@@ -66,6 +69,7 @@ namespace Hazel
 			if (m_Event.m_Handled)
 				return;
 
+			// 只有Event类型跟模板T匹配时, 才响应事件 
 			if (m_Event.GetEventType() == T::GetStaticType()) 
 			{
 				m_Event.m_Handled = handler(*(T*)&m_Event); //使用(T*)把m_Event转换成输入事件的指针类型

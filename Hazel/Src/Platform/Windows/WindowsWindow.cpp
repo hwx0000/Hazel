@@ -16,17 +16,17 @@ namespace Hazel
 	}
 
 
-	Hazel::WindowsWindow::WindowsWindow(const WindowProps& props)
+	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		Init(props);
 	}
 
-	Hazel::WindowsWindow::~WindowsWindow()
+	WindowsWindow::~WindowsWindow()
 	{
 		Shutdown();
 	}
 
-	void Hazel::WindowsWindow::Init(const WindowProps& props)
+	void WindowsWindow::Init(const WindowProps& props)
 	{
 		if (!m_initialized)
 		{
@@ -143,7 +143,7 @@ namespace Hazel
 		);
 	}
 
-	void Hazel::WindowsWindow::SetVSync(bool enabled)
+	void WindowsWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -153,10 +153,15 @@ namespace Hazel
 		m_Data.isVSync = enabled;
 	}
 
-	void Hazel::WindowsWindow::OnUpdate()
+	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
 		m_Context->SwapBuffer();
+	}
+
+	void WindowsWindow::OnResized(int width, int height)
+	{
+		glViewport(0, 0, width, height);
 	}
 
 	void* WindowsWindow::GetNativeWindow() const
