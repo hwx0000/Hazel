@@ -39,6 +39,7 @@ project "Hazel"
 	{
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/Src",
+		"%{prj.name}/Src/Hazel",
 		"%{prj.name}/vendor/GLFW/include",
 		"%{prj.name}/vendor/Glad/include",
 		"%{prj.name}/vendor/imgui",
@@ -90,6 +91,7 @@ project "Sandbox"
 	{
         "Hazel/vendor/spdlog/include",
 		"Hazel/Src",
+		"Hazel/Src/Hazel",
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui"
 	}

@@ -1,5 +1,5 @@
 #pragma once
-#include "Hazel/Layer.h"
+#include "Hazel/Core/Layer.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/OrthographicCameraController.h"

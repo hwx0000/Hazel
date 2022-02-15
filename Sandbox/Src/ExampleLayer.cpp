@@ -1,9 +1,9 @@
 #include "ExampleLayer.h"
-#include "Hazel/Input.h"
+#include "Hazel/Core/Input.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/RendererAPI.h"
 #include "Hazel/Renderer/Renderer.h"
-#include "Hazel//KeyCode.h"
+#include "Hazel/Core/KeyCode.h"
 #include "imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <filesystem>

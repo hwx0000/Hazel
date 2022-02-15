@@ -1,13 +1,13 @@
 #include "hzpch.h"
-#include "Application.h"
-#include "Window.h"
+#include "Core/Application.h"
+#include "Core/Window.h"
 #include "Event/MouseEvent.h"
 #include "Event/ApplicationEvent.h"
-#include "Input.h"
+#include "Core/Input.h"
 #include "Renderer/Buffer.h"
-#include "Hazel/Renderer/RenderCommand.h"
-#include "Hazel/OrthographicCamera.h"
-#include "Hazel/KeyCode.h"
+#include "Renderer/RenderCommand.h"
+#include "OrthographicCamera.h"
+#include "Core/KeyCode.h"
 
 // TODO: 
 #include <GLFW/glfw3.h>

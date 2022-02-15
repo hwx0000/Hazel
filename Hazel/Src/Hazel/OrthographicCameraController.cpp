@@ -1,9 +1,9 @@
 #include "hzpch.h"
 #include "OrthographicCameraController.h"
-#include "Hazel/Input.h"
-#include "Hazel/KeyCode.h"
-#include "Hazel/Event/MouseEvent.h"
-#include "Hazel/Event/KeyEvent.h"
+#include "Core/Input.h"
+#include "Core/KeyCode.h"
+#include "Event/MouseEvent.h"
+#include "Event/KeyEvent.h"
 
 namespace Hazel
 {

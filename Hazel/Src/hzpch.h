@@ -12,5 +12,5 @@
 #include <unordered_map>
 #include <set>
 #include <functional>
-#include "Hazel/Log.h"
+#include "Hazel/Core/Log.h"
 #include <fstream>

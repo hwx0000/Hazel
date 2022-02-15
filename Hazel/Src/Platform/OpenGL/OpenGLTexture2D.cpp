@@ -2,7 +2,7 @@
 #include "OpenGLTexture2D.h"
 #include "glad/glad.h"
 #include "stb_image.cpp"
-#include "Hazel/Core.h"
+#include "Core/Core.h"
 
 namespace Hazel
 {
