@@ -4,10 +4,6 @@
 
 #include "Hazel/Core/Application.h"
 
-//---------EntrtryPoint ------------
-#include "Hazel/Core/EntryPoint.h"
-//----------------------------------
-
 #include "Hazel/Core/Log.h"
 
 #include "Hazel/ImGui/ImGuiLayer.h"
@@ -22,3 +18,6 @@
 #include "Hazel/Renderer/VertexArray.h"
 
 #include "Hazel/Core/Timestep.h"
+#include "Hazel/OrthographicCameraController.h"
+#include "Hazel/Renderer/ShaderLibrary.h"
+#include "Hazel/Renderer/Texture.h"

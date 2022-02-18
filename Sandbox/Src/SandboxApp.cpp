@@ -1,5 +1,6 @@
 #include "SandboxApp.h"
 #include "ExampleLayer.h"
+#include "Renderer2DTestLayer.h"
 
 
 SandboxApp::SandboxApp()
@@ -12,7 +13,8 @@ SandboxApp::SandboxApp()
 	m_ImGuiLayer = new Hazel::ImGuiLayer();
 	m_LayerStack.PushOverlay(m_ImGuiLayer);
 	
-	m_LayerStack.PushLayer(new ExampleLayer());
+	//m_LayerStack.PushLayer(new ExampleLayer());
+	m_LayerStack.PushLayer(new Renderer2DTestLayer());
 
 	//m_Window->SetVSync(true);
 }

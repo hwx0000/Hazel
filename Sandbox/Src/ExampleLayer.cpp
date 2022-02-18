@@ -1,9 +1,4 @@
 #include "ExampleLayer.h"
-#include "Hazel/Core/Input.h"
-#include "Hazel/Renderer/RenderCommand.h"
-#include "Hazel/Renderer/RendererAPI.h"
-#include "Hazel/Renderer/Renderer.h"
-#include "Hazel/Core/KeyCode.h"
 #include "imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <filesystem>
@@ -92,7 +87,7 @@ void ExampleLayer::OnEvent(Hazel::Event & e)
 }
 
 // 这里的step相当于deltaTime
-void ExampleLayer::OnUpdate(const Timestep & step)
+void ExampleLayer::OnUpdate(const Hazel::Timestep & step)
 {
 	m_OrthoCameraController.OnUpdate(step);
 

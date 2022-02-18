@@ -1,10 +1,5 @@
 #pragma once
-#include "Hazel/Core/Layer.h"
-#include "Hazel/Renderer/Shader.h"
-#include "Hazel/Renderer/VertexArray.h"
-#include "Hazel/OrthographicCameraController.h"
-#include "Hazel/Renderer/Texture.h"
-#include "Hazel/Renderer/ShaderLibrary.h"
+#include "Hazel.h"
 
 // 这里的Camera是属于Layer的, 没有存在Application或Sandbox类里
 class ExampleLayer : public Hazel::Layer
@@ -16,7 +11,7 @@ private:
 	void OnAttach() override;
 	void OnDettach() override;
 	void OnEvent(Hazel::Event& e) override;
-	void OnUpdate(const Timestep& step) override;
+	void OnUpdate(const Hazel::Timestep& step) override;
 	void OnImGuiRender() override;
 
 private:
