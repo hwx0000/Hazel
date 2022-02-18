@@ -6,6 +6,7 @@ namespace Hazel
 	class OpenGLRendererAPI : public RendererAPI
 	{
 	public:
+		virtual void Init() const override;
 
 		// Inherited via RendererAPI
 		virtual void Clear() const override;

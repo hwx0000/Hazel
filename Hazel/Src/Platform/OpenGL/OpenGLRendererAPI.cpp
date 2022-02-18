@@ -4,6 +4,12 @@
 
 namespace Hazel
 {
+	void OpenGLRendererAPI::Init() const
+	{
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+	}
+
 	void OpenGLRendererAPI::Clear() const
 	{
 		// TODO: 后期会添加flag

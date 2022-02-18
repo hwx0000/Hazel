@@ -11,7 +11,10 @@ namespace Hazel
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_Stack)
+		{
+			layer->OnDettach();
 			delete layer;
+		}
 	}
 
 	// 用vector模拟m_Stack，vector[0]为栈顶

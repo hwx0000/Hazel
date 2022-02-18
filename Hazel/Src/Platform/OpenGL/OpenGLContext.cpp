@@ -15,9 +15,15 @@ namespace Hazel
 		CORE_LOG("    Renderer: {0}", glGetString(GL_RENDERER));
 		CORE_LOG("    Version: {0}", glGetString(GL_VERSION));
 
-		// TODO: 应该挪到Renderer::Init里, 在里面调用RenderCommand::Init()
-		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+		// 检查OpenGL版本
+#ifdef HZ_ENABLE_ASSERTS
+		int versionMajor;
+		int versionMinor;
+		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+
+		HAZEL_CORE_ASSERT((versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5)), "Hazel requires at least OpenGL version 4.5!");
+#endif
 	}
 
 	void OpenGLContext::SwapBuffer() 

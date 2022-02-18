@@ -3,6 +3,7 @@
 #include "Hazel/Event/ApplicationEvent.h"
 #include "Hazel/Event/KeyEvent.h"
 #include "Hazel/Event/MouseEvent.h"
+#include "Hazel/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 
 
@@ -45,6 +46,8 @@ namespace Hazel
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
+
+		Renderer::Init();
 
 		// glfw规定的回调函数里，不能传入m_Data的指针，所以只能通过glfw的API设置数据的指针
 		// 下面函数会把m_Window传进去，然后又把m_Window作为lambda的参数输入进去

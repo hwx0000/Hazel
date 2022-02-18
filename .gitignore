@@ -11,3 +11,6 @@ bin-int/
 *.vcxproj.user
 *.vcxproj.filters
 *.sln
+
+# submodule
+Hazel/vendor/imgui/

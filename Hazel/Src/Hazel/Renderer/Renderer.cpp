@@ -6,6 +6,11 @@ namespace Hazel
 {
 	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData();// 最后的()居然可以去掉
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(const OrthographicCamera& camera)
 	{
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
