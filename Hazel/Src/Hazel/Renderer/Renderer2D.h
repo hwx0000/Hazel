@@ -15,9 +15,10 @@ namespace Hazel
 	class Renderer2D
 	{
 	public:
-		static inline RendererAPI::APIType GetAPI() { return RendererAPI::GetAPIType(); }
 
 		static void Init();
+		static void Shutdown();
+
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 		
@@ -25,14 +26,5 @@ namespace Hazel
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>);
 
-	private:
-		// 对于不同的物体, MVP矩阵里的M都是不同的, 但是VP矩阵都是相同的
-		// 所以这里归类在场景信息里
-		struct SceneData
-		{
-			glm::mat4 ViewProjectionMatrix;
-		};
-
-		static SceneData* s_SceneData;
 	};
 }

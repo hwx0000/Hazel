@@ -15,8 +15,6 @@ public:
 private:
 	Hazel::OrthographicCameraController m_OrthoCameraController;
 	std::shared_ptr<Hazel::ShaderLibrary> m_ShaderLibrary;
-	std::shared_ptr<Hazel::Texture2D> m_Texture;
 
-	std::shared_ptr<Hazel::VertexArray> m_QuadVertexArray;
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 };
