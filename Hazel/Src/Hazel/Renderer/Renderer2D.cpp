@@ -106,7 +106,22 @@ namespace Hazel
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, std::shared_ptr<Texture>)
+	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, std::shared_ptr<Texture> tex)
 	{
+		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
+		tex->Bind(0);		
+		s_Data->TextureShader->Bind();
+
+		s_Data->TextureShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+		transform = glm::translate(transform, position);
+
+		s_Data->TextureShader->UploadUniformMat4("u_Transform", transform);
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture> tex)
+	{
+		DrawQuad(glm::vec3(position.x, position.y, 0), size, tex);
 	}
 }
