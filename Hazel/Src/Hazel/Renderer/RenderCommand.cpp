@@ -11,6 +11,7 @@ namespace Hazel
 		s_RendererAPI->Init();
 	}
 
+	// 调用此API之前, 绑定了什么Shader, 就用对应的Shader绘制这个vertex array
 	void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArr)
 	{
 		vertexArr->Bind();

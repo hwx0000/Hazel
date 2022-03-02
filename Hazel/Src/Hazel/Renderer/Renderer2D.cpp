@@ -75,6 +75,7 @@ namespace Hazel
 
 		std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
 		s_Data->TextureShader = Shader::Create(shaderPath2);
+		s_Data->TextureShader->UploadUniformI1("u_Texture", 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -86,21 +87,22 @@ namespace Hazel
 	void Renderer2D::BeginScene(const OrthographicCamera & camera)
 	{
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+
+		s_Data->FlatColorShader->Bind();
+		s_Data->FlatColorShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 	}
 
 	void Renderer2D::EndScene()
 	{
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2 & position, const glm::vec2 & size, const glm::vec4 & color)
-	{
-		DrawQuad(glm::vec3(position.x, position.y, 0), size, color);
-	}
-
+	// 这里的position的z值好像要在0到1之间
 	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, const glm::vec4 & color)
 	{
 		s_Data->FlatColorShader->Bind();
-		s_Data->FlatColorShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 		s_Data->FlatColorShader->UploadUniformVec4("u_Color", color);
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		transform = glm::translate(transform, position);
@@ -114,8 +116,6 @@ namespace Hazel
 		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
 		tex->Bind(0);		
 		s_Data->TextureShader->Bind();
-
-		s_Data->TextureShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		transform = glm::translate(transform, position);
 
@@ -126,5 +126,10 @@ namespace Hazel
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture> tex)
 	{
 		DrawQuad(glm::vec3(position.x, position.y, 0), size, tex);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		DrawQuad(glm::vec3(position.x, position.y, 0), size, color);
 	}
 }
