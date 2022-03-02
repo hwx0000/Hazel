@@ -72,6 +72,9 @@ namespace Hazel
 		std::string path = std::filesystem::current_path().string();
 		std::string shaderPath1 = std::filesystem::current_path().string() + "\\Resources\\FlatColorShader.glsl";
 		s_Data->FlatColorShader = Shader::Create(shaderPath1);
+
+		std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
+		s_Data->TextureShader = Shader::Create(shaderPath2);
 	}
 
 	void Renderer2D::Shutdown()
