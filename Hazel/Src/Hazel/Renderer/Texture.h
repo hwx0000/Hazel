@@ -12,6 +12,8 @@ namespace Hazel
 		virtual unsigned int GetWidth() = 0;
 		virtual unsigned int GetHeight() = 0;
 
+		virtual void SetData(void* data, uint32_t size) = 0;
+
 		virtual void Bind(uint32_t slot) = 0;
 	};
 
@@ -20,5 +22,6 @@ namespace Hazel
 	{
 	public:
 		static std::shared_ptr<Texture2D> Create(const std::string& path);
+		static std::shared_ptr<Texture2D> Create(uint32_t width, uint32_t height);
 	};
 }

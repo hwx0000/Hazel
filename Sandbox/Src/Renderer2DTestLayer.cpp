@@ -7,16 +7,6 @@
 Renderer2DTestLayer::Renderer2DTestLayer(const std::string& name) :
 m_OrthoCameraController(1.6667f, 1.0f)
 {
-	//m_ShaderLibrary = std::make_shared<Hazel::ShaderLibrary>();
-	//// std::filesystem是C++17提供的库, 用于方便的获取Project的绝对路径
-	//std::string path = std::filesystem::current_path().string();
-	//std::string shaderPath1 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
-	//m_ShaderLibrary->Load(shaderPath1);
-
-	//auto m_TextureShader = m_ShaderLibrary->Get("TextureShader");
-
-	//std::string path1 = path + "\\Resources\\HeadIcon.jpg";
-
 	Hazel::Renderer2D::Init();
 
 	std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";

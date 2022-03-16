@@ -19,9 +19,8 @@ namespace Hazel
 	struct Renderer2DStorage
 	{
 		std::shared_ptr<VertexArray> QuadVertexArray;		// 一个Mesh, 代表Quad
-		std::shared_ptr<Shader> FlatColorShader;			// 两个Shader
-		std::shared_ptr<Shader> TextureShader;
-		std::shared_ptr<Texture2D> WhiteTexture;			// 一个默认贴图, 用于Blend等
+		std::shared_ptr<Shader> Shader;
+		std::shared_ptr<Texture2D> WhiteTexture;			
 	};
 
 	// 定义静态的Data, 这种static对象是不是不方便用shared_ptr?
@@ -34,7 +33,7 @@ namespace Hazel
 		s_Data = new Renderer2DStorage();
 
 		// 创建Vertex Array前要先创建VBO和EBO
-		
+
 		// 创建VBO
 		float quadVertices[] =
 		{
@@ -70,12 +69,15 @@ namespace Hazel
 
 
 		std::string path = std::filesystem::current_path().string();
-		std::string shaderPath1 = std::filesystem::current_path().string() + "\\Resources\\FlatColorShader.glsl";
-		s_Data->FlatColorShader = Shader::Create(shaderPath1);
+		std::string shaderPath = std::filesystem::current_path().string() + "\\Resources\\Shader2D.glsl";
+		s_Data->Shader = Shader::Create(shaderPath);
 
-		std::string shaderPath2 = std::filesystem::current_path().string() + "\\Resources\\TextureShader.glsl";
-		s_Data->TextureShader = Shader::Create(shaderPath2);
-		s_Data->TextureShader->UploadUniformI1("u_Texture", 0);
+		s_Data->WhiteTexture = Texture2D::Create(1, 1);
+		void* s = (void*)new int[1]{ (int)0xffffffff };
+		uint32_t whiteTextureData = 0xffffffff;
+		//s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
+		s_Data->Shader->UploadUniformI1("u_Texture", 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -88,11 +90,8 @@ namespace Hazel
 	{
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 
-		s_Data->FlatColorShader->Bind();
-		s_Data->FlatColorShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		s_Data->Shader->Bind();
+		s_Data->Shader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 	}
 
 	void Renderer2D::EndScene()
@@ -102,12 +101,13 @@ namespace Hazel
 	// 这里的position的z值好像要在0到1之间
 	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, const glm::vec4 & color)
 	{
-		s_Data->FlatColorShader->Bind();
-		s_Data->FlatColorShader->UploadUniformVec4("u_Color", color);
+		s_Data->Shader->UploadUniformVec4("u_Color", color);
+		s_Data->WhiteTexture->Bind(0);
+
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		transform = glm::translate(transform, position);
+		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
 
-		s_Data->FlatColorShader->UploadUniformMat4("u_Transform", transform);
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
@@ -115,11 +115,11 @@ namespace Hazel
 	{
 		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
 		tex->Bind(0);		
-		s_Data->TextureShader->Bind();
+		s_Data->Shader->UploadUniformVec4("u_Color", { 1.0f, 1.0f, 1.0f, 1.0f });
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		transform = glm::translate(transform, position);
 
-		s_Data->TextureShader->UploadUniformMat4("u_Transform", transform);
+		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
