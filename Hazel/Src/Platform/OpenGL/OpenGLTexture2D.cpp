@@ -44,14 +44,11 @@ namespace Hazel
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_Width(width), m_Height(height)
 	{
-		glGenTextures(1, &m_TextureID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
-
-		//glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
-
-		uint32_t whiteTextureData = 0xffffffff;
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &whiteTextureData);
-		//glTexImage2D(m_TextureID, 1, GL_RGBA, m_Width, m_Height, GL_UNSIGNED_BYTE, NULL);
+		
+		// 注意格式是GL_RGBA8
+		glTextureStorage2D(m_TextureID, 1, GL_RGBA8, m_Width, m_Height);
 
 		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -78,7 +75,7 @@ namespace Hazel
 
 	void OpenGLTexture2D::Bind(uint32_t slot)
 	{
-		//// 老式的写法是这样
+		// 老式的写法是这样
 		glActiveTexture(GL_TEXTURE0);// todo, 多个Texture的时候有问题
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 		
@@ -93,7 +90,6 @@ namespace Hazel
 		uint32_t bpp = 4;// 默认是用RGBA的格式
 		HAZEL_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 		// 可以通过glTextureSubImage2D这个API，为Texture手动提供数据，创建这个WhiteTexture
-		//glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glTexSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_TextureID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 }
