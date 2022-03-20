@@ -17,4 +17,13 @@ private:
 	std::shared_ptr<Hazel::Texture2D> m_Texture2D;
 
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
+
+	// 在SandBox里添加一个数组, 每个数组元素代表每个Timer的结果
+	struct ProfileResult
+	{
+		const char* Name;
+		float Time;
+	};
+
+	std::vector<ProfileResult> m_ProfileResults;
 };

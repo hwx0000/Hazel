@@ -23,3 +23,5 @@
 #include "Hazel/Renderer/ShaderLibrary.h"
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/Renderer2D.h"
+
+#include "Hazel/Timer.h"
