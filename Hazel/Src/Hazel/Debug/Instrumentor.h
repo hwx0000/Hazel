@@ -84,4 +84,14 @@ namespace Hazel
 		std::ofstream m_OutputStream;
 		int m_ProfileCount;
 	};
+
+#ifdef HAZEL_PROFILING
+	#define HAZEL_PROFILINE_BEGIN_SESSION(name, filename) Hazel::Instrumentor::Get().BeginSession(name, filename);
+	#define HAZEL_PROFILINE_END_SESSION() Hazel::Instrumentor::Get().EndSession();
+#define HAZEL_PROFILE_TIMER(name) Hazel::Timer timer##__LINE__(name, [&](ProfileResult result){Hazel::Instrumentor::Get().WriteProfile(result);});
+#else
+	#define HAZEL_PROFILINE_BEGIN_SESSION(name, filename)
+	#define HAZEL_PROFILINE_END_SESSION()
+	#define HAZEL_PROFILE_TIMER(name)
+#endif
 }

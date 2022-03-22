@@ -23,10 +23,8 @@ namespace Hazel
 		while (m_Running)
 		{
 			{
-				Hazel::Timer s("Layer Stack Update", [&](ProfileResult result)
-					{
-						Hazel::Instrumentor::Get().WriteProfile(result);
-					});
+				HAZEL_PROFILE_TIMER("Layer Stack Update")
+
 				// 1. 算deltatime, deltatime是引擎内部算的东西, 会在layer里提供deltatime为参数
 				float time = (float)glfwGetTime();// todo: 这里不应该用glfw的东西
 				Timestep timestep = time - m_LastTimestep;
@@ -55,10 +53,8 @@ namespace Hazel
 			m_ImGuiLayer->End();
 
 			{
-				Hazel::Timer s("Window Update", [&](ProfileResult result)
-					{
-						Hazel::Instrumentor::Get().WriteProfile(result);
-					});
+				HAZEL_PROFILE_TIMER("Window Update")
+
 				// 4. 每帧结束调用glSwapBuffer函数, 把画面显示到屏幕上
 				m_Window->OnUpdate();
 			}
