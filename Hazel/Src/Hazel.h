@@ -24,4 +24,7 @@
 #include "Hazel/Renderer/Texture.h"
 #include "Hazel/Renderer/Renderer2D.h"
 
-#include "Hazel/Timer.h"
+#ifdef HAZEL_PROFILING
+#include "Hazel/Debug/Timer.h"
+#include "Hazel/Debug/Instrumentor.h"
+#endif

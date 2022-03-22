@@ -1,13 +1,5 @@
 #include "hzpch.h"
-#include "Core/Application.h"
-#include "Core/Window.h"
-#include "Event/MouseEvent.h"
-#include "Event/ApplicationEvent.h"
-#include "Core/Input.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/RenderCommand.h"
-#include "OrthographicCamera.h"
-#include "Core/KeyCode.h"
+#include "Hazel.h"
 
 // TODO: 
 #include <GLFW/glfw3.h>
@@ -30,19 +22,25 @@ namespace Hazel
 	{
 		while (m_Running)
 		{
-			// 1. 算deltatime, deltatime是引擎内部算的东西, 会在layer里提供deltatime为参数
-			float time = (float)glfwGetTime();// todo: 这里不应该用glfw的东西
-			Timestep timestep = time - m_LastTimestep;
-			m_LastTimestep = time;
-
-			if (!m_Minimized)
 			{
-				// 2. 再执行使用引擎的用户代码的循环
-				// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
-				// 所以创建完window后，可以直接调用其loop开始渲染
-				for (Hazel::Layer* layer : m_LayerStack)
+				Hazel::Timer s("Layer Stack Update", [&](ProfileResult result)
+					{
+						Hazel::Instrumentor::Get().WriteProfile(result);
+					});
+				// 1. 算deltatime, deltatime是引擎内部算的东西, 会在layer里提供deltatime为参数
+				float time = (float)glfwGetTime();// todo: 这里不应该用glfw的东西
+				Timestep timestep = time - m_LastTimestep;
+				m_LastTimestep = time;
+
+				if (!m_Minimized)
 				{
-					layer->OnUpdate(timestep);
+					// 2. 再执行使用引擎的用户代码的循环
+					// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
+					// 所以创建完window后，可以直接调用其loop开始渲染
+					for (Hazel::Layer* layer : m_LayerStack)
+					{
+						layer->OnUpdate(timestep);
+					}
 				}
 			}
 			
@@ -56,8 +54,14 @@ namespace Hazel
 			}
 			m_ImGuiLayer->End();
 
-			// 4. 每帧结束调用glSwapBuffer函数, 把画面显示到屏幕上
-			m_Window->OnUpdate();
+			{
+				Hazel::Timer s("Window Update", [&](ProfileResult result)
+					{
+						Hazel::Instrumentor::Get().WriteProfile(result);
+					});
+				// 4. 每帧结束调用glSwapBuffer函数, 把画面显示到屏幕上
+				m_Window->OnUpdate();
+			}
 		}
 	}
 

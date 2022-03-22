@@ -22,3 +22,6 @@
 #endif
 
 #define BIT(x) 1 << x 
+
+// todo
+#define HAZEL_PROFILING

@@ -36,13 +36,13 @@ void Renderer2DTestLayer::OnEvent(Hazel::Event& e )
 void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 {
 	{
-		// 使用的时候, 需要传入一个profileResult对象
-		Hazel::Timer t("CameraController.OnUpdate", [&](const char* name, float duration)
-		{ 
-			ProfileResult profileResult = {name, duration};
-			m_ProfileResults.push_back(profileResult); 
-		});
-		m_OrthoCameraController.OnUpdate(ts);
+		//// 使用的时候, 需要传入一个profileResult对象
+		//Hazel::Timer t("CameraController.OnUpdate", [&](const char* name, float duration)
+		//{ 
+		//	Hazel::ProfileResult profileResult = {name, duration};
+		//	m_ProfileResults.push_back(profileResult); 
+		//});
+		//m_OrthoCameraController.OnUpdate(ts);
 	}
 
 	// 每帧开始Clear
@@ -62,14 +62,14 @@ void Renderer2DTestLayer::OnImGuiRender()
 	ImGui::Begin("Test");
 	ImGui::ColorEdit4("Flat Color Picker", glm::value_ptr(m_FlatColor));
 
-	for (size_t i = 0; i < m_ProfileResults.size(); i++)
-	{
-		auto& result = m_ProfileResults[i];
-		char label[50];
-		strcpy_s(label, result.Name);
-		strcat_s(label, ": %.3fms ");		// 保留三位小数
-		ImGui::Text(label, result.Time);// 打印Profile条目的名字和time
-	}
+	//for (size_t i = 0; i < m_ProfileResults.size(); i++)
+	//{
+	//	auto& result = m_ProfileResults[i];
+	//	char label[50];
+	//	strcpy_s(label, result.Name);
+	//	strcat_s(label, ": %.3fms ");		// 保留三位小数
+	//	ImGui::Text(label, result.Time);// 打印Profile条目的名字和time
+	//}
 
 	m_ProfileResults.clear();
 	ImGui::End();

@@ -7,9 +7,17 @@ extern Hazel::Application* Hazel::CreateApplication();
 
 int main()
 {
+	Hazel::Instrumentor::Get().BeginSession("Init SpdLog System", "InitSpdLog.json");
 	Hazel::Log::Init();
+	Hazel::Instrumentor::Get().EndSession();
+
+	Hazel::Instrumentor::Get().BeginSession("Create Application", "CreateApplication.json");
 	auto app = Hazel::CreateApplication();
+	Hazel::Instrumentor::Get().EndSession();
+	
+	Hazel::Instrumentor::Get().BeginSession("Run Application", "RunApplication.json");
 	app->Run();
+	Hazel::Instrumentor::Get().EndSession();
 	
 	delete app;
 
