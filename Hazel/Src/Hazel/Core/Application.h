@@ -48,6 +48,7 @@ namespace Hazel
 
 	private:
 		float m_LastTimestep;
+		bool m_FirstFrame = true;
 	};
 
 	Application* CreateApplication();

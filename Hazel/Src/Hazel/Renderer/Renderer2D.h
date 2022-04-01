@@ -21,11 +21,12 @@ namespace Hazel
 
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
-		
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-		
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture>);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>);
+
+		static void DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, const glm::vec4& color);
+		static void DrawQuad(const glm::vec3& position, float rotatedAngle, const glm::vec2& size, const glm::vec4& color);
+
+
+		static void DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, std::shared_ptr<Texture>, const glm::vec4& color = { 1,1,1,1 });
+		static void DrawQuad(const glm::vec3& position, float rotatedAngle, const glm::vec2& size, std::shared_ptr<Texture>, const glm::vec4& color = { 1,1,1,1 });
 	};
 }

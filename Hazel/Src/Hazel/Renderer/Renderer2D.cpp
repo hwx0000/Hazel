@@ -20,7 +20,7 @@ namespace Hazel
 	{
 		std::shared_ptr<VertexArray> QuadVertexArray;		// 一个Mesh, 代表Quad
 		std::shared_ptr<Shader> Shader;
-		std::shared_ptr<Texture2D> WhiteTexture;			
+		std::shared_ptr<Texture2D> WhiteTexture;
 	};
 
 	// 定义静态的Data, 这种static对象是不是不方便用shared_ptr?
@@ -98,37 +98,48 @@ namespace Hazel
 	}
 
 	// 这里的position的z值好像要在0到1之间
-	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, const glm::vec4 & color)
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, const glm::vec4 & color)
 	{
 		s_Data->Shader->UploadUniformVec4("u_Color", color);
 		s_Data->WhiteTexture->Bind(0);
 
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
-		transform = glm::translate(transform, position);
+		transform = glm::rotate(transform, glm::radians(rotatedAngle), { 0, 0, 1 });
+
+		// 这种写法是为了让position为Global Position
+		// 直接写glm::translate(transform, position)得到的是基于LocalRotation进行平移得到的Transform
+		glm::mat4 translation = glm::translate(glm::mat4(1.0f), globalPos);
+		transform = translation * transform;
+
 		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
 
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & position, const glm::vec2 & size, std::shared_ptr<Texture> tex)
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, std::shared_ptr<Texture> tex, const glm::vec4& color)
 	{
 		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
-		tex->Bind(0);		
-		s_Data->Shader->UploadUniformVec4("u_Color", { 1.0f, 1.0f, 1.0f, 1.0f });
+		tex->Bind(0);
+		s_Data->Shader->UploadUniformVec4("u_Color", color);
 		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
-		transform = glm::translate(transform, position);
+		transform = glm::rotate(transform, glm::radians(rotatedAngle), { 0, 0, 1 });
+
+		// 这种写法是为了让position为Global Position
+		// 直接写glm::translate(transform, position)得到的是基于LocalRotation进行平移得到的Transform
+		glm::mat4 translation = glm::translate(glm::mat4(1.0f), globalPos);
+		transform = translation * transform;
 
 		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture> tex)
+	void Renderer2D::DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, std::shared_ptr<Texture> tex, const glm::vec4& color)
 	{
-		DrawQuad(glm::vec3(position.x, position.y, 0), size, tex);
+		DrawQuad(glm::vec3(position.x, position.y, 0), rotatedAngle, size, tex, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, const glm::vec4& color)
 	{
-		DrawQuad(glm::vec3(position.x, position.y, 0), size, color);
+		DrawQuad(glm::vec3(position.x, position.y, 0), rotatedAngle, size, color);
 	}
 }
