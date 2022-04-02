@@ -135,7 +135,7 @@ namespace Hazel
 		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
+	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
 	{
 		s_Data->Shader->UploadUniformVec4("u_Color", color);
 		s_Data->WhiteTexture->Bind(0);
@@ -149,12 +149,12 @@ namespace Hazel
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
+	void Renderer2D::DrawRotatedQuad(const glm::vec2 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
 	{
-		DrawQuad({ globalPos.x, globalPos.y, 0 }, size, rotatedAngle, color);
+		DrawRotatedQuad({ globalPos.x, globalPos.y, 0 }, size, rotatedAngle, color);
 	}
 	
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
 		texture->Bind(0);
@@ -170,8 +170,8 @@ namespace Hazel
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
+		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
 	}
 }
