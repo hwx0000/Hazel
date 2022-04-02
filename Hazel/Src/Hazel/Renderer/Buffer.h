@@ -88,7 +88,7 @@ namespace Hazel
 		void CalculateElementsOffsets();
 	};
 
-	/*static*/ uint32_t GetShaderTypeDataCount(const ShaderDataType& type);
+	uint32_t GetShaderTypeDataCount(const ShaderDataType& type);
 
 	class VertexBuffer
 	{
@@ -99,8 +99,9 @@ namespace Hazel
 		virtual BufferLayout& GetBufferLayout() = 0;
 		virtual void SetBufferLayout(const BufferLayout&) = 0;
 
-		// 注意这个static函数是在基类声明的, 但是会根据Platform在派生类里被定义
-		static VertexBuffer* Create(float* vertices, uint32_t size);
+		// 注意这个static函数是在基类声明的, 会根据当前Renderer::GetAPI()返回VertexBuffer的派生类对象
+		static VertexBuffer* Create(float* vertices, uint32_t size);			// static buffer
+		static VertexBuffer* Create(uint32_t size);								// dynamic buffer
 	protected:
 		uint32_t m_VertexBuffer;
 	};
@@ -112,7 +113,7 @@ namespace Hazel
 		virtual void Bind() const = 0;// 别忘了加const
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetCount() const = 0;
-		static IndexBuffer* Create(int* indices, uint32_t size);
+		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
 	protected:
 		uint32_t m_IndexBuffer;
 	};

@@ -33,8 +33,31 @@ namespace Hazel
 		return buffer;
 	}
 
+	VertexBuffer* VertexBuffer::Create(uint32_t size)
+	{
+		VertexBuffer* buffer = nullptr;
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::APIType::None:
+		{
+			CORE_LOG_ERROR("No RendererAPI selected");
+			HAZEL_ASSERT(false, "Error, please choose a Renderer API");
+			break;
+		}
+		case RendererAPI::APIType::OpenGL:
+		{
+			buffer = (new OpenGLVertexBuffer(size));
 
-	IndexBuffer* IndexBuffer::Create(int* indices, uint32_t size)
+			break;
+		}
+		default:
+			break;
+		}
+
+		return buffer;
+	}
+
+	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t size)
 	{
 		IndexBuffer* buffer = nullptr;
 		switch (Renderer::GetAPI())

@@ -23,7 +23,7 @@ in vec2 TexCoord;
 
 out vec4 color;
 uniform sampler2D u_Texture;
-uniform vec4 u_Color;// as TintColor
+uniform vec4 u_Color;// when draw Texture, it is TintColor, but when draw color, this is color
 uniform float u_TilingFactor;
 
 void main()

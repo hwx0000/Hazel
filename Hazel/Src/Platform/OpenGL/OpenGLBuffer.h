@@ -6,7 +6,8 @@ namespace Hazel
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(float* vertices, uint32_t size);				// static buffer
+		OpenGLVertexBuffer(uint32_t size);								// dynamic buffer
 		virtual ~OpenGLVertexBuffer() override;
 		void Bind()const override;// 别忘了加const
 		void Unbind() const override;
@@ -28,7 +29,7 @@ namespace Hazel
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(int* vertices, uint32_t size);
+		OpenGLIndexBuffer(uint32_t* vertices, uint32_t size);	// Static
 		virtual ~OpenGLIndexBuffer() override;
 		uint32_t GetCount() const override;
 		void Bind()const override;// 别忘了加const

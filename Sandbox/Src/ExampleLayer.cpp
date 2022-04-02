@@ -13,7 +13,7 @@ ExampleLayer::ExampleLayer() : m_OrthoCameraController(1.6667f, 1.0f)
 		 0.5f,  0.5f, 0, 1.0f, 1.0f
 	};
 
-	int quadIndices[] = { 0,1,2,2,1,3 };
+	uint32_t quadIndices[] = { 0,1,2,2,1,3 };
 
 	// 创建VBO
 	std::shared_ptr<Hazel::VertexBuffer>m_QuadVertexBuffer = 
