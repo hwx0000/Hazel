@@ -97,49 +97,81 @@ namespace Hazel
 	{
 	}
 
-	// 这里的position的z值好像要在0到1之间
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, const glm::vec4 & color)
+	// 这里的position的z值要注意在相机的near和far之间, 比如[-1,1]之间
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const glm::vec4 & color) 
+	{
+		s_Data->Shader->UploadUniformVec4("u_Color", color);
+		s_Data->WhiteTexture->Bind(0);// 绑定到IdentityTexture上
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
+		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
+
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
+	{
+		DrawQuad({ globalPos.x, globalPos.y, 0 }, size, color);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
+	{
+		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
+		texture->Bind(0);
+		s_Data->Shader->UploadUniformVec4("u_Color", tintColor);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
+
+		s_Data->Shader->UploadUniformF1("u_TilingFactor", tilingFactor);
+
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2 & position, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
 	{
 		s_Data->Shader->UploadUniformVec4("u_Color", color);
 		s_Data->WhiteTexture->Bind(0);
 
-		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
-		transform = glm::rotate(transform, glm::radians(rotatedAngle), { 0, 0, 1 });
-
-		// 这种写法是为了让position为Global Position
-		// 直接写glm::translate(transform, position)得到的是基于LocalRotation进行平移得到的Transform
-		glm::mat4 translation = glm::translate(glm::mat4(1.0f), globalPos);
-		transform = translation * transform;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * 
+			glm::rotate(glm::mat4(1.0f),glm::radians(rotatedAngle), { 0, 0, 1 }) * 
+			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
 
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, std::shared_ptr<Texture> tex, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
+	{
+		DrawQuad({ globalPos.x, globalPos.y, 0 }, size, rotatedAngle, color);
+	}
+	
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
-		tex->Bind(0);
-		s_Data->Shader->UploadUniformVec4("u_Color", color);
-		glm::mat4 transform = glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
-		transform = glm::rotate(transform, glm::radians(rotatedAngle), { 0, 0, 1 });
+		texture->Bind(0);
+		s_Data->Shader->UploadUniformVec4("u_Color", tintColor);
 
-		// 这种写法是为了让position为Global Position
-		// 直接写glm::translate(transform, position)得到的是基于LocalRotation进行平移得到的Transform
-		glm::mat4 translation = glm::translate(glm::mat4(1.0f), globalPos);
-		transform = translation * transform;
-
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) *
+			glm::rotate(glm::mat4(1.0f), glm::radians(rotatedAngle), { 0, 0, 1 }) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 		s_Data->Shader->UploadUniformMat4("u_Transform", transform);
+
+		s_Data->Shader->UploadUniformF1("u_TilingFactor", tilingFactor);
+
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, std::shared_ptr<Texture> tex, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawQuad(glm::vec3(position.x, position.y, 0), rotatedAngle, size, tex, color);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, float rotatedAngle, const glm::vec2& size, const glm::vec4& color)
-	{
-		DrawQuad(glm::vec3(position.x, position.y, 0), rotatedAngle, size, color);
+		DrawQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
 	}
 }

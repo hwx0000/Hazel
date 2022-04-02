@@ -23,9 +23,10 @@ in vec2 TexCoord;
 
 out vec4 color;
 uniform sampler2D u_Texture;
-uniform vec4 u_Color;
+uniform vec4 u_Color;// as TintColor
+uniform float u_TilingFactor;
 
 void main()
 {
-	color = texture(u_Texture, TexCoord) * u_Color;
+	color = texture(u_Texture, TexCoord * u_TilingFactor) * u_Color;
 }
