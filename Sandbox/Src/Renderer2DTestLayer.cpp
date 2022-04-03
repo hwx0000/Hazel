@@ -51,8 +51,9 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 	{
-		Hazel::Renderer2D::DrawQuad({ 0, 0, -0.1 }, { 1.5, 1.5 }, { 1.0f, 0.0f, 0.0f, 1.0f });// 调用Renderer2D里的FlatColorShader
-		Hazel::Renderer2D::DrawQuad({ 0, 0, 0 }, { 1.0, 1.0 }, m_Texture2D, 3.0f);// 调用Renderer2D里的TextureShader
+		Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });// 调用Renderer2D里的FlatColorShader
+		Hazel::Renderer2D::DrawQuad({ 0.2f, -0.8f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });// 调用Renderer2D里的FlatColorShader
+		//Hazel::Renderer2D::DrawQuad({ 0, 0, 0 }, { 1.0, 1.0 }, m_Texture2D, 3.0f);// 调用Renderer2D里的TextureShader
 	}
 	Hazel::Renderer2D::EndScene();
 }

@@ -98,6 +98,7 @@ namespace Hazel
 		virtual void Unbind() const = 0;
 		virtual BufferLayout& GetBufferLayout() = 0;
 		virtual void SetBufferLayout(const BufferLayout&) = 0;
+		virtual void SetData(uint32_t pos, void* data, uint32_t len) = 0;
 
 		// 注意这个static函数是在基类声明的, 会根据当前Renderer::GetAPI()返回VertexBuffer的派生类对象
 		static VertexBuffer* Create(float* vertices, uint32_t size);			// static buffer

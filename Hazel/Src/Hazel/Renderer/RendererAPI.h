@@ -17,7 +17,7 @@ namespace Hazel
 		virtual void Init() const = 0;
 		virtual void Clear() const = 0;
 		virtual void SetClearColor(const glm::vec4&) const = 0;
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>&) const = 0;
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>&, uint32_t count) const = 0;// count为0则绘制整个IndexBuffer
 
 		inline static APIType GetAPIType() { return s_CurType; }
 	private:

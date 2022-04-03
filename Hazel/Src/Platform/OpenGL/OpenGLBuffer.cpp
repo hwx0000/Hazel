@@ -33,6 +33,11 @@ namespace Hazel
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	void OpenGLVertexBuffer::SetData(uint32_t pos, void * data, uint32_t len)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, pos, len, data);
+	}
+
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t size)
 	{
 		m_Count = size / sizeof(uint32_t);

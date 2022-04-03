@@ -11,6 +11,7 @@ namespace Hazel
 		virtual ~OpenGLVertexBuffer() override;
 		void Bind()const override;// 别忘了加const
 		void Unbind() const override;
+		void SetData(uint32_t pos, void* data, uint32_t len) override;
 		BufferLayout& GetBufferLayout() override
 		{
 			return m_Layout;
