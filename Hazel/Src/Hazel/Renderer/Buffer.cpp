@@ -90,4 +90,12 @@ namespace Hazel
 			m_Stride += element.GetSize();
 		}
 	}
+
+	bool BufferElement::IsIntergerType() const
+	{
+		if (m_Type == ShaderDataType::INT) 
+			return true;
+		
+		return false;
+	}
 }

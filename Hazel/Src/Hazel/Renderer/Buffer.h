@@ -62,6 +62,7 @@ namespace Hazel
 		uint32_t GetSize() const { return m_Size; }
 		uint32_t GetOffset() const { return m_Offset; }
 		ShaderDataType GetType() const { return m_Type; }
+		bool IsIntergerType() const;
 		bool IsNormalized() const { return m_IsNormalized; }
 	private:
 		std::string m_Name;

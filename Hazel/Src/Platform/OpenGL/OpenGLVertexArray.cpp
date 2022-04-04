@@ -50,12 +50,24 @@ namespace Hazel
 		for (const BufferElement& element : layout)
 		{
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
-				GetShaderTypeDataCount(element.GetType()),
-				GetShaderDataTypeToOpenGL(element.GetType()),
-				element.IsNormalized() ? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				(const void*)(element.GetOffset()));
+			if (element.IsIntergerType())
+			{
+				glVertexAttribIPointer(index,
+					GetShaderTypeDataCount(element.GetType()),
+					GetShaderDataTypeToOpenGL(element.GetType()),
+					layout.GetStride(),
+					(const void*)(element.GetOffset()));
+			}
+			else
+			{
+				glVertexAttribPointer(index,
+					GetShaderTypeDataCount(element.GetType()),
+					GetShaderDataTypeToOpenGL(element.GetType()),
+					element.IsNormalized() ? GL_TRUE : GL_FALSE,
+					layout.GetStride(),
+					(const void*)(element.GetOffset()));
+			}
+
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexBuffer);
