@@ -5,7 +5,8 @@ namespace Hazel
 {
 	enum class ShaderDataType
 	{
-		FLOAT, FLOAT2, FLOAT3, FLOAT4
+		FLOAT, FLOAT2, FLOAT3, FLOAT4,
+		INT
 	};
 
 	// 正常的函数在多个cpp里会出现重定义，但是这里有static就不一样了，每一个函数都是该cpp的namespace范围里适用的
@@ -13,24 +14,30 @@ namespace Hazel
 	{
 		switch (type)
 		{
-		case ShaderDataType::FLOAT:  return 4;
-		case ShaderDataType::FLOAT2: return 4 * 2;
-		case ShaderDataType::FLOAT3: return 4 * 3;
-		case ShaderDataType::FLOAT4: return 4 * 4;
+			// 32位机和64位机上int和float都是4个字节, 只有long和
+			// 指针是4和8个字节的区别
+			case ShaderDataType::FLOAT:  return 4;
+			case ShaderDataType::FLOAT2: return 4 * 2;
+			case ShaderDataType::FLOAT3: return 4 * 3;
+			case ShaderDataType::FLOAT4: return 4 * 4;
+			case ShaderDataType::INT : return 4;
 		}
 
 		HAZEL_ASSERT(false, "Unknown ShaderDataType")
 			return -1;
 	}
 
+	// 主要是用于glVertexAttribPointer函数, 用于描述数据里的GL_FLOAT或者
+	// GL_INT的个数
 	static uint32_t GetShaderTypeDataCount(const ShaderDataType& type)
 	{
 		switch (type)
 		{
-		case ShaderDataType::FLOAT: return 1;
-		case ShaderDataType::FLOAT2: return 2;
-		case ShaderDataType::FLOAT3: return 3;
-		case ShaderDataType::FLOAT4: return 4;
+			case ShaderDataType::FLOAT: return 1;
+			case ShaderDataType::FLOAT2: return 2;
+			case ShaderDataType::FLOAT3: return 3;
+			case ShaderDataType::FLOAT4: return 4;
+			case ShaderDataType::INT: return 1;
 		}
 		HAZEL_ASSERT(false, "Unknown Shader Data Type");
 		return -1;

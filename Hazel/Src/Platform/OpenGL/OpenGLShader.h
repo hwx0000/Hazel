@@ -9,12 +9,13 @@ namespace Hazel
 	public:
 		OpenGLShader(const std::string& path);
 		OpenGLShader(const std::string& vertSource, const std::string& fragSource);
-		virtual ~OpenGLShader() override;
+		~OpenGLShader() override;
 		void Bind() override;
 		void Unbind() override;//其实这个函数一般运行时不会用到，一般用于Debug，因为使用的时候会直接Bind新的，就会自动Unbind这个
 		void UploadUniformMat4(const std::string& uniformName, glm::mat4 matrix) override;
 		void UploadUniformVec4(const std::string& uniformName, glm::vec4 vec4) override;
 		void UploadUniformI1(const std::string& uniformName, int id) override;
 		void UploadUniformF1(const std::string& uniformName, float number) override;
+		void UploadUniformIntArr(const std::string& uniformName, size_t count, int* number) override;
 	};
 }

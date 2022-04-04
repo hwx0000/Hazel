@@ -29,6 +29,8 @@ namespace Hazel
 		uint32_t* VertexBufferPtr = nullptr;
 		uint32_t DrawedVerticesSize = 0;
 		uint32_t DrawedTrianglesCnt = 0;
+
+		std::unordered_map<std::shared_ptr<Texture2D>, uint32_t> AddedTextures;
 	};
 
 	static Renderer2DData s_Data;
@@ -39,6 +41,7 @@ namespace Hazel
 		glm::vec3 Position;
 		glm::vec2 TexCoord;
 		glm::vec4 Color;			// 加了个Color
+		uint32_t TextureId;
 		// TODO: texid, normal,.etc
 	};
 
@@ -51,11 +54,14 @@ namespace Hazel
 		quadVertexBuffer->Bind();
 
 		// 2. 创建VertexBuffer的Layout，会计算好Stride和Offset
+		// 这里的命名其实只是为了Debug看的, 没啥实用性
 		BufferLayout layout =
 		{
 			{ ShaderDataType::FLOAT3, "a_Pos" },
 			{ ShaderDataType::FLOAT2, "a_Tex" },
-			{ ShaderDataType::FLOAT4, "a_Col" }
+			{ ShaderDataType::FLOAT4, "a_Col" },
+			{ ShaderDataType::INT, "a_TexIndex" }
+			//{ ShaderDataType::FLOAT, "a_TexIndex" }
 		};
 
 		quadVertexBuffer->SetBufferLayout(layout);
@@ -94,7 +100,14 @@ namespace Hazel
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_Data.Shader->UploadUniformI1("u_Texture", 0);
+		int32_t texIndices[32];
+		for (uint32_t  i = 0; i < 32; i++)
+			texIndices[i] = i;
+		
+		s_Data.Shader->Bind();
+		s_Data.Shader->UploadUniformIntArr("u_Texture", 32, texIndices);
+
+		s_Data.AddedTextures[s_Data.WhiteTexture] = 0;
 	}
 
 	void Renderer2D::Shutdown()
@@ -110,10 +123,22 @@ namespace Hazel
 
 		s_Data.DrawedVerticesSize = 0;
 		s_Data.DrawedTrianglesCnt = 0;
+
+		//int32_t texIndices[32];
+		//for (uint32_t i = 0; i < 32; i++)
+		//	texIndices[i] = i;
+		//s_Data.Shader->UploadUniformIntArr("u_Texture", 32, texIndices);
+		//s_Data.AddedTextures.clear();
 	}
 
 	void Renderer2D::EndScene()
 	{
+		int c = 0;
+		for (auto itr = s_Data.AddedTextures.begin(); itr != s_Data.AddedTextures.end(); itr++)
+		{
+			itr->first->Bind(c++);
+		}
+
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.DrawedTrianglesCnt * 3);
 	}
 
@@ -133,21 +158,25 @@ namespace Hazel
 		glm::vec4 v0 = transform * glm::vec4{ -0.5f, -0.5f , 0, 1 };// 一定要注意, 点的w为1
 		vertices[0].Position = { v0.x, v0.y, v0.z };
 		vertices[0].TexCoord = { 0.0f, 0.0f };
+		vertices[0].TextureId = 0;
 
 		vertices[1].Color = color;
 		glm::vec4 v1 = transform * glm::vec4{ 0.5f, -0.5f , 0, 1 };
 		vertices[1].Position = { v1.x, v1.y, v1.z };
 		vertices[1].TexCoord = { 1.0f, 0.0f };
+		vertices[1].TextureId = 0;
 
 		vertices[2].Color = color;
 		glm::vec4 v2 = transform * glm::vec4{ -0.5f, 0.5f , 0, 1 };
 		vertices[2].Position = { v2.x, v2.y, v2.z };
 		vertices[2].TexCoord = { 0.0f, 1.0f };
+		vertices[2].TextureId = 0;
 
 		vertices[3].Color = color;
 		glm::vec4 v3 = transform * glm::vec4{ 0.5f, 0.5f , 0, 1 };
 		vertices[3].Position = { v3.x, v3.y, v3.z };
 		vertices[3].TexCoord = { 1.0f, 1.0f };
+		vertices[3].TextureId = 0;
 
 		// 添加4个顶点的Vertex数据
 		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(s_Data.DrawedVerticesSize, &vertices,
@@ -164,6 +193,54 @@ namespace Hazel
 
 	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
 	{
+		if (s_Data.AddedTextures.find(texture) == s_Data.AddedTextures.end())
+		{
+			int id = s_Data.AddedTextures.size();
+			s_Data.AddedTextures[texture] = id;
+		}
+
+		int texId = s_Data.AddedTextures[texture];
+		texture->Bind(texId);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
+		QuadVertex vertices[4];
+		// -0.5f, -0.5f, 0, 0.0f, 0.0f,
+		//	0.5f, -0.5f, 0, 1.0f, 0.0f,
+		//	-0.5f, 0.5f, 0, 0.0f, 1.0f,
+		//	0.5f, 0.5f, 0, 1.0f, 1.0f
+		vertices[0].Color = tintColor;
+		glm::vec4 v0 = transform * glm::vec4{ -0.5f, -0.5f , 0, 1 };// 一定要注意, 点的w为1
+		vertices[0].Position = { v0.x, v0.y, v0.z };
+		vertices[0].TexCoord = { 0.0f, 0.0f };
+		vertices[0].TextureId = texId;
+
+		vertices[1].Color = tintColor;
+		glm::vec4 v1 = transform * glm::vec4{ 0.5f, -0.5f , 0, 1 };
+		vertices[1].Position = { v1.x, v1.y, v1.z };
+		vertices[1].TexCoord = { 1.0f, 0.0f };
+		vertices[1].TextureId = texId;
+
+		vertices[2].Color = tintColor;
+		glm::vec4 v2 = transform * glm::vec4{ -0.5f, 0.5f , 0, 1 };
+		vertices[2].Position = { v2.x, v2.y, v2.z };
+		vertices[2].TexCoord = { 0.0f, 1.0f };
+		vertices[2].TextureId = texId;
+
+		vertices[3].Color = tintColor;
+		glm::vec4 v3 = transform * glm::vec4{ 0.5f, 0.5f , 0, 1 };
+		vertices[3].Position = { v3.x, v3.y, v3.z };
+		vertices[3].TexCoord = { 1.0f, 1.0f };
+		vertices[3].TextureId = texId;
+
+		// 添加4个顶点的Vertex数据
+		// TODO: 既然这个数组是连续的, 其实可以在EndScene里把动态改变的内存区间一起SetData
+		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(s_Data.DrawedVerticesSize, &vertices,
+			sizeof(QuadVertex) * 4);
+
+		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
+		s_Data.DrawedTrianglesCnt += 2;
+
 	//	//Texture绑定到0号槽位即可, shader里面自然会去读取对应的shader
 	//	texture->Bind(0);
 	//	s_Data.Shader->UploadUniformVec4("u_Color", tintColor);
@@ -172,7 +249,7 @@ namespace Hazel
 	//		glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 	//	s_Data.Shader->UploadUniformMat4("u_Transform", transform);
 
-	//	s_Data.Shader->UploadUniformF1("u_TilingFactor", tilingFactor);
+		s_Data.Shader->UploadUniformF1("u_TilingFactor", tilingFactor);
 
 	//	RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
 	}

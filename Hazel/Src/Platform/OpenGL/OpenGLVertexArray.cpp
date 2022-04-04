@@ -12,6 +12,7 @@ namespace Hazel
 		case ShaderDataType::FLOAT2:return GL_FLOAT;
 		case ShaderDataType::FLOAT3:return GL_FLOAT;
 		case ShaderDataType::FLOAT4:return GL_FLOAT;
+		case ShaderDataType::INT   :return GL_INT;
 		}
 		HAZEL_ASSERT(false, "Unknown Shader Data Type");
 		return GL_FALSE;
