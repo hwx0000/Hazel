@@ -14,6 +14,18 @@ namespace Hazel
 
 	static SceneData s_SceneData;
 
+	// 为了方便更改QuadVertex的数据, 直接设计一个Struct来代表QuadVertex的数据：
+	struct QuadVertex
+	{
+		glm::vec3 Position;
+		glm::vec2 TexCoord;
+		glm::vec4 Color;			// 加了个Color
+		uint32_t TextureId;
+		float TilingFactor = 1.0f;
+		// TODO: texid, normal,.etc
+	};
+
+
 	// Renderer2D的cpp里
 	struct Renderer2DData
 	{
@@ -37,30 +49,21 @@ namespace Hazel
 			{ 1.0f, 1.0f }
 		};
 
-		std::shared_ptr<VertexArray> QuadVertexArray;		// 一个Mesh, 代表Quad
+		std::shared_ptr<VertexArray> QuadVertexArray;	// 一个Mesh, 代表Quad
 		std::shared_ptr<Shader> Shader;
 		std::shared_ptr<Texture2D> WhiteTexture;
+		std::unique_ptr<QuadVertex[]> Vertices;			// CPU这边用于批处理的临时数组, 用于在每次DrawCall时把Vertex数组数据填充到Vertex Buffer里
 
 		uint32_t* VertexBufferBaseP = nullptr;
 		uint32_t* VertexBufferPtr = nullptr;
 		uint32_t DrawedVerticesSize = 0;
+		uint32_t DrawedVerticesCnt = 0;
 		uint32_t DrawedTrianglesCnt = 0;
 
 		std::unordered_map<std::shared_ptr<Texture2D>, uint32_t> AddedTextures;
 	};
 
 	static Renderer2DData s_Data;
-
-	// 为了方便更改QuadVertex的数据, 直接设计一个Struct来代表QuadVertex的数据：
-	struct QuadVertex
-	{
-		glm::vec3 Position;
-		glm::vec2 TexCoord;
-		glm::vec4 Color;			// 加了个Color
-		uint32_t TextureId;
-		float TilingFactor = 1.0f;
-		// TODO: texid, normal,.etc
-	};
 
 	void Renderer2D::Init()
 	{
@@ -118,13 +121,15 @@ namespace Hazel
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
 		int32_t texIndices[32];
-		for (uint32_t  i = 0; i < 32; i++)
+		for (uint32_t i = 0; i < 32; i++)
 			texIndices[i] = i;
-		
+
 		s_Data.Shader->Bind();
 		s_Data.Shader->UploadUniformIntArr("u_Texture", 32, texIndices);
 
 		s_Data.AddedTextures[s_Data.WhiteTexture] = 0;
+
+		s_Data.Vertices.reset(new QuadVertex[s_Data.MaxVertices]);// 好像跟shared_ptr的写法不一样, 不能用make_shared
 	}
 
 	void Renderer2D::Shutdown()
@@ -140,10 +145,14 @@ namespace Hazel
 
 		s_Data.DrawedVerticesSize = 0;
 		s_Data.DrawedTrianglesCnt = 0;
+		s_Data.DrawedVerticesCnt = 0;
 	}
 
 	void Renderer2D::EndScene()
 	{
+		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(0, &s_Data.Vertices[0],
+			s_Data.DrawedVerticesSize);
+	
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.DrawedTrianglesCnt * 3);
 	}
 
@@ -185,10 +194,10 @@ namespace Hazel
 			vertices[i].TextureId = 0;
 		}
 
-		// 添加4个顶点的Vertex数据
-		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(s_Data.DrawedVerticesSize, &vertices,
-			sizeof(QuadVertex) * 4);
+		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
+			s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
 
+		s_Data.DrawedVerticesCnt += 4;
 		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
 		s_Data.DrawedTrianglesCnt += 2;
 	}
@@ -223,11 +232,10 @@ namespace Hazel
 			vertices[i].TilingFactor = tilingFactor;
 		}
 
-		// 添加4个顶点的Vertex数据
-		// TODO: 既然这个数组是连续的, 其实可以在EndScene里把动态改变的内存区间一起SetData
-		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(s_Data.DrawedVerticesSize, &vertices,
-			sizeof(QuadVertex) * 4);
+		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
+			s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
 
+		s_Data.DrawedVerticesCnt += 4;
 		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
 		s_Data.DrawedTrianglesCnt += 2;
 	}

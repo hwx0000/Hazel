@@ -76,7 +76,7 @@ namespace Hazel
 	void OpenGLTexture2D::Bind(uint32_t slot)
 	{
 		// 老式的写法是这样
-		glActiveTexture(GL_TEXTURE0 + (GL_TEXTURE1 - GL_TEXTURE0) * slot);// todo, 多个Texture的时候有问题
+		glActiveTexture(GL_TEXTURE0 + (GL_TEXTURE1 - GL_TEXTURE0) * slot);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
 
