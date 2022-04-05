@@ -42,6 +42,7 @@ namespace Hazel
 		glm::vec2 TexCoord;
 		glm::vec4 Color;			// 加了个Color
 		uint32_t TextureId;
+		float TilingFactor = 0.0f;
 		// TODO: texid, normal,.etc
 	};
 
@@ -60,8 +61,8 @@ namespace Hazel
 			{ ShaderDataType::FLOAT3, "a_Pos" },
 			{ ShaderDataType::FLOAT2, "a_Tex" },
 			{ ShaderDataType::FLOAT4, "a_Col" },
-			{ ShaderDataType::INT, "a_TexIndex" }
-			//{ ShaderDataType::FLOAT, "a_TexIndex" }
+			{ ShaderDataType::INT, "a_TexIndex" },
+			{ ShaderDataType::FLOAT, "a_TilingFactor" }
 		};
 
 		quadVertexBuffer->SetBufferLayout(layout);
@@ -214,24 +215,28 @@ namespace Hazel
 		vertices[0].Position = { v0.x, v0.y, v0.z };
 		vertices[0].TexCoord = { 0.0f, 0.0f };
 		vertices[0].TextureId = texId;
+		vertices[0].TilingFactor = tilingFactor;
 
 		vertices[1].Color = tintColor;
 		glm::vec4 v1 = transform * glm::vec4{ 0.5f, -0.5f , 0, 1 };
 		vertices[1].Position = { v1.x, v1.y, v1.z };
 		vertices[1].TexCoord = { 1.0f, 0.0f };
 		vertices[1].TextureId = texId;
+		vertices[1].TilingFactor = tilingFactor;
 
 		vertices[2].Color = tintColor;
 		glm::vec4 v2 = transform * glm::vec4{ -0.5f, 0.5f , 0, 1 };
 		vertices[2].Position = { v2.x, v2.y, v2.z };
 		vertices[2].TexCoord = { 0.0f, 1.0f };
 		vertices[2].TextureId = texId;
+		vertices[2].TilingFactor = tilingFactor;
 
 		vertices[3].Color = tintColor;
 		glm::vec4 v3 = transform * glm::vec4{ 0.5f, 0.5f , 0, 1 };
 		vertices[3].Position = { v3.x, v3.y, v3.z };
 		vertices[3].TexCoord = { 1.0f, 1.0f };
 		vertices[3].TextureId = texId;
+		vertices[3].TilingFactor = tilingFactor;
 
 		// 添加4个顶点的Vertex数据
 		// TODO: 既然这个数组是连续的, 其实可以在EndScene里把动态改变的内存区间一起SetData
@@ -248,8 +253,6 @@ namespace Hazel
 	//	glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) *
 	//		glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 	//	s_Data.Shader->UploadUniformMat4("u_Transform", transform);
-
-		s_Data.Shader->UploadUniformF1("u_TilingFactor", tilingFactor);
 
 	//	RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
 	}
