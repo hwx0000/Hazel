@@ -73,6 +73,14 @@ void Renderer2DTestLayer::OnImGuiRender()
 	//	ImGui::Text(label, result.Time);// 打印Profile条目的名字和time
 	//}
 
+	auto& stats = Hazel::Renderer2D::GetStatistics();
+
+	ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
+	ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
+	ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
+	ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
+
+
 	m_ProfileResults.clear();
 	ImGui::End();
 }

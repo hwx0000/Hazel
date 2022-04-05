@@ -35,5 +35,21 @@ namespace Hazel
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotatedAngle, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
+
+		// For Debuging
+		struct Statistics
+		{
+			uint32_t DrawCallCnt;
+			uint32_t DrawQuadCnt;
+
+			uint32_t DrawVerticesCnt() { return DrawQuadCnt * 4; }
+			uint32_t DrawTrianglesCnt() { return DrawQuadCnt * 2; }
+		};
+
+		static Statistics GetStatistics();// 会在2DRendererData里存一个Statistics对象
+
+	private:
+		static void Flush();
+		static void ResetBatchParams();
 	};
 }
