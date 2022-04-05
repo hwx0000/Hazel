@@ -164,7 +164,7 @@ namespace Hazel
 
 	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
 	{
-		DrawQuad({ globalPos.x, globalPos.y, 0 }, size, color);
+		DrawRotatedQuad({ globalPos.x, globalPos.y, 0 }, size, 0.0f, color);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
@@ -174,7 +174,7 @@ namespace Hazel
 
 	void Renderer2D::DrawQuad(const glm::vec2 & position, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, 0.0f, texture, tilingFactor, tintColor);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
@@ -211,7 +211,7 @@ namespace Hazel
 	{
 		if (s_Data.AddedTextures.find(texture) == s_Data.AddedTextures.end())
 		{
-			int id = s_Data.AddedTextures.size();
+			uint32_t id = (uint32_t)s_Data.AddedTextures.size();
 			s_Data.AddedTextures[texture] = id;
 		}
 

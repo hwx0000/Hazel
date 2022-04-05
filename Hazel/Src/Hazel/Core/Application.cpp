@@ -24,14 +24,19 @@ namespace Hazel
 		{
 			{
 				HAZEL_PROFILE_TIMER("Layer Stack Update")
-				
+
 				// 1. 算deltatime, deltatime是引擎内部算的东西, 会在layer里提供deltatime为参数
 				float time = (float)glfwGetTime();// todo: 这里不应该用glfw的东西
 				Timestep timestep;
 				if (m_FirstFrame)// 第一帧
-					m_FirstFrame = 0.0f;
+				{
+					m_FirstFrame = false;
+					timestep = 0.0f;
+				}
 				else
 					timestep = time - m_LastTimestep;
+				
+				m_LastTimestep = time;
 
 				if (!m_Minimized)
 				{

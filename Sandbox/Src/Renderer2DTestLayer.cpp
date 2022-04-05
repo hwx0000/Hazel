@@ -42,7 +42,7 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 		//	Hazel::ProfileResult profileResult = {name, duration};
 		//	m_ProfileResults.push_back(profileResult); 
 		//});
-		//m_OrthoCameraController.OnUpdate(ts);
+		m_OrthoCameraController.OnUpdate(ts);
 	}
 
 	// 每帧开始Clear
