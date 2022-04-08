@@ -22,6 +22,7 @@
 
 #include "Hazel/Renderer/ShaderLibrary.h"
 #include "Hazel/Renderer/Texture.h"
+#include "Hazel/Renderer/SubTexture2D.h"
 #include "Hazel/Renderer/Renderer2D.h"
 
 #ifdef HAZEL_PROFILING

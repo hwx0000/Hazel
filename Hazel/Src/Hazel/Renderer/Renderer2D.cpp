@@ -173,9 +173,19 @@ namespace Hazel
 		DrawRotatedQuad(globalPos, size, 0.0f, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2 & position, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
+	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, 0.0f, texture, tilingFactor, tintColor);
+		DrawRotatedQuad({ globalPos.x, globalPos.y, 0.0f }, size, 0.0f, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
+	{
+		DrawRotatedQuad(globalPos, size, 0, subTexture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
+	{
+		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, 0, subTexture, tilingFactor, tintColor);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
@@ -286,5 +296,53 @@ namespace Hazel
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, subTexture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
+		{
+			Flush();
+			ResetBatchParams();
+		}
+
+		auto& atlas = subTexture->GetTextureAtlas();
+		if (s_Data.AddedTextures.find(atlas) == s_Data.AddedTextures.end())
+		{
+			uint32_t id = (uint32_t)s_Data.AddedTextures.size();
+			s_Data.AddedTextures[atlas] = id;
+		}
+
+		int texId = s_Data.AddedTextures[atlas];
+		atlas->Bind(texId);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), glm::radians(rotatedAngle), { 0, 0, 1 }) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
+		QuadVertex vertices[4];
+		for (size_t i = 0; i < 4; i++)
+		{
+			vertices[i].Color = tintColor;
+			glm::vec4 v0 = transform * s_Data.QuadVertices[i];// 一定要注意, 点的w为1
+			vertices[i].Position = { v0.x, v0.y, v0.z };
+			vertices[i].TexCoord = subTexture->GetTexCoords()[i];
+			vertices[i].TextureId = texId;
+			vertices[i].TilingFactor = tilingFactor;
+		}
+
+		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
+			s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
+
+		s_Data.DrawedVerticesCnt += 4;
+		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
+		s_Data.DrawedTrianglesCnt += 2;
+
+		// Debugging
+		s_Data.Stats.DrawQuadCnt++;
 	}
 }
