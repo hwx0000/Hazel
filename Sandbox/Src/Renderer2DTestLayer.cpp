@@ -127,12 +127,12 @@ void Renderer2DTestLayer::OnImGuiRender()
 	ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
 	ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
+	ImGui::Image(m_Texture2D->GetTextureId(), { 1080, 720 });
 
 	m_ProfileResults.clear();
 	ImGui::End();
 
-
-
+	// 下面是绘制Dockspace的代码
 	static bool opt_fullscreen = true;
 	static bool opt_padding = false;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;

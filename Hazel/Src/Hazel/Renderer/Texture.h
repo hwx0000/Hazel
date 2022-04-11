@@ -11,6 +11,7 @@ namespace Hazel
 
 		virtual unsigned int GetWidth() = 0;
 		virtual unsigned int GetHeight() = 0;
+		virtual void* GetTextureId() = 0;// using `void*` for multi platforms
 
 		virtual void SetData(void* data, uint32_t size) = 0;
 
