@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Renderer/Renderer2D.h"
+#include "Math/Random.h"
 #include <filesystem>
 
 Renderer2DTestLayer::Renderer2DTestLayer(const std::string& name) :
@@ -53,6 +54,8 @@ void Renderer2DTestLayer::OnAttach()
 	Hazel::SubTexture2D subT3(m_Texture2D, { 0.3f, 4.0f / 9.0f }, { 0.35f, 5.0f / 9.0f });
 	std::shared_ptr<Hazel::SubTexture2D> roadSignTex = std::make_shared<Hazel::SubTexture2D>(subT3);
 	s_Map['S'] = roadSignTex;
+
+	m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
 }
 
 void Renderer2DTestLayer::OnDettach()
@@ -83,11 +86,14 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 	{
+		m_Framebuffer->Bind();
 		//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 		//Hazel::Renderer2D::DrawQuad({ 0.2f, -0.8f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
 		//Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.2f }, { 0.4f, 0.4f }, m_Texture2D, 2.0f);   		 
 		//Hazel::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.2f }, { 0.4f, 0.4f }, 45.0f, m_Texture2D, 2.0f);
 
+		static float rotatedAngle = 0.0f;
+		rotatedAngle += ts * 100.0f;
 
 		float tileSize = 0.18f;
 		float height = 9 * tileSize;
@@ -100,10 +106,12 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 				float xPos = -width / 2.0f + x * tileSize;
 				float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
-				Hazel::Renderer2D::DrawQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, s_Map[t], 1.0f);
+				Hazel::Renderer2D::DrawRotatedQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
 			}
 	}
 	Hazel::Renderer2D::EndScene();
+
+	m_Framebuffer->Unbind();
 }
 
 void Renderer2DTestLayer::OnImGuiRender()
@@ -127,7 +135,9 @@ void Renderer2DTestLayer::OnImGuiRender()
 	ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
 	ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
-	ImGui::Image(m_Texture2D->GetTextureId(), { 1080, 720 });
+	ImGui::Image(m_Framebuffer->GetColorAttachmentTexture2DId(), { 1080, 720 });
+	//ImGui::Image(m_Texture2D->GetTextureId(), { 1080, 720 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
 
 	m_ProfileResults.clear();
 	ImGui::End();
