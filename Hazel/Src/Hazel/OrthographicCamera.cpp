@@ -7,6 +7,10 @@ namespace Hazel
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
 		: m_ProjectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_ViewMatrix(1.0f)
 	{
+		//m_Camera(-radio * zoom, radio * zoom, -zoom, zoom)
+		m_ZoomLevel = top;
+		m_AspectRatio = right / m_ZoomLevel;
+
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
@@ -19,10 +23,16 @@ namespace Hazel
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
-	void OrthographicCamera::RecalculateMatrix(float left, float right, float bottom, float top)
+	void OrthographicCamera::OnResize(uint32_t width, uint32_t height)
+	{
+		m_AspectRatio = (float)width / (float)height;
+		// float left, float right, float bottom, float top
+		SetProjectionMatrix(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+	}
+
+	void OrthographicCamera::SetProjectionMatrix(float left, float right, float bottom, float top)
 	{
 		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 	}
-
 }
 

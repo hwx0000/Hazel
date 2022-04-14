@@ -110,7 +110,6 @@ void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 			}
 	}
 	Hazel::Renderer2D::EndScene();
-
 	m_Framebuffer->Unbind();
 }
 
@@ -222,8 +221,25 @@ void EditorLayer::OnImGuiRender()
 	ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
 	ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
-	ImGui::Image(m_Framebuffer->GetColorAttachmentTexture2DId(), { 800, 600 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-	//m_ProfileResults.clear();
 	ImGui::End();
+
+	ImGui::Begin("Viewport");
+
+	ImVec2 size = ImGui::GetContentRegionAvail();
+	glm::vec2 viewportSize = { size.x, size.y };
+
+	// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
+	if (viewportSize != m_LastViewportSize)
+	{
+		m_Framebuffer->ResizeColorAttachment(viewportSize.x, viewportSize.y);
+		m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
+	}
+
+	ImGui::Image(m_Framebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+
+	m_LastViewportSize = viewportSize;
+
+	ImGui::End();
+	
+	//m_ProfileResults.clear();
 }

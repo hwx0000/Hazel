@@ -19,6 +19,7 @@ private:
 	std::shared_ptr<Hazel::Framebuffer> m_Framebuffer;
 
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
+	glm::vec2 m_LastViewportSize = { 0, 0 };
 
 	// 添加一个数组, 每个数组元素代表每个Timer的结果
 	std::vector<Hazel::ProfileResult> m_ProfileResults;

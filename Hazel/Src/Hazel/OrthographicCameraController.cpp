@@ -56,6 +56,6 @@ namespace Hazel
 	{
 		m_ZoomLevel -= scrollOffset;
 		m_ZoomLevel = std::clamp(m_ZoomLevel, 0.15f, 3.0f);
-		m_Camera.RecalculateMatrix(-m_AspectRadio * m_ZoomLevel, m_AspectRadio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		m_Camera.SetProjectionMatrix(-m_AspectRadio * m_ZoomLevel, m_AspectRadio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 }

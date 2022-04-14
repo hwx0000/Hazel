@@ -11,6 +11,7 @@ namespace Hazel
 
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
+		virtual void ResizeColorAttachment(uint32_t width, uint32_t height) = 0;
 		virtual void* GetColorAttachmentTexture2DId() = 0;
 
 	protected:
