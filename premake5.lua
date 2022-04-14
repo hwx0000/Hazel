@@ -1,6 +1,7 @@
 workspace "Hazel"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
+	startproject "HazelEditor"
 
 --当前路径为premake5.lua所在路径
 --create outputdir macro
@@ -76,6 +77,46 @@ project "Hazel"
 
 
 project "Sandbox"
+	location "%{prj.name}"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir  ("bin/"..outputdir.."/%{prj.name}")
+	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
+    
+	files { "%{prj.name}/Src/**.h", "%{prj.name}/Src/**.cpp"}
+
+    includedirs
+	{
+        "Hazel/vendor/spdlog/include",
+		"Hazel/Src",
+		"Hazel/Src/Hazel",
+		"Hazel/vendor/glm",
+		"Hazel/vendor/imgui"
+	}
+
+	links { "Hazel" }
+
+    filter { "system:Windows" }
+	    systemversion "latest"
+		 defines { "HZ_PLATFORM_WINDOWS"}
+
+    filter { "configurations:Debug"}
+        defines { "DEBUG"}
+        symbols "On"
+
+    filter { "configurations:Release"}
+        defines { "NDEBUG" }
+        optimize "On"
+
+    filter { "configurations:Dist"}
+		defines { "NDEBUG"}
+		optimize "On"
+
+
+project "HazelEditor"
 	location "%{prj.name}"
 	kind "ConsoleApp"
 	language "C++"

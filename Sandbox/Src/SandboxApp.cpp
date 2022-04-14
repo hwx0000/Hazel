@@ -3,7 +3,7 @@
 #include "Renderer2DTestLayer.h"
 
 
-SandboxApp::SandboxApp()
+HazelEditorApp::HazelEditorApp()
 {
 	HAZEL_ASSERT(!s_Instance, "Already Exists an application instance");
 
@@ -21,6 +21,6 @@ SandboxApp::SandboxApp()
 
 Hazel::Application* Hazel::CreateApplication() 
 {
-	SandboxApp *s = new SandboxApp();
+	HazelEditorApp *s = new HazelEditorApp();
 	return s;
 }

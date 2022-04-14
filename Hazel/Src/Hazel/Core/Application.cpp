@@ -11,13 +11,20 @@ namespace Hazel
 	Application::Application()
 	{
 		s_Instance = this;
+
+		m_Window = std::unique_ptr<Hazel::Window>(Hazel::Window::Create());
+		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+		// Application应该自带ImGuiLayer, 这段代码应该放到引擎内部而不是User的Application派生类里
+		m_ImGuiLayer = new ImGuiLayer();
+		m_LayerStack.PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
 	{
 	}
 
-
+	// 游戏的核心循环
 	void Application::Run() 
 	{
 		while (m_Running)
