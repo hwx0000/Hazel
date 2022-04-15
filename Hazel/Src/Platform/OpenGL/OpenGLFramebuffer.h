@@ -10,7 +10,7 @@ namespace Hazel
 	{
 	public:
 		OpenGLFramebuffer(uint32_t width, uint32_t height);
-		~OpenGLFramebuffer();
+		~OpenGLFramebuffer() override;
 		GLuint GetColorAttachmentId();
 
 		virtual void Bind() override;

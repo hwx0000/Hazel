@@ -26,7 +26,9 @@ namespace Hazel
 	void OrthographicCamera::OnResize(uint32_t width, uint32_t height)
 	{
 		m_AspectRatio = (float)width / (float)height;
-		// float left, float right, float bottom, float top
+		// 里面会调用glm::ortho(float left, float right, float bottom, float top)函数
+		// 根据这段代码可知, camera看到的区域高度不会随着窗口大小而改变
+		// 而是会随着鼠标滚动改变zoom值而变化
 		SetProjectionMatrix(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
