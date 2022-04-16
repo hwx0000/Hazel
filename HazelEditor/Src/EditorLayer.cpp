@@ -81,12 +81,13 @@ void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 	}
 
 	// 每帧开始Clear
+
+	m_Framebuffer->Bind();
 	Hazel::RenderCommand::Clear();
-	Hazel::RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	Hazel::RenderCommand::ClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 	{
-		m_Framebuffer->Bind();
 		//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 		//Hazel::Renderer2D::DrawQuad({ 0.2f, -0.8f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
 		//Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.2f }, { 0.4f, 0.4f }, m_Texture2D, 2.0f);   		 
@@ -231,7 +232,7 @@ void EditorLayer::OnImGuiRender()
 	// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
 	if (viewportSize != m_LastViewportSize)
 	{
-		m_Framebuffer->ResizeColorAttachment(viewportSize.x, viewportSize.y);
+		m_Framebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
 	}
 
