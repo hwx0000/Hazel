@@ -229,7 +229,6 @@ void EditorLayer::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Viewport");
-
 	ImVec2 size = ImGui::GetContentRegionAvail();
 	glm::vec2 viewportSize = { size.x, size.y };
 

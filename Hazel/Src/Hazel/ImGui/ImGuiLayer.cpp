@@ -64,6 +64,11 @@ void Hazel::ImGuiLayer::OnImGuiRender()
 	//ImGui::ShowDemoWindow(&show);
 }
 
+void Hazel::ImGuiLayer::OnEvent(Event &e)
+{
+
+}
+
 void Hazel::ImGuiLayer::Begin()
 {
 	// 下面这一部分原本属于Update函数里，现在这部分抽出来作为了接口，可以在exe选择性的进行Render

@@ -16,7 +16,7 @@ namespace Hazel
 		void OnUpdate() override;
 		void OnResized(int width, int height) override;
 		void* GetNativeWindow() const override;
-		inline void SetEventCallback(const EventCallbackFn& callback)override { m_Data.eventCallback = callback; };
+		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.eventCallback = callback; };
 
 	private:
 		virtual void Shutdown();
@@ -30,7 +30,7 @@ namespace Hazel
 			std::string title;
 			unsigned int height, width;
 			bool isVSync;
-			EventCallbackFn eventCallback;
+			EventCallbackFn eventCallback;// EventCallbackFn其实是std::function<void(Event&)>
 		};
 
 		WindowData m_Data;

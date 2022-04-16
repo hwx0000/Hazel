@@ -13,6 +13,7 @@ namespace Hazel
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Hazel::Window>(Hazel::Window::Create());
+		// 这里会设置m_Window里的std::function<void(Event&)>对象, 当接受Event时, 会调用Application::OnEvent函数
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 		// Application应该自带ImGuiLayer, 这段代码应该放到引擎内部而不是User的Application派生类里
@@ -103,9 +104,7 @@ namespace Hazel
 
 		// 2. 否则才传递到layer来执行事件
 		for (Layer* layer : m_LayerStack)
-		{
 			layer->OnEvent(e);
-		}
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
