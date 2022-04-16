@@ -82,7 +82,7 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 	// 每帧开始Clear
 	Hazel::RenderCommand::Clear();
-	Hazel::RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
 	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 	{

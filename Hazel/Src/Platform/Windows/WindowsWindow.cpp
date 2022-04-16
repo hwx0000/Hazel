@@ -176,8 +176,6 @@ namespace Hazel
 	void WindowsWindow::Shutdown()
 	{
 		if (m_initialized)
-		{
 			glfwDestroyWindow(m_Window);
-		}
 	}
 }

@@ -94,7 +94,7 @@ void ExampleLayer::OnUpdate(const Hazel::Timestep & step)
 	// 1. 先执行引擎内部的循环逻辑
 	// 每帧开始Clear
 	Hazel::RenderCommand::Clear();
-	Hazel::RenderCommand::ClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
 	auto flatColorShader = m_ShaderLibrary->Get("FlatColorShader");
 	auto textureShader = m_ShaderLibrary->Get("TextureShader");

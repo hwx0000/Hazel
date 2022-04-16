@@ -82,10 +82,14 @@ void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 
 	// 每帧开始Clear
 
-	m_Framebuffer->Bind();
+	// This is for the color for default window 
+	// 保留原本默认窗口对应framebuffer的颜色, 注意, 一定要先设置ClearColor, 再去Clear
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	Hazel::RenderCommand::Clear();
-	Hazel::RenderCommand::ClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
+	m_Framebuffer->Bind();
+	Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	Hazel::RenderCommand::Clear();
 	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 	{
 		//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });

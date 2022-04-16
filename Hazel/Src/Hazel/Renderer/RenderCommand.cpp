@@ -23,7 +23,7 @@ namespace Hazel
 		s_RendererAPI->Clear();
 	}
 
-	void RenderCommand::ClearColor(const glm::vec4 &color)
+	void RenderCommand::SetClearColor(const glm::vec4 &color)
 	{
 		s_RendererAPI->SetClearColor(color);
 	}
