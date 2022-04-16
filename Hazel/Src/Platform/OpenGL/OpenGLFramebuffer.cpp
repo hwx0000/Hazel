@@ -29,7 +29,7 @@ namespace Hazel
 
 		// Stencil和Depth Buffer的Attachment暂时不加了
 
-		HAZEL_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer incomplete");
+		HAZEL_CORE_ASSERT((bool)(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Framebuffer incomplete");
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
@@ -56,10 +56,15 @@ namespace Hazel
 
 	void* OpenGLFramebuffer::GetColorAttachmentTexture2DId()
 	{
+#if _WIN64
 		// 强行使用C++的四个转型字符, 就只能用这个了
 		// TODO: 丑陋的代码
+		// TODO: 这样做很危险, 因为void*在不同平台下字节数是不同的, 而m_ColorAttachmentTextureId类型始终是4个字节
+		return reinterpret_cast<void*>((long long)m_ColorAttachmentTextureId);// 这里sizeof(long)返回4
+		//return (void*)((long)m_ColorAttachmentTextureId);
+#else
 		return reinterpret_cast<void*>(m_ColorAttachmentTextureId);
-		//return (void*)(m_ColorAttachmentTextureId);
+#endif
 	}
 
 	void OpenGLFramebuffer::ResizeColorAttachment(uint32_t width, uint32_t height)
