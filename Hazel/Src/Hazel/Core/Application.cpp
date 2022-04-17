@@ -17,7 +17,7 @@ namespace Hazel
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 		// Application应该自带ImGuiLayer, 这段代码应该放到引擎内部而不是User的Application派生类里
-		m_ImGuiLayer = new ImGuiLayer();
+		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
 		m_LayerStack.PushOverlay(m_ImGuiLayer);
 	}
 
@@ -51,7 +51,7 @@ namespace Hazel
 					// 2. 再执行使用引擎的用户代码的循环
 					// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 					// 所以创建完window后，可以直接调用其loop开始渲染
-					for (Hazel::Layer* layer : m_LayerStack)
+					for (std::shared_ptr<Hazel::Layer> layer : m_LayerStack)
 					{
 						layer->OnUpdate(timestep);
 					}
@@ -60,7 +60,7 @@ namespace Hazel
 			
 			// 3. 最后调用ImGUI的循环
 			m_ImGuiLayer->Begin();
-			for (Hazel::Layer* layer : m_LayerStack)
+			for (std::shared_ptr<Hazel::Layer> layer : m_LayerStack)
 			{
 				// 每一个Layer都在调用ImGuiRender函数
 				// 目前有两个Layer, Sandbox定义的ExampleLayer和构造函数添加的ImGuiLayer
@@ -77,12 +77,12 @@ namespace Hazel
 		}
 	}
 
-	void Application::PushLayer(Layer * layer)
+	void Application::PushLayer(std::shared_ptr<Layer>  layer)
 	{
 		m_LayerStack.PushLayer(layer);
 	}
 
-	Layer* Application::PopLayer()
+	std::shared_ptr<Hazel::Layer> Application::PopLayer()
 	{
 		return m_LayerStack.PopLayer();
 	}
@@ -103,8 +103,14 @@ namespace Hazel
 			std::bind(&Application::OnWindowResized, this, std::placeholders::_1));
 
 		// 2. 否则才传递到layer来执行事件
-		for (Layer* layer : m_LayerStack)
-			layer->OnEvent(e);
+		uint32_t layerCnt = m_LayerStack.GetLayerCnt();
+		for (int i = layerCnt - 1; i >= 0; i--)
+		{
+			if (e.IsHandled())
+				break;
+
+			m_LayerStack.GetLayer((uint32_t)i)->OnEvent(e);
+		}
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

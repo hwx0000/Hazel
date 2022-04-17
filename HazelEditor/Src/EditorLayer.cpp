@@ -63,7 +63,7 @@ void EditorLayer::OnDettach()
 	CORE_LOG("Detach Layer");
 }
 
-void EditorLayer::OnEvent(Hazel::Event& e )
+void EditorLayer::OnEvent(Hazel::Event& e)
 {
 	m_OrthoCameraController.OnEvent(e);
 }
@@ -77,7 +77,8 @@ void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 		//	Hazel::ProfileResult profileResult = {name, duration};
 		//	m_ProfileResults.push_back(profileResult); 
 		//});
-		m_OrthoCameraController.OnUpdate(ts);
+		if(m_ViewportFocused && m_ViewportHovered)
+			m_OrthoCameraController.OnUpdate(ts);
 	}
 
 	// 每帧开始Clear
@@ -229,6 +230,11 @@ void EditorLayer::OnImGuiRender()
 	ImGui::End();
 
 	ImGui::Begin("Viewport");
+	m_ViewportFocused = ImGui::IsWindowFocused();
+	m_ViewportHovered = ImGui::IsWindowHovered();
+	Hazel::Application::Get().GetImGuiLayer()->SetViewportFocusedStatus(m_ViewportFocused);
+	Hazel::Application::Get().GetImGuiLayer()->SetViewportHoveredStatus(m_ViewportHovered);
+
 	ImVec2 size = ImGui::GetContentRegionAvail();
 	glm::vec2 viewportSize = { size.x, size.y };
 

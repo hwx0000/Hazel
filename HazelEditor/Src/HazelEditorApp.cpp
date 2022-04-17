@@ -6,7 +6,7 @@ HazelEditorApp::HazelEditorApp()
 {
 	HAZEL_ASSERT(!s_Instance, "Already Exists an application instance");
 	
-	m_LayerStack.PushLayer(new EditorLayer());
+	m_LayerStack.PushLayer(std::make_shared<EditorLayer>());
 
 	//m_Window->SetVSync(true);
 }

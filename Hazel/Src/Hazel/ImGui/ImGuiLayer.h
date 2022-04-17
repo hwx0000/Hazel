@@ -19,7 +19,13 @@ namespace Hazel
 
 		void Begin();// 把原来的OnUpdate函数分解成了两部分
 		void End();
+
+		void SetViewportFocusedStatus(bool b) { m_ViewportFocused = b; }
+		void SetViewportHoveredStatus(bool b) { m_ViewportHovered = b; }
+	
 	private:
 		float m_Time = 0.0f;
+		bool m_ViewportFocused;
+		bool m_ViewportHovered;
 	};
 }

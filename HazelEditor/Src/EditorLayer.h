@@ -23,4 +23,7 @@ private:
 
 	// 添加一个数组, 每个数组元素代表每个Timer的结果
 	std::vector<Hazel::ProfileResult> m_ProfileResults;
+
+	bool m_ViewportFocused;
+	bool m_ViewportHovered;
 };

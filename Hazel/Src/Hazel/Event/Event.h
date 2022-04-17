@@ -46,6 +46,9 @@ namespace Hazel
 			return GetCategoryFlag() & type;
 		}
 
+		bool IsHandled() { return m_Handled; }
+		void MarkHandled() { m_Handled = true; }
+
 	protected:
 		bool m_Handled = false;//用来标记这个事件是否被处理了
 	};
