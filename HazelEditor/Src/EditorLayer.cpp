@@ -56,6 +56,9 @@ void EditorLayer::OnAttach()
 	s_Map['S'] = roadSignTex;
 
 	m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
+
+	m_Scene = std::make_shared<Hazel::Scene>();
+	m_Scene->CreateGameObjectInScene();
 }
 
 void EditorLayer::OnDettach()

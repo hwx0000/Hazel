@@ -102,7 +102,7 @@ namespace Hazel
 		dispatcher.Dispatch<WindowResizedEvent>(
 			std::bind(&Application::OnWindowResized, this, std::placeholders::_1));
 
-		// 2. 否则才传递到layer来执行事件
+		// 2. 否则才传递到layer来执行事件, 逆序遍历是为了让ImGuiLayer最先收到Event
 		uint32_t layerCnt = m_LayerStack.GetLayerCnt();
 		for (int i = layerCnt - 1; i >= 0; i--)
 		{

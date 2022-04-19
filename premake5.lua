@@ -45,7 +45,8 @@ project "Hazel"
 		"%{prj.name}/vendor/Glad/include",
 		"%{prj.name}/vendor/imgui",
 		"%{prj.name}/vendor/glm",
-		"%{prj.name}/vendor/stb_image"
+		"%{prj.name}/vendor/stb_image",
+		"%{prj.name}/vendor/entt/include"
 	}
 
 

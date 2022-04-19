@@ -17,6 +17,7 @@ private:
 	Hazel::OrthographicCameraController m_OrthoCameraController;
 	std::shared_ptr<Hazel::Texture2D> m_Texture2D;
 	std::shared_ptr<Hazel::Framebuffer> m_Framebuffer;
+	std::shared_ptr<Hazel::Scene> m_Scene;
 
 	glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 	glm::vec2 m_LastViewportSize = { 0, 0 };

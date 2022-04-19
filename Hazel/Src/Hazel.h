@@ -29,3 +29,6 @@
 #include "Hazel/Debug/Timer.h"
 #include "Hazel/Debug/Instrumentor.h"
 #endif
+
+#include "Hazel/ECS/Scene.h"
+#include "Hazel/ECS/Components/Component.h"
