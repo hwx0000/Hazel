@@ -5,13 +5,26 @@ namespace Hazel
 {
 	GameObject& Scene::CreateGameObjectInScene()
 	{
-		return GameObject(m_Registry.create());
+		m_GameObjects.push_back(m_Registry.create());
+		return m_GameObjects[m_GameObjects.size() - 1];
+	}
+
+	std::vector<GameObject>& Scene::GetGameObjects()
+	{
+		return m_GameObjects;
 	}
 
 	template<class T>
-	T& Scene::AddComponentForGameObject(GameObject & go, std::shared_ptr<T> component)
+	T& Scene::AddComponentForGameObject(GameObject & go, const T& component)
 	{
-		return m_Registry.emplace<T>(go, *component);
+		return NULL;//m_Registry.emplace<T>(go, T);
+	}
+
+	// TODO: 临时的写法, 只是为了让模板编译
+	template<> 
+	Hazel::SpriteRenderer& Scene::AddComponentForGameObject(GameObject & go, const Hazel::SpriteRenderer& component)
+	{
+		return m_Registry.emplace<Hazel::SpriteRenderer>(go, component);
 	}
 
 	template<class T>
@@ -24,5 +37,11 @@ namespace Hazel
 	T& Scene::GetComponentInGameObject(const GameObject & go)
 	{
 		return m_Registry.get<T>(go);
+	}
+
+	template<>
+	SpriteRenderer& Scene::GetComponentInGameObject(const GameObject & go)
+	{
+		return m_Registry.get<SpriteRenderer>(go.m_InsanceId);
 	}
 }

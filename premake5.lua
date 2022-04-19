@@ -95,7 +95,8 @@ project "Sandbox"
 		"Hazel/Src",
 		"Hazel/Src/Hazel",
 		"Hazel/vendor/glm",
-		"Hazel/vendor/imgui"
+		"Hazel/vendor/imgui",
+		"Hazel/vendor/entt/include"
 	}
 
 	links { "Hazel" }
@@ -135,7 +136,8 @@ project "HazelEditor"
 		"Hazel/Src",
 		"Hazel/Src/Hazel",
 		"Hazel/vendor/glm",
-		"Hazel/vendor/imgui"
+		"Hazel/vendor/imgui",
+		"Hazel/vendor/entt/include"
 	}
 
 	links { "Hazel" }

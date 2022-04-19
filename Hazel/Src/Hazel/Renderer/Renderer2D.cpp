@@ -183,6 +183,11 @@ namespace Hazel
 		DrawRotatedQuad(globalPos, size, 0, subTexture, tilingFactor, tintColor);
 	}
 
+	void Renderer2D::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::vec3 & globalPos, const glm::vec2 & size, const glm::vec4 & tintColor)
+	{
+		DrawRotatedQuad(globalPos, size, 0.0f, spriteRenderer.GetColor());
+	}
+
 	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
 	{
 		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, 0, subTexture, tilingFactor, tintColor);

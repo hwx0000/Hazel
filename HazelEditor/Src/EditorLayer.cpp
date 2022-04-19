@@ -58,7 +58,11 @@ void EditorLayer::OnAttach()
 	m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 	m_Scene = std::make_shared<Hazel::Scene>();
-	m_Scene->CreateGameObjectInScene();
+	Hazel::GameObject& go = m_Scene->CreateGameObjectInScene();
+
+	const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
+	m_Scene->AddComponentForGameObject<Hazel::SpriteRenderer>
+		(go, sr);
 }
 
 void EditorLayer::OnDettach()
@@ -101,22 +105,26 @@ void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 		//Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.2f }, { 0.4f, 0.4f }, m_Texture2D, 2.0f);   		 
 		//Hazel::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.2f }, { 0.4f, 0.4f }, 45.0f, m_Texture2D, 2.0f);
 
-		static float rotatedAngle = 0.0f;
-		rotatedAngle += ts * 100.0f;
+		const Hazel::GameObject& go =  m_Scene->GetGameObjects()[0];
+		Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
+		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
+		
+		//static float rotatedAngle = 0.0f;
+		//rotatedAngle += ts * 100.0f;
 
-		float tileSize = 0.18f;
-		float height = 9 * tileSize;
-		float width = 16 * tileSize;
+		//float tileSize = 0.18f;
+		//float height = 9 * tileSize;
+		//float width = 16 * tileSize;
 
-		for (size_t y = 0; y < 9; y++)
-			for (size_t x = 0; x < 16; x++)
-			{
-				char t = s_MapTiles[x + y * 16];
+		//for (size_t y = 0; y < 9; y++)
+		//	for (size_t x = 0; x < 16; x++)
+		//	{
+		//		char t = s_MapTiles[x + y * 16];
 
-				float xPos = -width / 2.0f + x * tileSize;
-				float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
-				Hazel::Renderer2D::DrawRotatedQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
-			}
+		//		float xPos = -width / 2.0f + x * tileSize;
+		//		float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
+		//		Hazel::Renderer2D::DrawRotatedQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
+		//	}
 	}
 	Hazel::Renderer2D::EndScene();
 	m_Framebuffer->Unbind();

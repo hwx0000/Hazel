@@ -11,6 +11,7 @@ namespace Hazel
 		SpriteRenderer(const glm::vec4& color) :m_Color(color) {}
 
 		glm::vec4 GetColor() { return m_Color; }
+		glm::vec4 GetColor() const { return m_Color; }
 
 	private:
 		glm::vec4 m_Color;
