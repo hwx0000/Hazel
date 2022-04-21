@@ -5,18 +5,16 @@ namespace Hazel
 {
 	Scene::Scene()
 	{
-		m_ThisPtr = std::shared_ptr<Scene>(this);
 	}
 
 	Scene::~Scene()
 	{
 		m_Registry.clear();
-		m_ThisPtr.reset();
 	}
 
-	GameObject& Scene::CreateGameObjectInScene()
+	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps)
 	{
-		GameObject go(m_ThisPtr, m_Registry.create());
+		GameObject go(ps, m_Registry.create());
 		m_GameObjects.push_back(go);
 		return m_GameObjects[m_GameObjects.size() - 1];
 	}

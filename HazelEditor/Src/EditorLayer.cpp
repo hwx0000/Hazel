@@ -60,7 +60,7 @@ namespace Hazel
 		m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
-		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene();
+		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene);
 
 		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
 		go.AddComponent<Hazel::SpriteRenderer>(sr, glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });

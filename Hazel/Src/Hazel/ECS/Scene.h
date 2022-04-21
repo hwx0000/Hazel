@@ -12,7 +12,7 @@ namespace Hazel
 	public:
 		Scene();
 		~Scene();
-		GameObject& CreateGameObjectInScene();
+		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps);
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
 		
 		template <class T>
@@ -27,6 +27,5 @@ namespace Hazel
 	private:
 		entt::registry m_Registry;
 		std::vector<GameObject> m_GameObjects;
-		std::shared_ptr<Scene> m_ThisPtr;
 	};
 }
