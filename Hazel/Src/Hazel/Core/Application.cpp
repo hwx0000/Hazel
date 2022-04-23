@@ -52,9 +52,7 @@ namespace Hazel
 					// Application并不应该知道调用的是哪个平台的window，Window的init操作放在Window::Create里面
 					// 所以创建完window后，可以直接调用其loop开始渲染
 					for (std::shared_ptr<Hazel::Layer> layer : m_LayerStack)
-					{
 						layer->OnUpdate(timestep);
-					}
 				}
 			}
 			

@@ -18,12 +18,16 @@ Hazel::ImGuiLayer::~ImGuiLayer()
 {
 }
 
+// ImGuiLayer的Init函数
 void Hazel::ImGuiLayer::OnAttach()
 {
 	// 这里的函数，参考了ImGui上的docking分支给的例子：example_glfw_opengl3的文件里的main函数
- // Setup Dear ImGui context
+	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
+	// 1. 创建ImGui Contex
 	ImGui::CreateContext();
+
+	// 2. IO相关的Flag设置, 目前允许键盘输入、允许Dokcing、允许多个Viewport
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -32,25 +36,30 @@ void Hazel::ImGuiLayer::OnAttach()
 	//io.ConfigViewportsNoAutoMerge = true;
 	//io.ConfigViewportsNoTaskBarIcon = true;
 
-	// Setup Dear ImGui style
+	// 3. 设置主题颜色
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsClassic();
 
+	// 4. 设置窗口Style和背景颜色的透明度
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		style.WindowRounding = 0.0f;// WindowRounding代表窗口角落的值, 设置为0.0代表是矩形窗口
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;// 窗口背景透明度
 	}
 
 	GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+	
+	// 5. glfw相关的初始化
 	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
+
+	// 6. OpenGL相关的初始化
 	ImGui_ImplOpenGL3_Init("#version 410");
 }
 
-void Hazel::ImGuiLayer::OnDettach()
+void Hazel::ImGuiLayer::OnDetach()
 {
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
@@ -71,6 +80,7 @@ void Hazel::ImGuiLayer::OnEvent(Event &e)
 		e.MarkHandled();
 }
 
+// Begin和End之间指向OnImGuiRender里的函数
 void Hazel::ImGuiLayer::Begin()
 {
 	// 下面这一部分原本属于Update函数里，现在这部分抽出来作为了接口，可以在exe选择性的进行Render

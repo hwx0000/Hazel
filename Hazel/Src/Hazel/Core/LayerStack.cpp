@@ -11,7 +11,7 @@ namespace Hazel
 	LayerStack::~LayerStack()
 	{
 		for (std::shared_ptr<Hazel::Layer> layer : m_Stack)
-			layer->OnDettach();
+			layer->OnDetach();
 	}
 
 	// 用vector模拟m_Stack，vector[0]为栈顶
