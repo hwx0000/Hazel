@@ -68,7 +68,7 @@ void ExampleLayer::OnAttach()
 	CORE_LOG("Init Layer");
 }
 
-void ExampleLayer::OnDettach()
+void ExampleLayer::OnDetach()
 {
 	CORE_LOG("Close Layer");
 }

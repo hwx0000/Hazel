@@ -85,8 +85,13 @@ void Hazel::ImGuiLayer::Begin()
 {
 	// 下面这一部分原本属于Update函数里，现在这部分抽出来作为了接口，可以在exe选择性的进行Render
 	// Start the Dear ImGui frame
+
+	// 这个函数应该只会执行一次具体的内容, 会在里面创建OpenGL的ShaderProgram
 	ImGui_ImplOpenGL3_NewFrame();
+
+	// 从glfw库里获取 时间、鼠标位置、窗口和Viewport大小等参数, 赋值给ImGui::IO
 	ImGui_ImplGlfw_NewFrame();
+
 	ImGui::NewFrame();
 }
 

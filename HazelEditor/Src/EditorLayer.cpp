@@ -66,7 +66,7 @@ namespace Hazel
 		go.AddComponent<Hazel::SpriteRenderer>(sr, glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 	}
 
-	void EditorLayer::OnDettach()
+	void EditorLayer::OnDetach()
 	{
 		CORE_LOG("Detach Layer");
 	}
@@ -78,16 +78,8 @@ namespace Hazel
 
 	void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 	{
-		{
-			//// 使用的时候, 需要传入一个profileResult对象
-			//Hazel::Timer t("CameraController.OnUpdate", [&](const char* name, float duration)
-			//{ 
-			//	Hazel::ProfileResult profileResult = {name, duration};
-			//	m_ProfileResults.push_back(profileResult); 
-			//});
-			if (m_ViewportFocused && m_ViewportHovered)
-				m_OrthoCameraController.OnUpdate(ts);
-		}
+		if (m_ViewportFocused && m_ViewportHovered)
+			m_OrthoCameraController.OnUpdate(ts);
 
 		// 每帧开始Clear
 
@@ -108,8 +100,7 @@ namespace Hazel
 
 			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
 			Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
-			//Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
-			Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f }, {0.1f, 1.0f, 0.1f, 1.0f});
+			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
 
 			//static float rotatedAngle = 0.0f;
 			//rotatedAngle += ts * 100.0f;
@@ -254,6 +245,7 @@ namespace Hazel
 		// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
 		if (viewportSize != m_LastViewportSize)
 		{
+			// 先Resize Framebuffer
 			m_Framebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
 		}

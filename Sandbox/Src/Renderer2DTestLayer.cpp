@@ -58,7 +58,7 @@ void Renderer2DTestLayer::OnAttach()
 	m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
 }
 
-void Renderer2DTestLayer::OnDettach()
+void Renderer2DTestLayer::OnDetach()
 {
 	CORE_LOG("Detach Layer");
 }

@@ -35,6 +35,8 @@ namespace Hazel
 	void OrthographicCamera::SetProjectionMatrix(float left, float right, float bottom, float top)
 	{
 		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		// Update VP mat4
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 }
 

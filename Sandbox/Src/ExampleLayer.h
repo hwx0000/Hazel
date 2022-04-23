@@ -9,7 +9,7 @@ public:
 
 private:
 	void OnAttach() override;
-	void OnDettach() override;
+	void OnDetach() override;
 	void OnEvent(Hazel::Event& e) override;
 	void OnUpdate(const Hazel::Timestep& step) override;
 	void OnImGuiRender() override;
