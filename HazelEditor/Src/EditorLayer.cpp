@@ -11,7 +11,7 @@ namespace Hazel
 		m_OrthoCameraController(1.6667f, 1.0f)
 	{
 		Hazel::Renderer2D::Init();
-
+		
 		//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";
 		std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\TextureAtlas.png";
 		m_Texture2D = Hazel::Texture2D::Create(texturePath);
@@ -63,7 +63,10 @@ namespace Hazel
 		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene);
 
 		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
-		go.AddComponent<Hazel::SpriteRenderer>(sr, glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
+		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
+
+		float radio = 1.77778f, zoom = 1.3f;
+		go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
 	}
 
 	void EditorLayer::OnDetach()
@@ -91,7 +94,14 @@ namespace Hazel
 		m_Framebuffer->Bind();
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
-		Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+
+		if(m_ShowViewportCamera)
+			Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+		else
+		{
+			Hazel::CameraComponent& s = m_Scene->GetGameObjects()[0].GetComponent<CameraComponent>();
+			Hazel::Renderer2D::BeginScene(s, { 0.5,0.4, 0 });
+		}
 		{
 			//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 			//Hazel::Renderer2D::DrawQuad({ 0.2f, -0.8f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
@@ -230,6 +240,8 @@ namespace Hazel
 		ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
 		ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
 		ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
+
+		ImGui::Checkbox("Switch Camera", &m_ShowViewportCamera);
 
 		ImGui::End();
 

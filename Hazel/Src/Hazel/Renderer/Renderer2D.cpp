@@ -152,6 +152,22 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt = 0;
 	}
 
+	void Renderer2D::BeginScene(const CameraComponent & camera, const glm::vec3& cameraPos)
+	{
+		s_SceneData.ViewProjectionMatrix = glm::translate(glm::mat4(1.0f), cameraPos) * camera.GetProjectionMatrix();
+
+		s_Data.Shader->Bind();
+		s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
+
+		// Reset Batch
+		ResetBatchParams();
+
+		// Reset Renderer Stats, For Debuging, called only in BeginScene
+		s_Data.Stats.DrawCallCnt = 0;
+		s_Data.Stats.DrawQuadCnt = 0;
+	}
+
+
 	void Renderer2D::EndScene()
 	{
 		Flush();
