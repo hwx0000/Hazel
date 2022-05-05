@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace Hazel
 {
@@ -7,6 +8,7 @@ namespace Hazel
 	public:
 		virtual ~Component() = default;
 
-	private:
+	//protected:
+	//	std::weak_ptr<GameObject> m_GameObject;
 	};
 }

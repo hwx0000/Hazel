@@ -30,6 +30,6 @@ namespace Hazel
 		bool m_ViewportFocused;
 		bool m_ViewportHovered;
 
-		bool m_ShowViewportCamera = true;
+		bool m_ShowCameraComponent = false;
 	};
 }

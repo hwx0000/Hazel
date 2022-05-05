@@ -95,7 +95,7 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		if(m_ShowViewportCamera)
+		if(!m_ShowCameraComponent)
 			Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 		else
 		{
@@ -103,31 +103,9 @@ namespace Hazel
 			Hazel::Renderer2D::BeginScene(s, { 0.5,0.4, 0 });
 		}
 		{
-			//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
-			//Hazel::Renderer2D::DrawQuad({ 0.2f, -0.8f }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f });
-			//Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.2f }, { 0.4f, 0.4f }, m_Texture2D, 2.0f);   		 
-			//Hazel::Renderer2D::DrawRotatedQuad({ -0.5f, 0.5f, 0.2f }, { 0.4f, 0.4f }, 45.0f, m_Texture2D, 2.0f);
-
 			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
 			Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
 			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
-
-			//static float rotatedAngle = 0.0f;
-			//rotatedAngle += ts * 100.0f;
-
-			//float tileSize = 0.18f;
-			//float height = 9 * tileSize;
-			//float width = 16 * tileSize;
-
-			//for (size_t y = 0; y < 9; y++)
-			//	for (size_t x = 0; x < 16; x++)
-			//	{
-			//		char t = s_MapTiles[x + y * 16];
-
-			//		float xPos = -width / 2.0f + x * tileSize;
-			//		float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
-			//		Hazel::Renderer2D::DrawRotatedQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
-			//	}
 		}
 		Hazel::Renderer2D::EndScene();
 		m_Framebuffer->Unbind();
@@ -241,11 +219,33 @@ namespace Hazel
 		ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
 		ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
-		ImGui::Checkbox("Switch Camera", &m_ShowViewportCamera);
+		ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
+
 
 		ImGui::End();
 
+		// 绘制CameraComponent对应的Window, 感觉放到HazelEditor里比Hazel里更好一点
+		if (m_ShowCameraComponent)
+		{
+			auto wholeWndStartPos = ImGui::GetMainViewport()->Pos;
+			auto size = ImGui::GetMainViewport()->Size;
+
+			ImVec2 subWndSize(300, 300);
+			ImVec2 subWndStartPos;
+			subWndStartPos.x = wholeWndStartPos.x + size.x - subWndSize.x;
+			subWndStartPos.y = wholeWndStartPos.y + size.y - subWndSize.y;
+
+			// TODO: optimization, 可以只在resize时才设置窗口大小
+			ImGui::SetNextWindowPos(subWndStartPos, ImGuiCond_Always);
+			ImGui::SetNextWindowSize(subWndSize);
+
+			ImGui::Begin("Camera View", &m_ShowCameraComponent, ImGuiWindowFlags_NoMove);
+			ImGui::End();
+		}
+
+
 		ImGui::Begin("Viewport");
+
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Hazel::Application::Get().GetImGuiLayer()->SetViewportFocusedStatus(m_ViewportFocused);
