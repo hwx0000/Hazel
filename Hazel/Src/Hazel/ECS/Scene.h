@@ -19,6 +19,21 @@ namespace Hazel
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
 		
 		template<class T>
+		std::vector<std::shared_ptr<T>> GetComponents()
+		{
+			std::vector<std::shared_ptr<T>>res;
+			auto view = m_Registry.view<T>();
+			for (auto entity : view)
+			{
+				T& ref = view.get<T>(entity);
+				res.push_back(std::make_shared<T>(ref));
+			}
+
+			return res;
+
+		}
+
+		template<class T>
 		void RemoveComponentForGameObject(GameObject& go)
 		{
 			m_Registry.remove<T>(go);

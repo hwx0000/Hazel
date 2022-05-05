@@ -57,7 +57,7 @@ namespace Hazel
 		std::shared_ptr<Hazel::SubTexture2D> roadSignTex = std::make_shared<Hazel::SubTexture2D>(subT3);
 		s_Map['S'] = roadSignTex;
 
-		m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
+		m_ViewportFramebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
 		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene);
@@ -66,7 +66,17 @@ namespace Hazel
 		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
 		float radio = 1.77778f, zoom = 1.3f;
-		go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
+		CameraComponent& camera = go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
+		camera.SetRenderTargetSize(300, 300);
+
+		std::vector<std::shared_ptr<CameraComponent>>cams = m_Scene->GetComponents<CameraComponent>();
+	
+		for (size_t i = 0; i < cams.size(); i++)
+		{
+			std::shared_ptr<Hazel::Framebuffer> buffer = Hazel::Framebuffer::Create(
+				cams[i]->GetRenderTargetWidth(),
+				cams[i]->GetRenderTargetHeight());
+		}
 	}
 
 	void EditorLayer::OnDetach()
@@ -91,7 +101,7 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		m_Framebuffer->Bind();
+		m_ViewportFramebuffer->Bind();
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
@@ -108,7 +118,7 @@ namespace Hazel
 			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
 		}
 		Hazel::Renderer2D::EndScene();
-		m_Framebuffer->Unbind();
+		m_ViewportFramebuffer->Unbind();
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -258,11 +268,11 @@ namespace Hazel
 		if (viewportSize != m_LastViewportSize)
 		{
 			// 先Resize Framebuffer
-			m_Framebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
 		}
 
-		ImGui::Image(m_Framebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+		ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
 
 		m_LastViewportSize = viewportSize;
 

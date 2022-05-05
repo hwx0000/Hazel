@@ -12,13 +12,13 @@ namespace Hazel
 
 		template<class T, class... Args>
 		// todo, 应该返回创建的Component, 模板函数都应该放到.h文件里
-		void AddComponent(Args&& ...args)
+		T& AddComponent(Args&& ...args)
 		{
 			//auto s = new T(args...);
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
 			if (p)
-				p->GetRegistry().emplace<T>(m_InsanceId, std::forward<Args>(args)...);
+				return p->GetRegistry().emplace<T>(m_InsanceId, std::forward<Args>(args)...);
 		}
 		
 		template<class T>
