@@ -14,6 +14,7 @@ namespace Hazel
 		void OnEvent(Hazel::Event&) override;
 		void OnUpdate(const Hazel::Timestep&) override;
 		void OnImGuiRender() override;
+		void Render();
 
 	private:
 		Hazel::OrthographicCameraController m_OrthoCameraController;
@@ -21,7 +22,7 @@ namespace Hazel
 		// 专属viewport的framebuffer
 		std::shared_ptr<Hazel::Framebuffer> m_ViewportFramebuffer;
 		// framebuffer数组, 每个元素对应一个CameraComponent
-		std::vector<std::shared_ptr<Hazel::Framebuffer>> m_Framebuffers;
+		std::shared_ptr<Hazel::Framebuffer> m_CameraComponentFramebuffer;
 		std::shared_ptr<Hazel::Scene> m_Scene;
 
 		glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);

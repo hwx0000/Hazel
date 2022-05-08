@@ -30,7 +30,6 @@ namespace Hazel
 			}
 
 			return res;
-
 		}
 
 		template<class T>

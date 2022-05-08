@@ -65,18 +65,15 @@ namespace Hazel
 		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
 		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
+		// 添加CameraComponent
 		float radio = 1.77778f, zoom = 1.3f;
 		CameraComponent& camera = go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
 		camera.SetRenderTargetSize(300, 300);
 
-		std::vector<std::shared_ptr<CameraComponent>>cams = m_Scene->GetComponents<CameraComponent>();
-	
-		for (size_t i = 0; i < cams.size(); i++)
-		{
-			std::shared_ptr<Hazel::Framebuffer> buffer = Hazel::Framebuffer::Create(
-				cams[i]->GetRenderTargetWidth(),
-				cams[i]->GetRenderTargetHeight());
-		}
+		// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
+		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
+			camera.GetRenderTargetWidth(),
+			camera.GetRenderTargetHeight());
 	}
 
 	void EditorLayer::OnDetach()
@@ -101,24 +98,31 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
+		// 先渲染Viewport
 		m_ViewportFramebuffer->Bind();
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		if(!m_ShowCameraComponent)
-			Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-		else
-		{
-			Hazel::CameraComponent& s = m_Scene->GetGameObjects()[0].GetComponent<CameraComponent>();
-			Hazel::Renderer2D::BeginScene(s, { 0.5,0.4, 0 });
-		}
-		{
-			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
-			Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
-			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
-		}
+		Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+		Render();
 		Hazel::Renderer2D::EndScene();
 		m_ViewportFramebuffer->Unbind();
+
+		// 再渲染各个CameraComponent
+		if (m_ShowCameraComponent)
+		{
+			m_CameraComponentFramebuffer->Bind();
+			Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			Hazel::RenderCommand::Clear();
+
+			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
+			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
+
+			Hazel::Renderer2D::BeginScene(cam, { 0.5f, 0.4f, 0 });
+			Render();
+			Hazel::Renderer2D::EndScene();
+			m_CameraComponentFramebuffer->Unbind();
+		}
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -250,6 +254,8 @@ namespace Hazel
 			ImGui::SetNextWindowSize(subWndSize);
 
 			ImGui::Begin("Camera View", &m_ShowCameraComponent, ImGuiWindowFlags_NoMove);
+			// 好像是出现的ImGui窗口存在Border, 所以要设置280的size
+			ImGui::Image(m_CameraComponentFramebuffer->GetColorAttachmentTexture2DId(), {280, 280}, { 0,1 }, { 1,0 });
 			ImGui::End();
 		}
 
@@ -279,5 +285,12 @@ namespace Hazel
 		ImGui::End();
 
 		//m_ProfileResults.clear();
+	}
+
+	void EditorLayer::Render()
+	{
+		const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
+		Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
+		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
 	}
 }

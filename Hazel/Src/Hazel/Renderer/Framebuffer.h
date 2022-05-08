@@ -7,7 +7,7 @@ namespace Hazel
 	{
 	public:
 		static std::shared_ptr<Framebuffer>Create(uint32_t width, uint32_t height);
-		Framebuffer(uint32_t w, uint32_t h) : m_Width(), m_Height(h) {}
+		Framebuffer(uint32_t w, uint32_t h) : m_Width(w), m_Height(h) {}
 		virtual ~Framebuffer() = default;
 
 		virtual void Bind() = 0;
