@@ -16,6 +16,19 @@ namespace Hazel
 	{
 	}
 
+	void Scene::OnViewportResized(uint32_t width, uint32_t height)
+	{
+		std::vector<std::shared_ptr<CameraComponent>> cams = GetComponents<CameraComponent>();
+
+		for (std::shared_ptr<CameraComponent>& cam : cams)
+		{
+			if (!cam->IsFixedAspectRatio())
+			{
+				cam -> SetAspectRatio(width, height);
+			}
+		}
+	}
+
 	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps)
 	{
 		GameObject go(ps, m_Registry.create());

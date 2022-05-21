@@ -14,6 +14,7 @@ namespace Hazel
 		~Scene();
 
 		void Update();
+		void OnViewportResized(uint32_t width, uint32_t height);
 
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps);
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
