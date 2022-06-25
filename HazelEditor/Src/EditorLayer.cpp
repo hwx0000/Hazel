@@ -70,7 +70,7 @@ namespace Hazel
 		CameraComponent& camera = go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
 		camera.SetRenderTargetSize(300, 300);
 
-		// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
+		// TODO: 暂时默认绑定到它上, 实际应该在Hierarchy里选择哪个Camera, 此时的m_CameraComponentFramebuffer就绑定到谁
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
 			camera.GetRenderTargetWidth(),
 			camera.GetRenderTargetHeight());
@@ -270,12 +270,14 @@ namespace Hazel
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		glm::vec2 viewportSize = { size.x, size.y };
 
+		// 当Viewport的Size改变时, 更新Framebuffer的ColorAttachment的Size, 同时调用其他函数
 		// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
 		if (viewportSize != m_LastViewportSize)
 		{
 			// 先Resize Framebuffer
 			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
+			m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
 		}
 
 		ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
