@@ -16,7 +16,7 @@ project "Hazel"
     location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
     kind "StaticLib"
     language "C++"
-	staticruntime "on"
+	staticruntime "off"
 	cppdialect "C++17"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
@@ -82,7 +82,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir  ("bin/"..outputdir.."/%{prj.name}")
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
@@ -123,7 +123,7 @@ project "HazelEditor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir  ("bin/"..outputdir.."/%{prj.name}")
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
