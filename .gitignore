@@ -11,5 +11,3 @@ bin-int/
 *.vcxproj.user
 *.vcxproj.filters
 *.sln
-
-imgui.ini

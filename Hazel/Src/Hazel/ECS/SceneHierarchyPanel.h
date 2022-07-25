@@ -13,5 +13,6 @@ namespace Hazel
 
 	private:
 		std::shared_ptr<Scene> m_Scene;
+		uint32_t m_SelectedGOId;
 	};
 }

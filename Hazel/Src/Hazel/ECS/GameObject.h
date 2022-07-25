@@ -49,6 +49,8 @@ namespace Hazel
 		void SetName(const std::string& name) { m_Name = name; }
 		const std::string& ToString() CONST { return m_Name; }
 		//std::string& ToString() { return m_Name; }
+		const uint32_t GetInstanceId() const { return (uint32_t)m_InsanceId; }
+
 
 	private:
 		entt::entity m_InsanceId;
