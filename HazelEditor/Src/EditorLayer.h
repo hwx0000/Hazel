@@ -35,5 +35,7 @@ namespace Hazel
 		bool m_ViewportHovered;
 
 		bool m_ShowCameraComponent = false;
+
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }

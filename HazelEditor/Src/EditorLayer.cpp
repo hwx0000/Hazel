@@ -60,7 +60,7 @@ namespace Hazel
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
-		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene);
+		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
 
 		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
 		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
@@ -74,6 +74,8 @@ namespace Hazel
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
 			camera.GetRenderTargetWidth(),
 			camera.GetRenderTargetHeight());
+
+		m_SceneHierarchyPanel.SetContext(m_Scene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -285,6 +287,8 @@ namespace Hazel
 		ImGui::End();
 
 		//m_ProfileResults.clear();
+
+		m_SceneHierarchyPanel.OnImGuiRender();
 	}
 
 	void EditorLayer::Render()

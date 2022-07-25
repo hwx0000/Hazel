@@ -5,7 +5,8 @@
 
 namespace Hazel
 {
-	GameObject::GameObject(const std::shared_ptr<Scene>& ps, const entt::entity & entity) : m_Scene(ps), m_InsanceId(entity)
+	GameObject::GameObject(const std::shared_ptr<Scene>& ps, const entt::entity & entity, const std::string& name)
+		: m_Scene(ps), m_InsanceId(entity), m_Name(name)
 	{
 	}
 }

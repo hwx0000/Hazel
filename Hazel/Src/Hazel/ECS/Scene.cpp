@@ -29,9 +29,9 @@ namespace Hazel
 		}
 	}
 
-	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps)
+	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name)
 	{
-		GameObject go(ps, m_Registry.create());
+		GameObject go(ps, m_Registry.create(), name);
 		m_GameObjects.push_back(go);
 		return m_GameObjects[m_GameObjects.size() - 1];
 	}
