@@ -65,9 +65,10 @@ namespace Hazel
 		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
 		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
+		Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
 		// 添加CameraComponent
 		float radio = 1.77778f, zoom = 1.3f;
-		CameraComponent& camera = go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
+		CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
 		camera.SetRenderTargetSize(300, 300);
 
 		// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
