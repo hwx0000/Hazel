@@ -8,6 +8,7 @@ namespace Hazel
 	class GameObject
 	{
 	public:
+		GameObject() = default;
 		GameObject(const std::shared_ptr<Scene>& ps, const entt::entity& entity, const std::string& name = "Default GameObject");
 
 		template<class T, class... Args>
@@ -17,7 +18,8 @@ namespace Hazel
 			//auto s = new T(args...);
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
-			if (p)
+			//if (p)	// TODO: 这里写法不合理, 因为不是所有路径都有返回值, 貌似GameObject存Scene的shared_ptr需要改一改
+			// Hazel这里存了Scene的Raw Pointer
 				return p->GetRegistry().emplace<T>(m_InsanceId, std::forward<Args>(args)...);
 		}
 

@@ -18,6 +18,7 @@ namespace Hazel
 
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name = "Default Name");
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
+		GameObject& GetGameObjectById(uint32_t id, bool& success);
 		
 		template<class T>
 		std::vector<std::shared_ptr<T>> GetComponents()

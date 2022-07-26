@@ -40,4 +40,20 @@ namespace Hazel
 	{
 		return m_GameObjects;
 	}
+
+	GameObject& Scene::GetGameObjectById(uint32_t id, bool& success)
+	{
+		for (size_t i = 0; i < m_GameObjects.size(); i++)
+		{
+			if (m_GameObjects[i].GetInstanceId() == id)
+			{
+				success = true;
+				return m_GameObjects[i];
+			}
+		}
+
+		success = false;
+		GameObject empty;
+		return empty;
+	}
 }
