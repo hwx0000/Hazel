@@ -67,13 +67,14 @@ namespace Hazel
 		memset(buffer, 0, sizeof(buffer));
 		strcpy_s(buffer, sizeof(buffer), go.ToString().c_str());
 
-		// 老式的写法会让Text在右边显示
-		if (ImGui::InputText("Name", buffer, sizeof(buffer)))
-			go.SetName(std::string(buffer));
-
-		//ImGui::Text("Name");
-		//ImGui::SameLine();
-		//if (ImGui::InputText(" ", buffer, sizeof(buffer)))
+		//// 老式的写法会让Text在右边显示
+		//if (ImGui::InputText("Name", buffer, sizeof(buffer)))
 		//	go.SetName(std::string(buffer));
+
+		// 新的写法用" "占了个位, 也不是特别科学
+		ImGui::Text("Name");
+		ImGui::SameLine();
+		if (ImGui::InputText(" ", buffer, sizeof(buffer)))
+			go.SetName(std::string(buffer));
 	}
 }
