@@ -43,6 +43,9 @@ namespace Hazel
 		}
 		//	ImGui::Text(gos[i].ToString().c_str());
 
+		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
+			m_SelectedGOId = 999999;// 只要这个值跟出现在Hierarchy里Node的Instance Id不同即可
+
 		ImGui::End();
 	}
 }
