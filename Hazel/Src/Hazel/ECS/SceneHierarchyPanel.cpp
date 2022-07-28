@@ -2,6 +2,7 @@
 #include "SceneHierarchyPanel.h"
 #include "imgui.h"
 #include "ECS/GameObject.h"
+#include "ECS/Components/Transform.h"
 
 namespace Hazel
 {
@@ -59,6 +60,7 @@ namespace Hazel
 
 	void SceneHierarchyPanel::DrawComponentsForSelectedGameObject()
 	{
+		// Draw name for GameObject
 		bool suc;
 		GameObject& go = m_Scene->GetGameObjectById(m_SelectedGOId, suc);
 		if (!suc) return;
@@ -76,5 +78,19 @@ namespace Hazel
 		ImGui::SameLine();
 		if (ImGui::InputText(" ", buffer, sizeof(buffer)))
 			go.SetName(std::string(buffer));
+
+
+		// Draw Transform Component
+		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
+		if (go.HasComponent<Transform>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(Transform).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			{
+				glm::mat4& transform = go.GetComponent<Transform>();
+				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
+
+				ImGui::TreePop();
+			}
+		}
 	}
 }

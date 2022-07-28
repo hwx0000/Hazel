@@ -1,5 +1,6 @@
 #include "hzpch.h"
 #include "Scene.h"
+#include "ECS/Components/Transform.h"
 
 namespace Hazel
 {
@@ -32,6 +33,7 @@ namespace Hazel
 	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name)
 	{
 		GameObject go(ps, m_Registry.create(), name);
+		go.AddComponent<Transform>();
 		m_GameObjects.push_back(go);
 		return m_GameObjects[m_GameObjects.size() - 1];
 	}

@@ -29,7 +29,7 @@ namespace Hazel
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
 			if (p)
-				return p->GetRegistry().all_of<T>();
+				return p->GetRegistry().all_of<T>(m_InsanceId);
 
 			return false;
 		}
@@ -53,6 +53,8 @@ namespace Hazel
 		//std::string& ToString() { return m_Name; }
 		const uint32_t GetInstanceId() const { return (uint32_t)m_InsanceId; }
 
+
+		glm::vec3 GetPosition();
 
 	private:
 		entt::entity m_InsanceId;

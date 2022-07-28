@@ -118,7 +118,8 @@ namespace Hazel
 			Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Hazel::RenderCommand::Clear();
 
-			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
+			// TODO: 
+			const Hazel::GameObject& go = m_Scene->GetGameObjects()[1];
 			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
 			Hazel::Renderer2D::BeginScene(cam, { 0.5f, 0.4f, 0 });
@@ -294,8 +295,9 @@ namespace Hazel
 
 	void EditorLayer::Render()
 	{
-		const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
+		// TODO
+		Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
 		Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
-		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
+		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, go.GetPosition(), { 0.8f, 0.8f });
 	}
 }
