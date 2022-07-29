@@ -279,7 +279,7 @@ namespace Hazel
 		{
 			// 先Resize Framebuffer
 			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-			m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
+			m_OrthoCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		}
 
 		ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });

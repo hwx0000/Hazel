@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "ECS/GameObject.h"
 #include "ECS/Components/Transform.h"
+#include "ECS/Components/CameraComponent.h"
 
 namespace Hazel
 {
@@ -88,6 +89,42 @@ namespace Hazel
 			{
 				glm::mat4& transform = go.GetComponent<Transform>();
 				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
+
+				ImGui::TreePop();
+			}
+		}
+
+		// Draw Camera Component
+		if (go.HasComponent<CameraComponent>())
+		{
+			// 默认展开TreeView
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "CameraComponent"))
+			{
+				CameraComponent& cam = go.GetComponent<CameraComponent>();
+				
+				// 绘制俩选项, 这里的选项顺序与ProjectionType的枚举顺序相同
+				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+				// 当前选项从数组中找
+				const char* currentProjectionTypeString = projectionTypeStrings[(int)cam.GetProjectionType()];
+				// BeginCombo是ImGui绘制EnumPopup的方法
+				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+						{
+							currentProjectionTypeString = projectionTypeStrings[i];
+							cam.SetProjectionType((CameraComponent::ProjectionType)i);
+						}
+
+						// 高亮当前已经选择的Item
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
 
 				ImGui::TreePop();
 			}
