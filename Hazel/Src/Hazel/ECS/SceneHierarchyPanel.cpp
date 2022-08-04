@@ -106,6 +106,9 @@ namespace Hazel
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				// 当前选项从数组中找
 				const char* currentProjectionTypeString = projectionTypeStrings[(int)cam.GetProjectionType()];
+
+				bool projectionTypeChanged = false;
+
 				// BeginCombo是ImGui绘制EnumPopup的方法
 				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 				{
@@ -114,8 +117,12 @@ namespace Hazel
 						bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
 						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
 						{
-							currentProjectionTypeString = projectionTypeStrings[i];
-							cam.SetProjectionType((CameraComponent::ProjectionType)i);
+							if (cam.GetProjectionType() != (CameraComponent::ProjectionType)i)
+							{
+								currentProjectionTypeString = projectionTypeStrings[i];
+								cam.SetProjectionType((CameraComponent::ProjectionType)i);
+								projectionTypeChanged = true;
+							}
 						}
 
 						// 高亮当前已经选择的Item
@@ -125,6 +132,41 @@ namespace Hazel
 
 					ImGui::EndCombo();
 				}
+
+				if (cam.GetProjectionType() == CameraComponent::ProjectionType::Perspective)
+				{
+					float verticalFov = glm::degrees(cam.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+						cam.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
+
+					float orthoNear = cam.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near", &orthoNear))
+						cam.SetPerspectiveNearClip(orthoNear);
+
+					float orthoFar = cam.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far", &orthoFar))
+						cam.SetPerspectiveFarClip(orthoFar);
+				}
+
+				if (cam.GetProjectionType() == CameraComponent::ProjectionType::Orthographic)
+				{
+					float orthoSize = cam.GetOrthographicSize();
+					if (ImGui::DragFloat("Size", &orthoSize))
+						cam.SetOrthographicSize(orthoSize);
+
+					float orthoNear = cam.GetOrthographicNearClip();
+					if (ImGui::DragFloat("Near", &orthoNear))
+						cam.SetOrthographicNearClip(orthoNear);
+
+					float orthoFar = cam.GetOrthographicFarClip();
+					if (ImGui::DragFloat("Far", &orthoFar))
+						cam.SetOrthographicFarClip(orthoFar);
+
+					ImGui::Checkbox("Fixed Aspect Ratio", &cam.GetFixedAspectRatio());
+				}
+
+				if (projectionTypeChanged)
+					cam.RecalculateProjectionMat();
 
 				ImGui::TreePop();
 			}

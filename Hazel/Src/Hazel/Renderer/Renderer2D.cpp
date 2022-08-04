@@ -147,7 +147,7 @@ namespace Hazel
 		// Reset Batch
 		ResetBatchParams();
 
-		// Reset Renderer Stats, For Debuging, called only in BeginScene
+		// Reset Renderer Stats, For Debugging, called only in BeginScene
 		s_Data.Stats.DrawCallCnt = 0;
 		s_Data.Stats.DrawQuadCnt = 0;
 	}
@@ -162,7 +162,7 @@ namespace Hazel
 		// Reset Batch
 		ResetBatchParams();
 
-		// Reset Renderer Stats, For Debuging, called only in BeginScene
+		// Reset Renderer Stats, For Debugging, called only in BeginScene
 		s_Data.Stats.DrawCallCnt = 0;
 		s_Data.Stats.DrawQuadCnt = 0;
 	}

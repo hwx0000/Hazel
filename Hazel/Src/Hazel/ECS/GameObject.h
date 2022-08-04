@@ -35,7 +35,28 @@ namespace Hazel
 		}
 
 		template<class T>
+		bool HasComponent() const
+		{
+			std::shared_ptr<Scene> p = m_Scene.lock();
+
+			if (p)
+				return p->GetRegistry().all_of<T>(m_InsanceId);
+
+			return false;
+		}
+
+		template<class T>
 		T& GetComponent()
+		{
+			HAZEL_ASSERT(HasComponent<T>(), "GameObject Does Not Have The Specified Component!")
+
+				std::shared_ptr<Scene> p = m_Scene.lock();
+
+			return p->GetRegistry().get<T>(m_InsanceId);
+		}
+
+		template<class T>
+		T& GetComponent() const
 		{
 			HAZEL_ASSERT(HasComponent<T>(), "GameObject Does Not Have The Specified Component!")
 
@@ -55,6 +76,7 @@ namespace Hazel
 
 
 		glm::vec3 GetPosition();
+		glm::vec3 GetPosition() const;
 
 	private:
 		entt::entity m_InsanceId;

@@ -67,8 +67,7 @@ namespace Hazel
 
 		Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
 		// 添加CameraComponent
-		float radio = 1.77778f, zoom = 1.3f;
-		CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
+		CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
 		camera.SetRenderTargetSize(300, 300);
 
 		// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
@@ -122,7 +121,7 @@ namespace Hazel
 			const Hazel::GameObject& go = m_Scene->GetGameObjects()[1];
 			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
-			Hazel::Renderer2D::BeginScene(cam, { 0.5f, 0.4f, 0 });
+			Hazel::Renderer2D::BeginScene(cam, go.GetPosition());
 			Render();
 			Hazel::Renderer2D::EndScene();
 			m_CameraComponentFramebuffer->Unbind();
