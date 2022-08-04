@@ -78,6 +78,9 @@ namespace Hazel
 		glm::vec3 GetPosition();
 		glm::vec3 GetPosition() const;
 
+		glm::mat4 GetTransformMat();
+		glm::mat4 GetTransformMat() const;
+
 	private:
 		entt::entity m_InsanceId;
 		std::weak_ptr<Scene> m_Scene;

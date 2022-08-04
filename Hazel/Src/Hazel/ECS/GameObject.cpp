@@ -26,4 +26,16 @@ namespace Hazel
 		const glm::mat4 trans = GetComponent<Transform>();
 		return glm::vec3(trans[3][0], trans[3][1], trans[3][2]);
 	}
+
+	glm::mat4 GameObject::GetTransformMat()
+	{
+		HAZEL_ASSERT(HasComponent<Transform>(), "GameObejct Missing TransformComponent");
+		return GetComponent<Transform>();
+	}
+
+	glm::mat4 GameObject::GetTransformMat() const
+	{
+		HAZEL_ASSERT(HasComponent<Transform>(), "GameObejct Missing TransformComponent");
+		return GetComponent<Transform>();
+	}
 }

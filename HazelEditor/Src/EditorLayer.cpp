@@ -121,7 +121,7 @@ namespace Hazel
 			const Hazel::GameObject& go = m_Scene->GetGameObjects()[1];
 			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
-			Hazel::Renderer2D::BeginScene(cam, go.GetPosition());
+			Hazel::Renderer2D::BeginScene(cam, go.GetTransformMat());
 			Render();
 			Hazel::Renderer2D::EndScene();
 			m_CameraComponentFramebuffer->Unbind();
