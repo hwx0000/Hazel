@@ -154,7 +154,7 @@ namespace Hazel
 
 	void Renderer2D::BeginScene(const CameraComponent & camera, const glm::vec3& cameraPos)
 	{
-		s_SceneData.ViewProjectionMatrix = glm::translate(glm::mat4(1.0f), cameraPos) * camera.GetProjectionMatrix();
+		s_SceneData.ViewProjectionMatrix = camera.GetProjectionMatrix() * glm::translate(glm::mat4(1.0f), -cameraPos);
 
 		s_Data.Shader->Bind();
 		s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
