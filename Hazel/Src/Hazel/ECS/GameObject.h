@@ -78,6 +78,8 @@ namespace Hazel
 		glm::vec3 GetPosition();
 		glm::vec3 GetPosition() const;
 
+		void SetPosition(const glm::vec3& p);
+
 		glm::mat4 GetTransformMat();
 		glm::mat4 GetTransformMat() const;
 

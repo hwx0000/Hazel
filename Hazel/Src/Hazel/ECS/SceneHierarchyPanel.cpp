@@ -81,6 +81,9 @@ namespace Hazel
 			go.SetName(std::string(buffer));
 
 
+		// TODO: 未来DrawComponent函数应该设置为模板函数, 模板函数里设置一个可调用的lambda函数
+		// 不同的Component可以在模板函数里的DrawComponent的基础代码执行后, 绘制多余的部分
+
 		// Draw Transform Component
 		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
 		if (go.HasComponent<Transform>())
@@ -101,7 +104,7 @@ namespace Hazel
 			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "CameraComponent"))
 			{
 				CameraComponent& cam = go.GetComponent<CameraComponent>();
-				
+
 				// 绘制俩选项, 这里的选项顺序与ProjectionType的枚举顺序相同
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				// 当前选项从数组中找
@@ -168,6 +171,17 @@ namespace Hazel
 				if (projectionTypeChanged)
 					cam.RecalculateProjectionMat();
 
+				ImGui::TreePop();
+			}
+		}
+	
+		// Draw SpriteRendererComponent
+		if (go.HasComponent<SpriteRenderer>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRenderer).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				auto& src = go.GetComponent<SpriteRenderer>();
+				ImGui::ColorEdit4("Color", glm::value_ptr(src.GetColor()));
 				ImGui::TreePop();
 			}
 		}

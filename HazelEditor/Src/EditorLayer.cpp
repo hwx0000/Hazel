@@ -44,7 +44,6 @@ namespace Hazel
 	{
 		CORE_LOG("Init Layer");
 
-
 		Hazel::SubTexture2D subT1(m_Texture2D, { 0.7f, 5.0f / 9.0f }, { 0.75f, 6.0f / 9.0f });
 		std::shared_ptr<Hazel::SubTexture2D> waterTileTex = std::make_shared<Hazel::SubTexture2D>(subT1);
 		s_Map['W'] = waterTileTex;
@@ -60,11 +59,12 @@ namespace Hazel
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
-		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
 
-		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
+		// 1. 创建MySquare对象
+		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
 		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
+		// 2. 创建MainCamera对象
 		Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
 		// 添加CameraComponent
 		CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
@@ -74,6 +74,11 @@ namespace Hazel
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
 			camera.GetRenderTargetWidth(),
 			camera.GetRenderTargetHeight());
+
+		// 3. 创建MySquare2对象
+		Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
+		go2.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.8f, 0.1f, 0.1f, 1.0f });
+		go2.SetPosition({ 1,0,0 });
 
 		m_SceneHierarchyPanel.SetContext(m_Scene);
 	}
@@ -226,9 +231,7 @@ namespace Hazel
 
 		ImGui::End();
 
-		ImGui::Begin("Test");
-		ImGui::ColorEdit4("Flat Color Picker", glm::value_ptr(m_FlatColor));
-
+		ImGui::Begin("Render Stats");
 		auto& stats = Hazel::Renderer2D::GetStatistics();
 
 		ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
@@ -237,7 +240,6 @@ namespace Hazel
 		ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
 		ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
-
 
 		ImGui::End();
 
@@ -292,11 +294,16 @@ namespace Hazel
 		m_SceneHierarchyPanel.OnImGuiRender();
 	}
 
+	// 此函数会为每个fbo都调用一次, 比如为Viewport和每个CameraComponent都调用一次
 	void EditorLayer::Render()
 	{
-		// TODO
-		Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
-		Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
-		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, go.GetPosition(), { 0.8f, 0.8f });
+		std::vector<GameObject> gos = m_Scene->GetGameObjectsByComponent<Hazel::SpriteRenderer>();
+
+		for (size_t i = 0; i < gos.size(); i++)
+		{
+			Hazel::GameObject& go = gos[i];
+			Hazel::SpriteRenderer sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
+			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, go.GetPosition(), { 0.8f, 0.8f });
+		}
 	}
 }
