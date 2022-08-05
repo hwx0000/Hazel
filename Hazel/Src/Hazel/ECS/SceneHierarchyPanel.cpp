@@ -280,12 +280,39 @@ namespace Hazel
 		// Draw SpriteRendererComponent
 		if (go.HasComponent<SpriteRenderer>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRenderer).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			// 在每一个Component的绘制函数里添加此函数
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			bool openComponentDetails = ImGui::TreeNodeEx((void*)typeid(SpriteRenderer).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer");
+
+			// SameLine的意思是继续与上面的内容在同一行
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			// 绘制20x20大小的+号按钮
+			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+			{
+				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
+				ImGui::OpenPopup("ComponentSettings");
+			}
+
+			ImGui::PopStyleVar();
+
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove component"))
+				{
+					m_Scene->RemoveComponentForGameObject<SpriteRenderer>(go);
+					openComponentDetails = false;
+				}
+
+				ImGui::EndPopup();
+			}
+
+			if (openComponentDetails)
 			{
 				auto& src = go.GetComponent<SpriteRenderer>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(src.GetColor()));
-				ImGui::TreePop();
 			}
+
+			ImGui::TreePop();
 		}
 
 
