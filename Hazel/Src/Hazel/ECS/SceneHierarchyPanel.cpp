@@ -79,21 +79,47 @@ namespace Hazel
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
 		ImGui::Begin("SceneHierarchyPanel");
+		{
 
-		std::vector<GameObject>& gos = m_Scene->GetGameObjects();
-		for (size_t i = 0; i < gos.size(); i++)
-			DrawGameObject(gos[i]);
+			std::vector<GameObject>& gos = m_Scene->GetGameObjects();
+			for (size_t i = 0; i < gos.size(); i++)
+				DrawGameObject(gos[i]);
 
-		//	ImGui::Text(gos[i].ToString().c_str());
+			//	ImGui::Text(gos[i].ToString().c_str());
 
-		if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
-			m_SelectedGOId = INVALID_INSTANCE_ID;// 只要这个值跟出现在Hierarchy里Node的Instance Id不同即可
+			if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
+				m_SelectedGOId = INVALID_INSTANCE_ID;// 只要这个值跟出现在Hierarchy里Node的Instance Id不同即可
 
+
+			// Right-click on blank space
+			// 1代表鼠标右键(0代表左键、2代表中键), bool over_item为false, 意味着这个窗口只在空白处点击才会触发 
+			// 后续应该允许在item上点击, 无非此时创建的是子GameObject
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Create New GameObject"))
+					m_Scene->CreateGameObjectInScene(m_Scene, "New GameObject");
+
+				ImGui::EndPopup();
+			}
+
+			if (m_SelectedGOId != INVALID_INSTANCE_ID)
+			{
+				if (ImGui::BeginPopupContextWindow("Delete", 1, true))
+				{
+					if (ImGui::MenuItem("Delete GameObject"))
+						m_Scene->DestroyGameObjectById(m_SelectedGOId);
+
+					ImGui::EndPopup();
+				}
+			}
+		}
 		ImGui::End();
 
 		ImGui::Begin("Inspector");
-		if(m_SelectedGOId != INVALID_INSTANCE_ID)
-			DrawComponentsForSelectedGameObject();
+		{
+			if (m_SelectedGOId != INVALID_INSTANCE_ID)
+				DrawComponentsForSelectedGameObject();
+		}
 		ImGui::End();
 	}
 

@@ -58,4 +58,24 @@ namespace Hazel
 		GameObject empty;
 		return empty;
 	}
+
+	void Scene::DestroyGameObject(const GameObject& go)
+	{
+		for (std::vector<GameObject>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
+		{
+			if (*it == go)
+			{
+				m_GameObjects.erase(it);
+				return;
+			}
+		}
+	}
+
+	void Scene::DestroyGameObjectById(uint32_t id)
+	{
+		bool suc = false;
+		auto& go = GetGameObjectById(id, suc);
+		if(suc)
+			DestroyGameObject(go);
+	}
 }

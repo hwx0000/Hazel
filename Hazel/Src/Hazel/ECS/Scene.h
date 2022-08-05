@@ -65,6 +65,10 @@ namespace Hazel
 		entt::registry& GetRegistry() { return m_Registry; }
 		const entt::registry& GetRegistry() const { return m_Registry; }
 
+		void DestroyGameObject(const GameObject& go);
+
+		void DestroyGameObjectById(uint32_t id);
+
 	private:
 		entt::registry m_Registry;
 		std::vector<GameObject> m_GameObjects;
