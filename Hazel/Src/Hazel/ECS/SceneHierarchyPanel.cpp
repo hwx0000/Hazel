@@ -107,7 +107,10 @@ namespace Hazel
 				if (ImGui::BeginPopupContextWindow("Delete", 1, true))
 				{
 					if (ImGui::MenuItem("Delete GameObject"))
+					{
 						m_Scene->DestroyGameObjectById(m_SelectedGOId);
+						m_SelectedGOId = INVALID_INSTANCE_ID;
+					}
 
 					ImGui::EndPopup();
 				}
