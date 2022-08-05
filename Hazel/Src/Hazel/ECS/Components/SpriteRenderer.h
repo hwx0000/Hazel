@@ -14,6 +14,6 @@ namespace Hazel
 		const glm::vec4& GetColor() const { return m_Color; }
 
 	private:
-		glm::vec4 m_Color;
+		glm::vec4 m_Color = { 0, 0, 0, 255 };
 	};
 }

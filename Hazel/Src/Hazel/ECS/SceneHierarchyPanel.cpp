@@ -287,5 +287,31 @@ namespace Hazel
 				ImGui::TreePop();
 			}
 		}
+
+
+		// Draw AddComponent Menu
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (ImGui::MenuItem("Camera"))
+			{
+				if (!go.HasComponent<CameraComponent>())
+					go.AddComponent<CameraComponent>();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Renderer"))
+			{
+				if(!go.HasComponent<SpriteRenderer>())
+					go.AddComponent<SpriteRenderer>();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 }
