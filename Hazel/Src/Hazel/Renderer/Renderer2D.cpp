@@ -199,9 +199,9 @@ namespace Hazel
 		DrawRotatedQuad(globalPos, size, 0, subTexture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::vec3 & globalPos, const glm::vec2 & size, const glm::vec4 & tintColor)
+	void Renderer2D::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(globalPos, size, 0.0f, spriteRenderer.GetColor());
+		DrawRotatedQuad(globalPos, size, rotatedAngle, spriteRenderer.GetColor());
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
@@ -219,7 +219,7 @@ namespace Hazel
 
 		s_Data.WhiteTexture->Bind(0);
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), glm::radians(rotatedAngle), {0, 0, 1}) *
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), rotatedAngle, {0, 0, 1}) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		QuadVertex vertices[4];
@@ -265,7 +265,7 @@ namespace Hazel
 		int texId = s_Data.AddedTextures[texture];
 		texture->Bind(texId);
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), glm::radians(rotatedAngle), { 0, 0, 1 }) *
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), rotatedAngle, { 0, 0, 1 }) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		QuadVertex vertices[4];
@@ -342,7 +342,7 @@ namespace Hazel
 		int texId = s_Data.AddedTextures[atlas];
 		atlas->Bind(texId);
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), glm::radians(rotatedAngle), { 0, 0, 1 }) *
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), rotatedAngle, { 0, 0, 1 }) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		QuadVertex vertices[4];

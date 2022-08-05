@@ -4,6 +4,7 @@
 #include "Renderer/Renderer2D.h"
 #include "Math/Random.h"
 #include <filesystem>
+#include "ECS/Components/Transform.h"
 
 namespace Hazel
 {
@@ -303,7 +304,8 @@ namespace Hazel
 		{
 			Hazel::GameObject& go = gos[i];
 			Hazel::SpriteRenderer sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
-			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, go.GetPosition(), { 0.8f, 0.8f });
+			Hazel::Transform& t = go.GetComponent<Hazel::Transform>();
+			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, t.Translation, t.Rotation.z, { t.Scale.x, t.Scale.y });
 		}
 	}
 }
