@@ -20,10 +20,12 @@ namespace Hazel
 		template<class T>
 		void DrawComponent(const char* name, GameObject& go, std::function<void(T&)> uiFunction)
 		{
+			ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding;
+
 			// 1. 绘制通用的右上角的按钮
 			// 在每一个Component的绘制函数里添加此函数
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, name);
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), flag, name);
 
 			// SameLine的意思是继续与上面的内容在同一行
 			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);

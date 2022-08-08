@@ -124,6 +124,9 @@ namespace Hazel
 					ImGui::EndPopup();
 				}
 			}
+
+			ImGui::GetStyle().WindowMinSize.x = 250.0f;
+
 		}
 		ImGui::End();
 
@@ -131,6 +134,8 @@ namespace Hazel
 		{
 			if (m_SelectedGOId != INVALID_INSTANCE_ID)
 				DrawComponentsForSelectedGameObject();
+
+			ImGui::GetStyle().WindowMinSize.x = 250.0f;
 		}
 		ImGui::End();
 	}
@@ -139,7 +144,8 @@ namespace Hazel
 	{
 		uint32_t id = go.GetInstanceId();
 		// 每个node都自带OpenOnArrow的flag, 如果当前go正好是被选择的go, 那么还会多一个selected flag
-		ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow | ((m_SelectedGOId == id) ? ImGuiTreeNodeFlags_Selected : 0);
+		ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding
+			| ((m_SelectedGOId == id) ? ImGuiTreeNodeFlags_Selected : 0);
 
 		// 这里的TreeNodeEx会让ImGui基于输入的HashCode(GUID), 绘制一个TreeNode, 由于这里需要一个
 		// void*指针, 这里直接把GameObject的id转成void*给它即可
@@ -184,12 +190,39 @@ namespace Hazel
 		// 新的写法用" "占了个位, 也不是特别科学
 		ImGui::Text("Name");
 		ImGui::SameLine();
+		ImGui::PushItemWidth(200);
 		if (ImGui::InputText(" ", buffer, sizeof(buffer)))
 			go.SetName(std::string(buffer));
+		ImGui::PopItemWidth();
 
 
-		// TODO: 未来DrawComponent函数应该设置为模板函数, 模板函数里设置一个可调用的lambda函数
-		// 不同的Component可以在模板函数里的DrawComponent的基础代码执行后, 绘制多余的部分
+		//ImGui::SameLine();
+		ImGui::SameLine(ImGui::GetWindowWidth() - 110.0f);
+		// Draw AddComponent Menu
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (ImGui::MenuItem("Camera"))
+			{
+				if (!go.HasComponent<CameraComponent>())
+					go.AddComponent<CameraComponent>();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Renderer"))
+			{
+				if (!go.HasComponent<SpriteRenderer>())
+					go.AddComponent<SpriteRenderer>();
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+		
 
 		// Draw Transform Component
 		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
@@ -288,32 +321,6 @@ namespace Hazel
 				{
 					ImGui::ColorEdit4("Color", glm::value_ptr(sr.GetColor()));
 				});
-		}
-
-
-		// Draw AddComponent Menu
-		if (ImGui::Button("Add Component"))
-			ImGui::OpenPopup("AddComponent");
-
-		if (ImGui::BeginPopup("AddComponent"))
-		{
-			if (ImGui::MenuItem("Camera"))
-			{
-				if (!go.HasComponent<CameraComponent>())
-					go.AddComponent<CameraComponent>();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-			if (ImGui::MenuItem("Sprite Renderer"))
-			{
-				if(!go.HasComponent<SpriteRenderer>())
-					go.AddComponent<SpriteRenderer>();
-
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::EndPopup();
 		}
 	}
 }
