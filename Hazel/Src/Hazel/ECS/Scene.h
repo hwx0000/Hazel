@@ -24,11 +24,11 @@ namespace Hazel
 		std::vector<std::shared_ptr<T>> GetComponents()
 		{
 			std::vector<std::shared_ptr<T>>res;
-			auto view = m_Registry.view<T>();
-			for (auto entity : view)
+			auto& view = m_Registry.view<T>();
+			for (auto& entity : view)
 			{
 				T& ref = view.get<T>(entity);
-				res.push_back(std::make_shared<T>(ref));
+				res.push_back(std::shared_ptr<T>(&ref));
 			}
 
 			return res;

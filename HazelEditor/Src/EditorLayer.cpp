@@ -303,7 +303,7 @@ namespace Hazel
 		for (size_t i = 0; i < gos.size(); i++)
 		{
 			Hazel::GameObject& go = gos[i];
-			Hazel::SpriteRenderer sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
+			Hazel::SpriteRenderer& sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
 			Hazel::Transform& t = go.GetComponent<Hazel::Transform>();
 			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, t.Translation, t.Rotation.z, { t.Scale.x, t.Scale.y });
 		}

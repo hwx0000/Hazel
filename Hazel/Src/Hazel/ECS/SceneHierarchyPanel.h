@@ -17,6 +17,17 @@ namespace Hazel
 		void DrawComponentsForSelectedGameObject();
 
 	private:
+		template<class T>
+		void DrawComponent(const char* name, GameObject& go, std::function<void(T&)> uiFunction)
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, name))
+			{
+				T& tc = go.GetComponent<T>();
+				uiFunction(tc);
+				ImGui::TreePop();
+			}
+		}
+
 		std::shared_ptr<Scene> m_Scene;
 		uint32_t m_SelectedGOId = INVALID_INSTANCE_ID;
 	};

@@ -196,17 +196,16 @@ namespace Hazel
 		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
 		if (go.HasComponent<Transform>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(Transform).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
-			{
-				Transform& tc = go.GetComponent<Transform>();
-				DrawVec3Control("Translation", tc.Translation);
-				// 面板上展示的是degrees, 但是底层数据存的是radians
-				glm::vec3 rotation = glm::degrees(tc.Rotation);
-				DrawVec3Control("Rotation", rotation);
-				tc.Rotation = glm::radians(rotation);
-				DrawVec3Control("Scale", tc.Scale, 1.0f);
-				ImGui::TreePop();
-			}
+			DrawComponent<Transform>("Transform", go, [&](Transform& tc)
+				{
+					DrawVec3Control("Translation", tc.Translation);
+					// 面板上展示的是degrees, 但是底层数据存的是radians
+					glm::vec3 rotation = glm::degrees(tc.Rotation);
+					DrawVec3Control("Rotation", rotation);
+					tc.Rotation = glm::radians(rotation);
+					DrawVec3Control("Scale", tc.Scale, 1.0f);
+				}
+			);
 		}
 
 		// Draw Camera Component
