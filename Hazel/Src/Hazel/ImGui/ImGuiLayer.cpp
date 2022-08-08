@@ -37,6 +37,7 @@ void Hazel::ImGuiLayer::OnAttach()
 	//io.ConfigViewportsNoTaskBarIcon = true;
 	// 加载fonts
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceSansPro-Regular.ttf", 18);
+	io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceSansPro-Bold.ttf", 18);
 
 	// 3. 设置主题颜色
 	ImGui::StyleColorsDark();
