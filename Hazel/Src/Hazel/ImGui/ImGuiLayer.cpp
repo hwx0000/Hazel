@@ -28,13 +28,15 @@ void Hazel::ImGuiLayer::OnAttach()
 	ImGui::CreateContext();
 
 	// 2. IO相关的Flag设置, 目前允许键盘输入、允许Dokcing、允许多个Viewport
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 	//io.ConfigViewportsNoAutoMerge = true;
 	//io.ConfigViewportsNoTaskBarIcon = true;
+	// 加载fonts
+	io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/SourceSansPro-Regular.ttf", 18);
 
 	// 3. 设置主题颜色
 	ImGui::StyleColorsDark();

@@ -287,7 +287,7 @@ namespace Hazel
 			// SameLine的意思是继续与上面的内容在同一行
 			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
 			// 绘制20x20大小的+号按钮
-			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+			if (ImGui::Button("...", ImVec2{ 20, 20 }))
 			{
 				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
 				ImGui::OpenPopup("ComponentSettings");
