@@ -90,7 +90,6 @@ namespace Hazel
 	{
 		ImGui::Begin("SceneHierarchyPanel");
 		{
-
 			std::vector<GameObject>& gos = m_Scene->GetGameObjects();
 			for (size_t i = 0; i < gos.size(); i++)
 				DrawGameObject(gos[i]);
@@ -155,13 +154,13 @@ namespace Hazel
 		// 由于目前没有链式GameObjects, 所以这里把展开的对象再绘制一个相同的子节点
 		if (expanded)
 		{
-			ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow;
-			// ID 随便取一个就行, 只要不跟已有的一样就行
-			bool opened = ImGui::TreeNodeEx((void*)9817239, flag, go.ToString().c_str());
+			//ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow;
+			//// ID 随便取一个就行, 只要不跟已有的一样就行
+			//bool opened = ImGui::TreeNodeEx((void*)9817239, flag, go.ToString().c_str());
 
-			// TreePop貌似是个结束的操作, 好像每个节点绘制结束时要调用此函数
-			if (opened)
-				ImGui::TreePop();
+			//// TreePop貌似是个结束的操作, 好像每个节点绘制结束时要调用此函数
+			//if (opened)
+			//	ImGui::TreePop();
 
 			ImGui::TreePop();
 		}

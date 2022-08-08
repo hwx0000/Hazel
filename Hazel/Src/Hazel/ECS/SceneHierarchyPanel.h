@@ -23,7 +23,7 @@ namespace Hazel
 			// 1. 绘制通用的右上角的按钮
 			// 在每一个Component的绘制函数里添加此函数
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			bool openComponentDetails = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, name);
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, name);
 
 			// SameLine的意思是继续与上面的内容在同一行
 			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
@@ -36,6 +36,7 @@ namespace Hazel
 
 			ImGui::PopStyleVar();
 
+			bool openComponentDetails = true;
 			if (ImGui::BeginPopup("ComponentSettings"))
 			{
 				// Transform cannot be removed
@@ -51,13 +52,14 @@ namespace Hazel
 				ImGui::EndPopup();
 			}
 
-			if (openComponentDetails)
+			if (openComponentDetails && open)
 			{
 				T& tc = go.GetComponent<T>();
 				uiFunction(tc);
 			}
 
-			ImGui::TreePop();
+			if(open)
+				ImGui::TreePop();
 		}
 
 		std::shared_ptr<Scene> m_Scene;
