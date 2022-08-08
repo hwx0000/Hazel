@@ -196,7 +196,7 @@ namespace Hazel
 		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
 		if (go.HasComponent<Transform>())
 		{
-			DrawComponent<Transform>("Transform", go, [&](Transform& tc)
+			DrawComponent<Transform>("Transform", go, [](Transform& tc)
 				{
 					DrawVec3Control("Translation", tc.Translation);
 					// 面板上展示的是degrees, 但是底层数据存的是radians
@@ -211,117 +211,84 @@ namespace Hazel
 		// Draw Camera Component
 		if (go.HasComponent<CameraComponent>())
 		{
-			// 默认展开TreeView
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "CameraComponent"))
-			{
-				CameraComponent& cam = go.GetComponent<CameraComponent>();
-
-				// 绘制俩选项, 这里的选项顺序与ProjectionType的枚举顺序相同
-				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-				// 当前选项从数组中找
-				const char* currentProjectionTypeString = projectionTypeStrings[(int)cam.GetProjectionType()];
-
-				bool projectionTypeChanged = false;
-
-				// BeginCombo是ImGui绘制EnumPopup的方法
-				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+			DrawComponent<CameraComponent>("CameraComponent", go, [](CameraComponent& cam)
 				{
-					for (int i = 0; i < 2; i++)
+					// 绘制俩选项, 这里的选项顺序与ProjectionType的枚举顺序相同
+					const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+					// 当前选项从数组中找
+					const char* currentProjectionTypeString = projectionTypeStrings[(int)cam.GetProjectionType()];
+
+					bool projectionTypeChanged = false;
+
+					// BeginCombo是ImGui绘制EnumPopup的方法
+					if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 					{
-						bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+						for (int i = 0; i < 2; i++)
 						{
-							if (cam.GetProjectionType() != (CameraComponent::ProjectionType)i)
+							bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
+							if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
 							{
-								currentProjectionTypeString = projectionTypeStrings[i];
-								cam.SetProjectionType((CameraComponent::ProjectionType)i);
-								projectionTypeChanged = true;
+								if (cam.GetProjectionType() != (CameraComponent::ProjectionType)i)
+								{
+									currentProjectionTypeString = projectionTypeStrings[i];
+									cam.SetProjectionType((CameraComponent::ProjectionType)i);
+									projectionTypeChanged = true;
+								}
 							}
+
+							// 高亮当前已经选择的Item
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
 						}
 
-						// 高亮当前已经选择的Item
-						if (isSelected)
-							ImGui::SetItemDefaultFocus();
+						ImGui::EndCombo();
 					}
 
-					ImGui::EndCombo();
+					if (cam.GetProjectionType() == CameraComponent::ProjectionType::Perspective)
+					{
+						float verticalFov = glm::degrees(cam.GetPerspectiveVerticalFOV());
+						if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+							cam.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
+
+						float orthoNear = cam.GetPerspectiveNearClip();
+						if (ImGui::DragFloat("Near", &orthoNear))
+							cam.SetPerspectiveNearClip(orthoNear);
+
+						float orthoFar = cam.GetPerspectiveFarClip();
+						if (ImGui::DragFloat("Far", &orthoFar))
+							cam.SetPerspectiveFarClip(orthoFar);
+					}
+
+					if (cam.GetProjectionType() == CameraComponent::ProjectionType::Orthographic)
+					{
+						float orthoSize = cam.GetOrthographicSize();
+						if (ImGui::DragFloat("Size", &orthoSize))
+							cam.SetOrthographicSize(orthoSize);
+
+						float orthoNear = cam.GetOrthographicNearClip();
+						if (ImGui::DragFloat("Near", &orthoNear))
+							cam.SetOrthographicNearClip(orthoNear);
+
+						float orthoFar = cam.GetOrthographicFarClip();
+						if (ImGui::DragFloat("Far", &orthoFar))
+							cam.SetOrthographicFarClip(orthoFar);
+
+						ImGui::Checkbox("Fixed Aspect Ratio", &cam.GetFixedAspectRatio());
+					}
+
+					if (projectionTypeChanged)
+						cam.RecalculateProjectionMat();
 				}
-
-				if (cam.GetProjectionType() == CameraComponent::ProjectionType::Perspective)
-				{
-					float verticalFov = glm::degrees(cam.GetPerspectiveVerticalFOV());
-					if (ImGui::DragFloat("Vertical FOV", &verticalFov))
-						cam.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
-
-					float orthoNear = cam.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
-						cam.SetPerspectiveNearClip(orthoNear);
-
-					float orthoFar = cam.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
-						cam.SetPerspectiveFarClip(orthoFar);
-				}
-
-				if (cam.GetProjectionType() == CameraComponent::ProjectionType::Orthographic)
-				{
-					float orthoSize = cam.GetOrthographicSize();
-					if (ImGui::DragFloat("Size", &orthoSize))
-						cam.SetOrthographicSize(orthoSize);
-
-					float orthoNear = cam.GetOrthographicNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
-						cam.SetOrthographicNearClip(orthoNear);
-
-					float orthoFar = cam.GetOrthographicFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
-						cam.SetOrthographicFarClip(orthoFar);
-
-					ImGui::Checkbox("Fixed Aspect Ratio", &cam.GetFixedAspectRatio());
-				}
-
-				if (projectionTypeChanged)
-					cam.RecalculateProjectionMat();
-
-				ImGui::TreePop();
-			}
+			);
 		}
 	
 		// Draw SpriteRendererComponent
 		if (go.HasComponent<SpriteRenderer>())
 		{
-			// 在每一个Component的绘制函数里添加此函数
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			bool openComponentDetails = ImGui::TreeNodeEx((void*)typeid(SpriteRenderer).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer");
-
-			// SameLine的意思是继续与上面的内容在同一行
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			// 绘制20x20大小的+号按钮
-			if (ImGui::Button("...", ImVec2{ 20, 20 }))
-			{
-				// 这里的Popup通过OpenPopup、BeginPopup和EndPopup一起生效, 输入的string为id
-				ImGui::OpenPopup("ComponentSettings");
-			}
-
-			ImGui::PopStyleVar();
-
-			if (ImGui::BeginPopup("ComponentSettings"))
-			{
-				if (ImGui::MenuItem("Remove component"))
+			DrawComponent<SpriteRenderer>("SpriteRenderer", go, [](SpriteRenderer& sr)
 				{
-					m_Scene->RemoveComponentForGameObject<SpriteRenderer>(go);
-					openComponentDetails = false;
-				}
-
-				ImGui::EndPopup();
-			}
-
-			if (openComponentDetails)
-			{
-				auto& src = go.GetComponent<SpriteRenderer>();
-				ImGui::ColorEdit4("Color", glm::value_ptr(src.GetColor()));
-			}
-
-			ImGui::TreePop();
+					ImGui::ColorEdit4("Color", glm::value_ptr(sr.GetColor()));
+				});
 		}
 
 
