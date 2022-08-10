@@ -105,7 +105,8 @@ namespace Hazel
 			// 后续应该允许在item上点击, 无非此时创建的是子GameObject
 			if (ImGui::BeginPopupContextWindow(0, 1, false))
 			{
-				if (ImGui::MenuItem("Create New GameObject"))
+				// 这里的快捷键只是一个说明, 还要手动实现对应的Event Callback
+				if (ImGui::MenuItem("Create New GameObject", "Ctrl+Alt+N"))
 					m_Scene->CreateGameObjectInScene(m_Scene, "New GameObject");
 
 				ImGui::EndPopup();
