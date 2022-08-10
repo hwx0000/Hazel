@@ -62,25 +62,25 @@ namespace Hazel
 
 		m_Scene = std::make_shared<Hazel::Scene>();
 
-		// 1. 创建MySquare对象
-		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
-		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
+		//// 1. 创建MySquare对象
+		//Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
+		//go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
-		// 2. 创建MainCamera对象
-		Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
-		// 添加CameraComponent
-		CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
-		camera.SetRenderTargetSize(300, 300);
+		//// 2. 创建MainCamera对象
+		//Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
+		//// 添加CameraComponent
+		//CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
+		//camera.SetRenderTargetSize(300, 300);
 
-		// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
-		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
-			camera.GetRenderTargetWidth(),
-			camera.GetRenderTargetHeight());
+		//// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
+		//m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
+		//	camera.GetRenderTargetWidth(),
+		//	camera.GetRenderTargetHeight());
 
-		// 3. 创建MySquare2对象
-		Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
-		go2.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.8f, 0.1f, 0.1f, 1.0f });
-		go2.SetPosition({ 1,0,0 });
+		//// 3. 创建MySquare2对象
+		//Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
+		//go2.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.8f, 0.1f, 0.1f, 1.0f });
+		//go2.SetPosition({ 1,0,0 });
 
 		m_SceneHierarchyPanel.SetContext(m_Scene);
 	}
@@ -199,8 +199,15 @@ namespace Hazel
 				if (ImGui::MenuItem("Save Scene")) 
 				{
 					if(m_Scene)
-						SceneSerializer::Serialize(m_Scene, "Default Scene");
+						SceneSerializer::Serialize(m_Scene, "DefaultScene.scene");
 				}
+
+				if (ImGui::MenuItem("Load Scene"))
+				{
+					if (m_Scene)
+						SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
+				}
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
