@@ -5,6 +5,7 @@
 #include "Math/Random.h"
 #include <filesystem>
 #include "ECS/Components/Transform.h"
+#include "ECS/SceneSerializer.h"
 
 namespace Hazel
 {
@@ -189,45 +190,20 @@ namespace Hazel
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-		else
-		{
-			//ShowDockingDisabledMessage();
-		}
 
-		if (ImGui::BeginMenuBar())
+		// 绘制toolbar
+		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("Options"))
+			if (ImGui::BeginMenu("File"))
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows,
-				// which we can't undo at the moment without finer window depth/z control.
-				ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-				ImGui::MenuItem("Padding", NULL, &opt_padding);
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-				if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-				if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-				if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-				if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Close", NULL, false, s_bool != NULL))
-					*s_bool = false;
+				if (ImGui::MenuItem("Save Scene")) 
+				{
+					if(m_Scene)
+						SceneSerializer::Serialize(m_Scene, "Default Scene");
+				}
 				ImGui::EndMenu();
 			}
-			/*HelpMarker(
-				"When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n\n"
-				" > if io.ConfigDockingWithShift==false (default):" "\n"
-				"   drag windows from title bar to dock" "\n"
-				" > if io.ConfigDockingWithShift==true:" "\n"
-				"   drag windows from anywhere and hold Shift to dock" "\n\n"
-				"This demo app has nothing to do with it!" "\n\n"
-				"This demo app only demonstrate the use of ImGui::DockSpace() which allows you to manually create a docking node _within_ another window. This is useful so you can decorate your main application window (e.g. with a menu bar)." "\n\n"
-				"ImGui::DockSpace() comes with one hard constraint: it needs to be submitted _before_ any window which may be docked into it. Therefore, if you use a dock spot as the central point of your application, you'll probably want it to be part of the very first window you are submitting to imgui every frame." "\n\n"
-				"(NB: because of this constraint, the implicit \"Debug\" window can not be docked into an explicit DockSpace() node, because that window is submitted as part of the NewFrame() call. An easy workaround is that you can create your own implicit \"Debug##2\" window after calling DockSpace() and leave it in the window stack for anyone to use.)"
-			);*/
-
-			ImGui::EndMenuBar();
+			ImGui::EndMainMenuBar();
 		}
 
 		ImGui::End();

@@ -1,5 +1,6 @@
 #pragma once
 #include "yaml-cpp/yaml.h"
+#include "glm/glm.hpp"
 
 namespace Hazel
 {
@@ -11,8 +12,6 @@ namespace Hazel
 		static void Serialize(std::shared_ptr<Scene>, const char*);
 		static void Deserialize(const char* path);
 		static void SerializeGameObject(YAML::Emitter& out, const GameObject&);
-
-	private:
 	};
 }
 
