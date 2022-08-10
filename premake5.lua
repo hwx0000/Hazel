@@ -98,7 +98,7 @@ project "Sandbox"
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
 		"Hazel/vendor/entt/include",
-		"%{prj.name}/vendor/yaml-cpp/include"
+		"Hazel/vendor/yaml-cpp/include"
 	}
 
 	links { "Hazel" }
@@ -140,7 +140,7 @@ project "HazelEditor"
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
 		"Hazel/vendor/entt/include",
-		"%{prj.name}/vendor/yaml-cpp/include"
+		"Hazel/vendor/yaml-cpp/include"
 	}
 
 	links { "Hazel" }
