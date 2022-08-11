@@ -6,9 +6,22 @@
 #include <filesystem>
 #include "ECS/Components/Transform.h"
 #include "ECS/SceneSerializer.h"
+#include "Utils/PlatformUtils.h"
 
 namespace Hazel
 {
+	bool hasEnding(std::string const& fullString, std::string const& ending) 
+	{
+		if (fullString.length() >= ending.length()) 
+		{
+			return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+		}
+		else 
+			return false;
+	}
+
+
+
 	EditorLayer::EditorLayer(const std::string& name) :
 		m_OrthoCameraController(1.6667f, 1.0f)
 	{
@@ -198,14 +211,33 @@ namespace Hazel
 			{
 				if (ImGui::MenuItem("Save Scene")) 
 				{
-					if(m_Scene)
-						SceneSerializer::Serialize(m_Scene, "DefaultScene.scene");
+					// 返回的是绝对路径
+					std::optional<std::string> filePath = FileDialogWindowUtils::SaveFile("Hazel Scene (*.scene)\0*.scene\0");
+
+					if (filePath.has_value())
+					{
+						std::string path = filePath.value();
+
+						if (!hasEnding(path, ".scene"))
+							path = path + ".scene";
+
+						if (m_Scene)
+							SceneSerializer::Serialize(m_Scene, path.c_str());
+					}
 				}
 
 				if (ImGui::MenuItem("Load Scene"))
 				{
 					if (m_Scene)
-						SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
+					{
+						std::optional<std::string> filePath = FileDialogWindowUtils::OpenFile("Hazel Scene (*.scene)\0*.scene\0");
+						if (filePath.has_value())
+						{
+							// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
+							if (m_Scene)
+								SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+						}
+					}
 				}
 
 				ImGui::EndMenu();

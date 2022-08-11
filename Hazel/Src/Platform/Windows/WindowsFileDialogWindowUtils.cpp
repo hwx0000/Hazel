@@ -27,7 +27,7 @@ namespace Hazel
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
 		ofn.nFilterIndex = 1;
-		// 
+		// 意思是必须选择路径存在、文件存在的内容? OFN_NOCHANGEDIR代表记录用户上次选择的路径
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 		// 调用win32 api
 		if (GetOpenFileNameA(&ofn) == TRUE)
