@@ -16,6 +16,9 @@ namespace Hazel
 		void DrawGameObject(const GameObject&);
 		void DrawComponentsForSelectedGameObject();
 
+		void SetSelectedGameObject(const GameObject&);
+		uint32_t GetSelectedGameObjectId();
+
 	private:
 		template<class T>
 		void DrawComponent(const char* name, GameObject& go, std::function<void(T&)> uiFunction)

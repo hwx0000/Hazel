@@ -324,4 +324,14 @@ namespace Hazel
 				});
 		}
 	}
+
+	void SceneHierarchyPanel::SetSelectedGameObject(const GameObject& go)
+	{
+		m_SelectedGOId = go.GetInstanceId();
+	}
+
+	uint32_t SceneHierarchyPanel::GetSelectedGameObjectId()
+	{
+		return m_SelectedGOId;
+	}
 }
