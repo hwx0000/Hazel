@@ -33,3 +33,4 @@
 #include "Hazel/ECS/Scene.h"
 #include "Hazel/ECS/Components/Component.h"
 #include "Hazel/ECS/Components/ScriptComponent.h"
+#include "Hazel/ECS/SceneHierarchyPanel.h"

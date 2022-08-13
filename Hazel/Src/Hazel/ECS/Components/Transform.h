@@ -9,9 +9,9 @@ namespace Hazel
 	public:
 		Transform() = default;
 
-		operator glm::mat4() { return transform; }
-
-	private:
-		glm::mat4 transform = glm::mat4(1.0f);
+		glm::mat4 GetTransformMat();
+		glm::vec3 Translation = { 0, 0, 0 };
+		glm::vec3 Rotation = { 0, 0, 0 };
+		glm::vec3 Scale = { 1, 1, 1 };
 	};
 }

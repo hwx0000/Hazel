@@ -4,9 +4,24 @@
 #include "Renderer/Renderer2D.h"
 #include "Math/Random.h"
 #include <filesystem>
+#include "ECS/Components/Transform.h"
+#include "ECS/SceneSerializer.h"
+#include "Utils/PlatformUtils.h"
 
 namespace Hazel
 {
+	bool hasEnding(std::string const& fullString, std::string const& ending) 
+	{
+		if (fullString.length() >= ending.length()) 
+		{
+			return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+		}
+		else 
+			return false;
+	}
+
+
+
 	EditorLayer::EditorLayer(const std::string& name) :
 		m_OrthoCameraController(1.6667f, 1.0f)
 	{
@@ -44,7 +59,6 @@ namespace Hazel
 	{
 		CORE_LOG("Init Layer");
 
-
 		Hazel::SubTexture2D subT1(m_Texture2D, { 0.7f, 5.0f / 9.0f }, { 0.75f, 6.0f / 9.0f });
 		std::shared_ptr<Hazel::SubTexture2D> waterTileTex = std::make_shared<Hazel::SubTexture2D>(subT1);
 		s_Map['W'] = waterTileTex;
@@ -60,20 +74,28 @@ namespace Hazel
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(1280, 720);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
-		Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene);
 
-		const Hazel::SpriteRenderer& sr = Hazel::SpriteRenderer({ 0.1f, 0.8f, 0.1f, 1.0f });
-		go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
+		//// 1. 创建MySquare对象
+		//Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
+		//go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
 
-		// 添加CameraComponent
-		float radio = 1.77778f, zoom = 1.3f;
-		CameraComponent& camera = go.AddComponent<Hazel::CameraComponent>(-radio * zoom, radio * zoom, -zoom, zoom);
-		camera.SetRenderTargetSize(300, 300);
+		//// 2. 创建MainCamera对象
+		//Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
+		//// 添加CameraComponent
+		//CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
+		//camera.SetRenderTargetSize(300, 300);
 
-		// TODO: 暂时默认绑定到它上, 实际应该在Hierarchy里选择哪个Camera, 此时的m_CameraComponentFramebuffer就绑定到谁
-		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
-			camera.GetRenderTargetWidth(),
-			camera.GetRenderTargetHeight());
+		//// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
+		//m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
+		//	camera.GetRenderTargetWidth(),
+		//	camera.GetRenderTargetHeight());
+
+		//// 3. 创建MySquare2对象
+		//Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
+		//go2.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.8f, 0.1f, 0.1f, 1.0f });
+		//go2.SetPosition({ 1,0,0 });
+
+		m_SceneHierarchyPanel.SetContext(m_Scene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -115,10 +137,11 @@ namespace Hazel
 			Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Hazel::RenderCommand::Clear();
 
-			const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
+			// TODO: 
+			const Hazel::GameObject& go = m_Scene->GetGameObjects()[1];
 			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
-			Hazel::Renderer2D::BeginScene(cam, { 0.5f, 0.4f, 0 });
+			Hazel::Renderer2D::BeginScene(cam, go.GetTransformMat());
 			Render();
 			Hazel::Renderer2D::EndScene();
 			m_CameraComponentFramebuffer->Unbind();
@@ -180,52 +203,51 @@ namespace Hazel
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-		else
-		{
-			//ShowDockingDisabledMessage();
-		}
 
-		if (ImGui::BeginMenuBar())
+		// 绘制toolbar
+		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("Options"))
+			if (ImGui::BeginMenu("File"))
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows,
-				// which we can't undo at the moment without finer window depth/z control.
-				ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-				ImGui::MenuItem("Padding", NULL, &opt_padding);
-				ImGui::Separator();
+				if (ImGui::MenuItem("Save Scene")) 
+				{
+					// 返回的是绝对路径
+					std::optional<std::string> filePath = FileDialogWindowUtils::SaveFile("Hazel Scene (*.scene)\0*.scene\0");
 
-				if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-				if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-				if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-				if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-				if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-				ImGui::Separator();
+					if (filePath.has_value())
+					{
+						std::string path = filePath.value();
 
-				if (ImGui::MenuItem("Close", NULL, false, s_bool != NULL))
-					*s_bool = false;
+						if (!hasEnding(path, ".scene"))
+							path = path + ".scene";
+
+						if (m_Scene)
+							SceneSerializer::Serialize(m_Scene, path.c_str());
+					}
+				}
+
+				if (ImGui::MenuItem("Load Scene"))
+				{
+					if (m_Scene)
+					{
+						std::optional<std::string> filePath = FileDialogWindowUtils::OpenFile("Hazel Scene (*.scene)\0*.scene\0");
+						if (filePath.has_value())
+						{
+							// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
+							if (m_Scene)
+								SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+						}
+					}
+				}
+
 				ImGui::EndMenu();
 			}
-			/*HelpMarker(
-				"When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n\n"
-				" > if io.ConfigDockingWithShift==false (default):" "\n"
-				"   drag windows from title bar to dock" "\n"
-				" > if io.ConfigDockingWithShift==true:" "\n"
-				"   drag windows from anywhere and hold Shift to dock" "\n\n"
-				"This demo app has nothing to do with it!" "\n\n"
-				"This demo app only demonstrate the use of ImGui::DockSpace() which allows you to manually create a docking node _within_ another window. This is useful so you can decorate your main application window (e.g. with a menu bar)." "\n\n"
-				"ImGui::DockSpace() comes with one hard constraint: it needs to be submitted _before_ any window which may be docked into it. Therefore, if you use a dock spot as the central point of your application, you'll probably want it to be part of the very first window you are submitting to imgui every frame." "\n\n"
-				"(NB: because of this constraint, the implicit \"Debug\" window can not be docked into an explicit DockSpace() node, because that window is submitted as part of the NewFrame() call. An easy workaround is that you can create your own implicit \"Debug##2\" window after calling DockSpace() and leave it in the window stack for anyone to use.)"
-			);*/
-
-			ImGui::EndMenuBar();
+			ImGui::EndMainMenuBar();
 		}
 
 		ImGui::End();
 
-		ImGui::Begin("Test");
-		ImGui::ColorEdit4("Flat Color Picker", glm::value_ptr(m_FlatColor));
-
+		ImGui::Begin("Render Stats");
 		auto& stats = Hazel::Renderer2D::GetStatistics();
 
 		ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
@@ -234,7 +256,6 @@ namespace Hazel
 		ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
 		ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
-
 
 		ImGui::End();
 
@@ -276,7 +297,7 @@ namespace Hazel
 		{
 			// 先Resize Framebuffer
 			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-			m_OrthoCameraController.GetCamera().OnResize(viewportSize.x, viewportSize.y);
+			m_OrthoCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
 		}
 
@@ -287,12 +308,21 @@ namespace Hazel
 		ImGui::End();
 
 		//m_ProfileResults.clear();
+
+		m_SceneHierarchyPanel.OnImGuiRender();
 	}
 
+	// 此函数会为每个fbo都调用一次, 比如为Viewport和每个CameraComponent都调用一次
 	void EditorLayer::Render()
 	{
-		const Hazel::GameObject& go = m_Scene->GetGameObjects()[0];
-		Hazel::SpriteRenderer sRenderer = m_Scene->GetComponentInGameObject<Hazel::SpriteRenderer>(go);
-		Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, { 0.0f, 0.0f, 0.2f }, { 0.8f, 0.8f });
+		std::vector<GameObject> gos = m_Scene->GetGameObjectsByComponent<Hazel::SpriteRenderer>();
+
+		for (size_t i = 0; i < gos.size(); i++)
+		{
+			Hazel::GameObject& go = gos[i];
+			Hazel::SpriteRenderer& sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
+			Hazel::Transform& t = go.GetComponent<Hazel::Transform>();
+			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, t.Translation, t.Rotation.z, { t.Scale.x, t.Scale.y });
+		}
 	}
 }

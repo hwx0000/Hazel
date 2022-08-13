@@ -10,24 +10,24 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
-
+include "Hazel/vendor/yaml-cpp"
 
 project "Hazel"
     location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
     kind "StaticLib"
     language "C++"
-	staticruntime "on"
+	staticruntime "off"
 	cppdialect "C++17"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
-	links {"GLFW", "opengl32.lib", "Glad", "imgui"}
+	links {"GLFW", "opengl32.lib", "Glad", "imgui", "YAML_CPP"}
 
     pchheader "hzpch.h"
     pchsource "%{prj.name}/Src/hzpch.cpp"
 
 	defines
 	{
-	    "_CRT_SECURE_NO_WARNINGS"
+	    "_CRT_SECURE_NO_WARNINGS", "YAML_CPP_STATIC_DEFINE"
 	}
 	files
 	{
@@ -46,7 +46,8 @@ project "Hazel"
 		"%{prj.name}/vendor/imgui",
 		"%{prj.name}/vendor/glm",
 		"%{prj.name}/vendor/stb_image",
-		"%{prj.name}/vendor/entt/include"
+		"%{prj.name}/vendor/entt/include",
+		"%{prj.name}/vendor/yaml-cpp/include"
 	}
 
 
@@ -82,7 +83,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir  ("bin/"..outputdir.."/%{prj.name}")
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
@@ -96,7 +97,8 @@ project "Sandbox"
 		"Hazel/Src/Hazel",
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
-		"Hazel/vendor/entt/include"
+		"Hazel/vendor/entt/include",
+		"Hazel/vendor/yaml-cpp/include"
 	}
 
 	links { "Hazel" }
@@ -123,7 +125,7 @@ project "HazelEditor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir  ("bin/"..outputdir.."/%{prj.name}")
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
@@ -137,7 +139,8 @@ project "HazelEditor"
 		"Hazel/Src/Hazel",
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
-		"Hazel/vendor/entt/include"
+		"Hazel/vendor/entt/include",
+		"Hazel/vendor/yaml-cpp/include"
 	}
 
 	links { "Hazel" }

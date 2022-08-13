@@ -24,6 +24,9 @@ namespace Hazel
 		void SetViewportHoveredStatus(bool b) { m_ViewportHovered = b; }
 	
 	private:
+		void SetDarkThemeColors();
+
+	private:
 		float m_Time = 0.0f;
 		bool m_ViewportFocused;
 		bool m_ViewportHovered;
