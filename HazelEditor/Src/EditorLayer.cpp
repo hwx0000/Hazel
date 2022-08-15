@@ -85,10 +85,8 @@ namespace Hazel
 		//CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
 		//camera.SetRenderTargetSize(300, 300);
 
-		//// TODO: 暂时默认绑定到它上, 实际应该是点谁, 就绑定到谁
-		//m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(
-		//	camera.GetRenderTargetWidth(),
-		//	camera.GetRenderTargetHeight());
+		// TODO: 暂时默认绑定到第一个CameraComponent上, 实际应该是点谁, 就绑定到谁
+		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(350, 350);
 
 		//// 3. 创建MySquare2对象
 		//Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
@@ -137,13 +135,18 @@ namespace Hazel
 			Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Hazel::RenderCommand::Clear();
 
-			// TODO: 
-			const Hazel::GameObject& go = m_Scene->GetGameObjects()[1];
-			Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
+			auto gos = m_Scene->GetGameObjectsByComponent<CameraComponent>();
 
-			Hazel::Renderer2D::BeginScene(cam, go.GetTransformMat());
-			Render();
-			Hazel::Renderer2D::EndScene();
+			if (gos.size() > 0)
+			{
+				const Hazel::GameObject& go = gos[0];
+				Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
+
+				Hazel::Renderer2D::BeginScene(cam, go.GetTransformMat());
+				Render();
+				Hazel::Renderer2D::EndScene();
+			}
+
 			m_CameraComponentFramebuffer->Unbind();
 		}
 	}
