@@ -29,11 +29,14 @@ project "Hazel"
 	{
 	    "_CRT_SECURE_NO_WARNINGS", "YAML_CPP_STATIC_DEFINE"
 	}
+	
 	files
 	{
 		"%{prj.name}/Src/**.h",
 		"%{prj.name}/Src/**.cpp",
 		"%{prj.name}/vendor/**.hpp",
+		"%{prj.name}/vendor/imguizmo/ImGuizmo.h",
+		"%{prj.name}/vendor/imguizmo/ImGuizmo.cpp"
 	}
 
 	includedirs
@@ -47,9 +50,14 @@ project "Hazel"
 		"%{prj.name}/vendor/glm",
 		"%{prj.name}/vendor/stb_image",
 		"%{prj.name}/vendor/entt/include",
-		"%{prj.name}/vendor/yaml-cpp/include"
+		"%{prj.name}/vendor/yaml-cpp/include",
+		"%{prj.name}/vendor/imguizmo"
 	}
-
+	
+	--filter "files:'%{prj.name}'/vendor/imguizmo/ImGuizmo.cpp"
+	filter "files:Hazel/vendor/imguizmo/ImGuizmo.cpp"
+	--filter "files:**.cpp"
+	flags { "NoPCH" }
 
 	filter { "system:windows" }
 	    systemversion "latest"
@@ -76,7 +84,6 @@ project "Hazel"
     filter { "configurations:Dist"}
 		defines { "NDEBUG", "HZ_BUILD_DLL"}
 	    optimize "On"
-
 
 project "Sandbox"
 	location "%{prj.name}"
@@ -140,7 +147,8 @@ project "HazelEditor"
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
 		"Hazel/vendor/entt/include",
-		"Hazel/vendor/yaml-cpp/include"
+		"Hazel/vendor/yaml-cpp/include",
+		"Hazel/vendor/imguizmo"
 	}
 
 	links { "Hazel" }

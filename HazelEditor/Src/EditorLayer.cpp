@@ -7,6 +7,7 @@
 #include "ECS/Components/Transform.h"
 #include "ECS/SceneSerializer.h"
 #include "Utils/PlatformUtils.h"
+#include "ImGuizmo.h"
 
 namespace Hazel
 {
@@ -313,6 +314,17 @@ namespace Hazel
 		//m_ProfileResults.clear();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
+
+
+		uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
+		bool succ;
+		GameObject& selected = m_Scene->GetGameObjectById(id, succ);
+		if (succ)
+		{
+			//ImGuizmo::
+		}
+
+
 	}
 
 	// 此函数会为每个fbo都调用一次, 比如为Viewport和每个CameraComponent都调用一次
