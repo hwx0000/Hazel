@@ -20,15 +20,17 @@ namespace Hazel
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
 		GameObject& GetGameObjectById(uint32_t id, bool& success);
 		
+		// TODO: 没有想到更好的办法能不用raw pointers, 如果返回shared_ptr, 则外部会在调用后, 
+		// 会因为引用计数变为0而销毁T对象
 		template<class T>
-		std::vector<std::shared_ptr<T>> GetComponents()
+		std::vector<T*> GetComponents()
 		{
-			std::vector<std::shared_ptr<T>>res;
+			std::vector<T*>res;
 			auto& view = m_Registry.view<T>();
 			for (auto& entity : view)
 			{
 				T& ref = view.get<T>(entity);
-				res.push_back(std::shared_ptr<T>(&ref));
+				res.push_back(&ref);
 			}
 
 			return res;

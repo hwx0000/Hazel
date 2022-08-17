@@ -17,6 +17,10 @@ namespace Hazel
 		void Render();
 
 	private:
+		void EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition);
+
+	private:
+
 		Hazel::OrthographicCameraController m_OrthoCameraController;
 		std::shared_ptr<Hazel::Texture2D> m_Texture2D;
 		// 专属viewport的framebuffer

@@ -19,14 +19,12 @@ namespace Hazel
 
 	void Scene::OnViewportResized(uint32_t width, uint32_t height)
 	{
-		std::vector<std::shared_ptr<CameraComponent>> cams = GetComponents<CameraComponent>();
+		std::vector<CameraComponent*> cams = GetComponents<CameraComponent>();
 
-		for (std::shared_ptr<CameraComponent>& cam : cams)
+		for (CameraComponent* cam : cams)
 		{
 			if (!cam->IsFixedAspectRatio())
-			{
-				cam -> SetAspectRatio(width, height);
-			}
+				cam->SetAspectRatio(width, height);
 		}
 	}
 

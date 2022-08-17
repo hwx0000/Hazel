@@ -21,8 +21,6 @@ namespace Hazel
 			return false;
 	}
 
-
-
 	EditorLayer::EditorLayer(const std::string& name) :
 		m_OrthoCameraController(1.6667f, 1.0f)
 	{
@@ -309,23 +307,26 @@ namespace Hazel
 
 		m_LastViewportSize = viewportSize;
 
-		ImGui::End();
-
-		//m_ProfileResults.clear();
-
-		m_SceneHierarchyPanel.OnImGuiRender();
-
-
 		uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
 		bool succ;
 		GameObject& selected = m_Scene->GetGameObjectById(id, succ);
 		if (succ)
 		{
-			//ImGuizmo::
+			ImGuizmo::SetOrthographic(true);
+			//ImGuizmo::BeginFrame();
+
+			glm::mat4 v = m_OrthoCameraController.GetCamera().GetViewMatrix();
+			glm::mat4 p = m_OrthoCameraController.GetCamera().GetProjectionMatrix();
+			glm::mat4 trans = selected.GetTransformMat();
+			//EditTransform((float*)(&v), (float*)(&p), (float*)(&trans), true);
 		}
+		ImGui::End();
 
+		//m_ProfileResults.clear();
 
+		m_SceneHierarchyPanel.OnImGuiRender();
 	}
+
 
 	// 此函数会为每个fbo都调用一次, 比如为Viewport和每个CameraComponent都调用一次
 	void EditorLayer::Render()
@@ -340,4 +341,93 @@ namespace Hazel
 			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, t.Translation, t.Rotation.z, { t.Scale.x, t.Scale.y });
 		}
 	}
+
+	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+	
+	// 绘制Viewport对应的窗口, 从而绘制gizmos, 传入的是camera的V和P矩阵, matrix的Transform对应的矩阵
+	void EditorLayer::EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition)
+	{
+		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
+		static bool useSnap = false;
+		static float snap[3] = { 1.f, 1.f, 1.f };
+		static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+		static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
+		static bool boundSizing = false;
+		static bool boundSizingSnap = false;
+
+		if (editTransformDecomposition)
+		{
+			if (ImGui::IsKeyPressed(90))
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			if (ImGui::IsKeyPressed(69))
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			if (ImGui::IsKeyPressed(82)) // r Key
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
+			if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			//ImGui::SameLine();
+			//if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+			//	mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			//ImGui::SameLine();
+			//if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+			//	mCurrentGizmoOperation = ImGuizmo::SCALE;
+			//if (ImGui::RadioButton("Universal", mCurrentGizmoOperation == ImGuizmo::UNIVERSAL))
+			//	mCurrentGizmoOperation = ImGuizmo::UNIVERSAL;
+			//float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+			//ImGuizmo::DecomposeMatrixToComponents(matrix, matrixTranslation, matrixRotation, matrixScale);
+			/*ImGui::InputFloat3("Tr", matrixTranslation);
+			ImGui::InputFloat3("Rt", matrixRotation);
+			ImGui::InputFloat3("Sc", matrixScale);
+			ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
+
+			if (mCurrentGizmoOperation != ImGuizmo::SCALE)
+			{
+				if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
+					mCurrentGizmoMode = ImGuizmo::LOCAL;
+				ImGui::SameLine();
+				if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
+					mCurrentGizmoMode = ImGuizmo::WORLD;
+			}
+			if (ImGui::IsKeyPressed(83))
+				useSnap = !useSnap;
+			ImGui::Checkbox("##UseSnap", &useSnap);
+			ImGui::SameLine();
+
+			switch (mCurrentGizmoOperation)
+			{
+			case ImGuizmo::TRANSLATE:
+				ImGui::InputFloat3("Snap", &snap[0]);
+				break;
+			case ImGuizmo::ROTATE:
+				ImGui::InputFloat("Angle Snap", &snap[0]);
+				break;
+			case ImGuizmo::SCALE:
+				ImGui::InputFloat("Scale Snap", &snap[0]);
+				break;
+			}
+			ImGui::Checkbox("Bound Sizing", &boundSizing);
+			if (boundSizing)
+			{
+				ImGui::PushID(3);
+				ImGui::Checkbox("##BoundSizing", &boundSizingSnap);
+				ImGui::SameLine();
+				ImGui::InputFloat3("Snap", boundsSnap);
+				ImGui::PopID();
+			}*/
+		}
+
+	/*	ImGuiIO& io = ImGui::GetIO();
+		float viewManipulateRight = io.DisplaySize.x;
+		float viewManipulateTop = 0;
+		static ImGuiWindowFlags gizmoWindowFlags = 0;
+
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);*/
+
+		//ImGuizmo::DrawGrid(cameraView, cameraProjection, identityMatrix, 100.f);
+		//ImGuizmo::DrawCubes(cameraView, cameraProjection, &objectMatrix[0][0], gizmoCount);
+		//ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+		//float camDistance = 8.f;
+		//ImGuizmo::ViewManipulate(cameraView, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+	}
+
 }
