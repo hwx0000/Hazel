@@ -322,6 +322,7 @@ namespace Hazel
 			glm::mat4 p = m_OrthoCameraController.GetCamera().GetProjectionMatrix();
 			glm::mat4 trans = selected.GetTransformMat();
 			EditTransform((float*)(&v), (float*)(&p), (float*)(&trans), true);
+			selected.SetTransformMat(trans);
 		}
 		ImGui::End();
 
@@ -365,12 +366,17 @@ namespace Hazel
 
 		ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_Appearing);
 		ImGui::SetNextWindowPos(ImVec2(400, 20), ImGuiCond_Appearing);
+
 		ImGuizmo::SetDrawlist();
+
+		// ImGuizmo的绘制范围应该与Viewport窗口相同, 绘制(相对于显示器的)地点也应该相同
 		float windowWidth = (float)ImGui::GetWindowWidth();
 		float windowHeight = (float)ImGui::GetWindowHeight();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		
 		ImGuiWindow* window = ImGui::GetCurrentWindow();
-		gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
+		gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect
+			(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
 
 
 		//ImGuizmo::DrawGrid(cameraView, cameraProjection, identityMatrix, 100.f);

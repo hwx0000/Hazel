@@ -41,4 +41,10 @@ namespace Hazel
 		HAZEL_ASSERT(HasComponent<Transform>(), "GameObject Missing TransformComponent");
 		return GetComponent<Transform>().GetTransformMat();
 	}
+
+	void GameObject::SetTransformMat(const glm::mat4& trans)
+	{
+		HAZEL_ASSERT(HasComponent<Transform>(), "GameObject Missing TransformComponent");
+		return GetComponent<Transform>().SetTransformMat(trans);
+	}
 }

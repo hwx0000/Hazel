@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Transform.h"
 #include "glm/gtx/transform.hpp"
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Hazel
 {
@@ -13,5 +14,17 @@ namespace Hazel
 		glm::mat4 scaleM = glm::scale(glm::mat4(1.0f), Scale);
 
 		return translationM * rotationM * scaleM;
+	}
+
+	void Transform::SetTransformMat(const glm::mat4& trans)
+	{
+		glm::quat quat;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(trans, Scale, quat, Translation, skew, perspective);
+
+		// https://stackoverflow.com/questions/12048046/quaternions-euler-angles-rotation-matrix-trouble-glm
+		// looks like the function 'glm::eulerAngles' returns 'XYZ' as pitch, yaw, and roll.
+		Rotation = glm::eulerAngles(quat) * 3.14159f / 180.f;
 	}
 }

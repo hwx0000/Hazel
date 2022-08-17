@@ -83,6 +83,7 @@ namespace Hazel
 		glm::mat4 GetTransformMat();
 		glm::mat4 GetTransformMat() const;
 
+		void SetTransformMat(const glm::mat4& trans);
 	private:
 		entt::entity m_InsanceId;
 		std::weak_ptr<Scene> m_Scene;
