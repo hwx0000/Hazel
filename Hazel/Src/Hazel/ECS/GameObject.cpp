@@ -26,7 +26,6 @@ namespace Hazel
 	void GameObject::SetPosition(const glm::vec3& p) 
 	{
 		HAZEL_ASSERT(HasComponent<Transform>(), "GameObject Missing TransformComponent");
-
 		GetComponent<Transform>().Translation = p;
 	}
 

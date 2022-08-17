@@ -105,6 +105,31 @@ namespace Hazel
 
 	void EditorLayer::OnEvent(Hazel::Event& e)
 	{
+		if (e.GetEventType() == Hazel::EventType::KeyPressed)
+		{
+			KeyPressedEvent* kpe = dynamic_cast<Hazel::KeyPressedEvent*>(&e);
+			if (kpe->GetKeycode() == HZ_KEY_Q)
+			{
+				m_Option = ToolbarOptions::Default;
+				kpe->MarkHandled();
+			}
+			if (kpe->GetKeycode() == HZ_KEY_W)
+			{
+				m_Option = ToolbarOptions::Translate;
+				kpe->MarkHandled();
+			}
+			if (kpe->GetKeycode() == HZ_KEY_E)
+			{
+				m_Option = ToolbarOptions::Rotation;
+				kpe->MarkHandled();
+			}
+			if (kpe->GetKeycode() == HZ_KEY_R)
+			{
+				m_Option = ToolbarOptions::Scale;
+				kpe->MarkHandled();
+			}
+		}
+		
 		m_OrthoCameraController.OnEvent(e);
 	}
 
@@ -351,6 +376,23 @@ namespace Hazel
 	// 绘制Viewport对应的窗口, 从而绘制gizmos, 传入的是camera的V和P矩阵, matrix的Transform对应的矩阵
 	void EditorLayer::EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition)
 	{
+		switch (m_Option)
+		{
+		case ToolbarOptions::Default:
+			break;
+		case ToolbarOptions::Translate:
+			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			break;
+		case ToolbarOptions::Rotation:
+			mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			break;
+		case ToolbarOptions::Scale:
+			mCurrentGizmoOperation = ImGuizmo::SCALE;
+			break;
+		default:
+			break;
+		}
+
 		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
 		static bool useSnap = false;
 		static float snap[3] = { 1.f, 1.f, 1.f };

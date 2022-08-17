@@ -41,5 +41,15 @@ namespace Hazel
 		bool m_ShowCameraComponent = false;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+
+		enum class ToolbarOptions
+		{
+			Default,
+			Translate,
+			Rotation,
+			Scale
+		};
+
+		ToolbarOptions m_Option = ToolbarOptions::Translate;
 	};
 }
