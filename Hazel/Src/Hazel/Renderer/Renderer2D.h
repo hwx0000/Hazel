@@ -3,7 +3,7 @@
 #include "VertexArray.h"
 #include <memory>
 #include "glm/glm.hpp"
-#include "Hazel/OrthographicCamera.h"
+#include "Hazel/EditorCamera.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
@@ -22,7 +22,7 @@ namespace Hazel
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const CameraComponent& camera, const glm::mat4& transform);
 		static void EndScene();
 

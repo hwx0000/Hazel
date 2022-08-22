@@ -14,11 +14,11 @@
 #include "Hazel/Core/Input.h"
 
 #include "Hazel/Renderer/RenderCommand.h"
-#include "Hazel/OrthographicCamera.h"
+#include "Hazel/EditorCamera.h"
 #include "Hazel/Renderer/VertexArray.h"
 
 #include "Hazel/Core/Timestep.h"
-#include "Hazel/OrthographicCameraController.h"
+#include "Hazel/EditorCameraController.h"
 
 #include "Hazel/Renderer/ShaderLibrary.h"
 #include "Hazel/Renderer/Texture.h"

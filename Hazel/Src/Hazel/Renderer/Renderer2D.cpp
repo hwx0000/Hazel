@@ -137,7 +137,7 @@ namespace Hazel
 	{
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera & camera)
+	void Renderer2D::BeginScene(const EditorCamera & camera)
 	{
 		s_SceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 

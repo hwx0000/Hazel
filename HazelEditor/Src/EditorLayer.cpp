@@ -340,7 +340,8 @@ namespace Hazel
 		GameObject& selected = m_Scene->GetGameObjectById(id, succ);
 		if (succ)
 		{
-			ImGuizmo::SetOrthographic(true);
+			bool bOrthographic = m_OrthoCameraController.GetCamera().IsOrthographicCamera();
+			ImGuizmo::SetOrthographic(bOrthographic);
 			ImGuizmo::BeginFrame();
 
 			glm::mat4 v = m_OrthoCameraController.GetCamera().GetViewMatrix();
