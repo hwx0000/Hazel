@@ -14,7 +14,7 @@ namespace Hazel
 	public:
 		// 构造函数, 由于正交投影下, 需要Frustum, 默认near为-1, far为1, 就不写了
 		// 不过这个构造函数没有指定Camera的位置, 所以应该是默认位置
-		EditorCamera(float left, float right, float bottom, float top);
+		EditorCamera(ProjectionType type, float left, float right, float bottom, float top);
 		void OnResize(uint32_t width, uint32_t height);
 
 		// 读写Camera的位置和朝向, 这些数据是用于设置View矩阵的
@@ -47,7 +47,8 @@ namespace Hazel
 		float m_ZoomLevel = 1.0f;
 
 		glm::vec3 m_Position = glm::vec3(0, 0, 3.0f);	// 正交投影下的相机位置不重要
-		glm::quat m_Rotation = { 0, 0, 0, 1 };// 正交投影下的相机只会有绕Z轴的旋转
+		// WXYZ
+		glm::quat m_Rotation = { 1, 0, 0, 0 };// 正交投影下的相机只会有绕Z轴的旋转
 
 		ProjectionType m_Type = ProjectionType::Perspective;
 	};

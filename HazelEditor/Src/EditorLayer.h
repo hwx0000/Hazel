@@ -21,7 +21,7 @@ namespace Hazel
 
 	private:
 
-		Hazel::EditorCameraController m_OrthoCameraController;
+		Hazel::EditorCameraController m_EditorCameraController;
 		std::shared_ptr<Hazel::Texture2D> m_Texture2D;
 		// 专属viewport的framebuffer
 		std::shared_ptr<Hazel::Framebuffer> m_ViewportFramebuffer;

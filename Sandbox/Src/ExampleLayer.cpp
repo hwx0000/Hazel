@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <filesystem>
 
-ExampleLayer::ExampleLayer() : m_OrthoCameraController(1.6667f, 1.0f)
+ExampleLayer::ExampleLayer() : m_EditorCameraController(1.6667f, 1.0f)
 {
 	float quadVertices[] =
 	{
@@ -75,7 +75,7 @@ void ExampleLayer::OnDetach()
 
 void ExampleLayer::OnEvent(Hazel::Event & e)
 {
-	m_OrthoCameraController.OnEvent(e);
+	m_EditorCameraController.OnEvent(e);
 	//if (e.GetEventType() == Hazel::EventType::KeyPressed)
 		//{
 		//	Hazel::KeyPressedEvent* ep = dynamic_cast<Hazel::KeyPressedEvent*>(&e);
@@ -89,7 +89,7 @@ void ExampleLayer::OnEvent(Hazel::Event & e)
 // 这里的step相当于deltaTime
 void ExampleLayer::OnUpdate(const Hazel::Timestep & step)
 {
-	m_OrthoCameraController.OnUpdate(step);
+	m_EditorCameraController.OnUpdate(step);
 
 	// 1. 先执行引擎内部的循环逻辑
 	// 每帧开始Clear
@@ -100,7 +100,7 @@ void ExampleLayer::OnUpdate(const Hazel::Timestep & step)
 	auto textureShader = m_ShaderLibrary->Get("TextureShader");
 
 	// 把Camera里的VP矩阵信息传到Renderer的SceneData里
-	Hazel::Renderer::BeginScene(m_OrthoCameraController.GetCamera());
+	Hazel::Renderer::BeginScene(m_EditorCameraController.GetCamera());
 	{
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		

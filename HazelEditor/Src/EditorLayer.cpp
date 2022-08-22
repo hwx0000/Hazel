@@ -22,11 +22,13 @@ namespace Hazel
 			return false;
 	}
 
-	EditorLayer::EditorLayer(const std::string& name) :
-		m_OrthoCameraController(1.6667f, 1.0f)
+	EditorLayer::EditorLayer(const std::string& name):
+		//m_EditorCameraController(1.6667f, 1.0f);
+		m_EditorCameraController(45.0f, 1.6667f, 0.01f, 1000.0f)
 	{
-		Hazel::Renderer2D::Init();
 		
+		Hazel::Renderer2D::Init();
+
 		//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";
 		std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\TextureAtlas.png";
 		m_Texture2D = Hazel::Texture2D::Create(texturePath);
@@ -130,13 +132,13 @@ namespace Hazel
 			}
 		}
 		
-		m_OrthoCameraController.OnEvent(e);
+		m_EditorCameraController.OnEvent(e);
 	}
 
 	void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 	{
 		if (m_ViewportFocused && m_ViewportHovered)
-			m_OrthoCameraController.OnUpdate(ts);
+			m_EditorCameraController.OnUpdate(ts);
 
 		// 每帧开始Clear
 
@@ -150,7 +152,7 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+		Hazel::Renderer2D::BeginScene(m_EditorCameraController.GetCamera());
 		Render();
 		Hazel::Renderer2D::EndScene();
 		m_ViewportFramebuffer->Unbind();
@@ -327,7 +329,7 @@ namespace Hazel
 		{
 			// 先Resize Framebuffer
 			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-			m_OrthoCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+			m_EditorCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
 		}
 
@@ -340,15 +342,16 @@ namespace Hazel
 		GameObject& selected = m_Scene->GetGameObjectById(id, succ);
 		if (succ)
 		{
-			bool bOrthographic = m_OrthoCameraController.GetCamera().IsOrthographicCamera();
+			bool bOrthographic = m_EditorCameraController.GetCamera().IsOrthographicCamera();
 			ImGuizmo::SetOrthographic(bOrthographic);
 			ImGuizmo::BeginFrame();
 
-			glm::mat4 v = m_OrthoCameraController.GetCamera().GetViewMatrix();
-			glm::mat4 p = m_OrthoCameraController.GetCamera().GetProjectionMatrix();
+			glm::mat4 v = m_EditorCameraController.GetCamera().GetViewMatrix();
+			glm::mat4 p = m_EditorCameraController.GetCamera().GetProjectionMatrix();
 			glm::mat4 trans = selected.GetTransformMat();
 			EditTransform((float*)(&v), (float*)(&p), (float*)(&trans), true);
-			selected.SetTransformMat(trans);
+			if(trans != selected.GetTransformMat())
+				selected.SetTransformMat(trans);
 		}
 		ImGui::End();
 

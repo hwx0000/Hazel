@@ -8,7 +8,13 @@
 namespace Hazel
 {
 	EditorCameraController::EditorCameraController(float radio, float zoom):
-		m_Camera(-radio * zoom, radio * zoom, -zoom, zoom)
+		m_Camera(EditorCamera::ProjectionType::Orthographic, -radio * zoom, radio * zoom, -zoom, zoom)
+	{
+
+	}
+
+	EditorCameraController::EditorCameraController(float fov, float aspect, float zNear, float zFar) :
+		m_Camera(EditorCamera::ProjectionType::Perspective, fov, aspect, zNear, zFar)
 	{
 
 	}
@@ -20,7 +26,7 @@ namespace Hazel
 		float m_CameraMoveSpeed = 1.0f;
 		float m_CameraRotationSpeed = 10.0f;
 
-		if (Input::IsMouseButtonPressed(2))
+		if (Input::IsMouseButtonPressed(1))
 		{
 			if (m_Camera.IsOrthographicCamera())
 			{

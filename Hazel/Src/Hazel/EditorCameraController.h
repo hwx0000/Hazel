@@ -10,6 +10,7 @@ namespace Hazel
 	{
 	public:
 		EditorCameraController(float radio, float zoom);
+		EditorCameraController(float fov, float aspect, float zNear, float zFar);
 		void OnUpdate(const Timestep&);
 		void OnEvent(Event&);
 

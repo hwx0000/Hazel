@@ -4,12 +4,23 @@
 
 namespace Hazel
 {
-	EditorCamera::EditorCamera(float left, float right, float bottom, float top)
-		: m_ProjectionMatrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_ViewMatrix(1.0f)
+	EditorCamera::EditorCamera(ProjectionType type, float leftOrFov, float rightOrAspect, float bottomOrZNear, float topOrZFar)
 	{
 		//m_Camera(-radio * zoom, radio * zoom, -zoom, zoom)
-		m_ZoomLevel = top;
-		m_AspectRatio = right / m_ZoomLevel;
+		m_ZoomLevel = topOrZFar;
+		m_AspectRatio = rightOrAspect / m_ZoomLevel;
+
+		if (type == ProjectionType::Orthographic)
+		{
+			m_ProjectionMatrix = glm::ortho(leftOrFov, rightOrAspect, bottomOrZNear, topOrZFar, -1.0f, 1.0f);
+			m_ViewMatrix = glm::mat4(1.0f);
+		}
+		else if(type == ProjectionType::Perspective)
+		{
+			m_ProjectionMatrix = glm::perspective(leftOrFov, rightOrAspect, bottomOrZNear, topOrZFar);
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(m_Rotation);
+			m_ViewMatrix = glm::inverse(transform);
+		}
 
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
@@ -17,7 +28,6 @@ namespace Hazel
 	void EditorCamera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(m_Rotation);
-
 		m_ViewMatrix = glm::inverse(transform);
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}

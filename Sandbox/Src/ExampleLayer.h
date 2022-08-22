@@ -15,7 +15,7 @@ private:
 	void OnImGuiRender() override;
 
 private:
-	Hazel::EditorCameraController m_OrthoCameraController;
+	Hazel::EditorCameraController m_EditorCameraController;
 	std::shared_ptr<Hazel::ShaderLibrary> m_ShaderLibrary;
 	std::shared_ptr<Hazel::Texture2D> m_TextureOne;
 	std::shared_ptr<Hazel::Texture2D> m_TextureTwo;
