@@ -43,14 +43,17 @@ namespace Hazel
 			else if (m_Camera.IsProjectiveCamera())
 			{
 				if (Input::IsKeyPressed(HZ_KEY_A))
-					m_CameraPosition -= m_Camera.GetLocalRight() * (float)ts;
-				else if (Input::IsKeyPressed(HZ_KEY_D))
 					m_CameraPosition += m_Camera.GetLocalRight() * (float)ts;
-
-				if (Input::IsKeyPressed(HZ_KEY_W))
+				else if (Input::IsKeyPressed(HZ_KEY_D))
+					m_CameraPosition -= m_Camera.GetLocalRight() * (float)ts;
+				else if (Input::IsKeyPressed(HZ_KEY_W))
 					m_CameraPosition += m_Camera.GetLocalForward() * (float)ts;
 				else if (Input::IsKeyPressed(HZ_KEY_S))
 					m_CameraPosition -= m_Camera.GetLocalForward() * (float)ts;
+				else if (m_DeltaPos.x != 0 || m_DeltaPos.y != 0)
+				  RotatePerspectiveCamera(m_CameraRotation, m_DeltaPos.x * ts, m_DeltaPos.y * ts);
+
+				m_DeltaPos = { 0, 0 };
 			}
 		}
 
@@ -77,12 +80,59 @@ namespace Hazel
 			MouseScrolledEvent* ep = dynamic_cast<Hazel::MouseScrolledEvent*>(&e);
 			OnZoomCamera(ep->GetYOffset());
 		}
+
+		if (e.GetEventType() == Hazel::EventType::MouseButtonReleased)
+		{
+			MouseButtonReleasedEvent* ep = dynamic_cast<Hazel::MouseButtonReleasedEvent*>(&e);
+			if (ep->GetMouseButton() == 1)
+				m_LastMousePos = { -1, -1 };
+		}
+
+		if (m_Camera.IsProjectiveCamera())
+		{
+			if (Input::IsMouseButtonPressed(1))
+			{
+				if (e.GetEventType() == Hazel::EventType::MouseMoved)
+				{
+					MouseMovedEvent* ep = dynamic_cast<Hazel::MouseMovedEvent*>(&e);
+
+					if (m_LastMousePos != glm::vec2(-1, -1))
+					{
+						m_DeltaPos.x = ep->GetXPos() - m_LastMousePos.x;
+						m_DeltaPos.y = ep->GetYPos() - m_LastMousePos.y;
+					}
+
+					m_LastMousePos.x = ep->GetXPos();
+					m_LastMousePos.y = ep->GetYPos();
+				}
+			}
+		}
 	}
 
 	void EditorCameraController::OnZoomCamera(float scrollOffset)
 	{
-		m_ZoomLevel -= scrollOffset;
-		m_ZoomLevel = std::clamp(m_ZoomLevel, 0.15f, 3.0f);
-		m_Camera.SetProjectionMatrix(-m_AspectRadio * m_ZoomLevel, m_AspectRadio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		if (m_Camera.IsOrthographicCamera())
+		{
+			m_ZoomLevel -= scrollOffset;
+			m_ZoomLevel = std::clamp(m_ZoomLevel, 0.15f, 3.0f);
+			m_Camera.SetProjectionMatrix(-m_AspectRadio * m_ZoomLevel, m_AspectRadio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		}
+	}
+
+	void EditorCameraController::RotatePerspectiveCamera(glm::quat& outQ, float deltaX, float deltaY)
+	{
+		if (deltaX)
+		{
+			auto localUp = m_Camera.GetLocalUp();
+			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaX, localUp);
+			outQ = outQ * glm::toQuat(deltaM);
+		}
+
+		if (deltaY)
+		{
+			auto localRight = m_Camera.GetLocalRight();
+			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaY, localRight);
+			outQ = outQ * glm::toQuat(deltaM);
+		}
 	}
 }

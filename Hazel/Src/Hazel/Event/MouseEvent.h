@@ -8,7 +8,7 @@ namespace Hazel
 	{
 	public:
 		MouseMovedEvent(float xPos, float yPos):
-		m_XPos(xPos), m_YPos(yPos) {}
+			m_XPos(xPos), m_YPos(yPos) {}
 		EVENT_CLASS_TYPE(MouseMoved)
 		EVENT_CLASS_GET_CATEGORY(EventCategoryInput | EventCategoryMouse)
 
@@ -16,7 +16,7 @@ namespace Hazel
 		std::string ToString() const override
 		{
 			std::stringstream a;
-			a << "MouseMovedEvent: xPos = " << GetXPos() << ", yOffset = " << GetYPos();
+			a << "MouseMovedEvent: xPos = " << GetXPos() << ", yPos = " << GetYPos();
 			return a.str();
 		}
 

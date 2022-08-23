@@ -19,9 +19,9 @@ namespace Hazel
 
 		// 读写Camera的位置和朝向, 这些数据是用于设置View矩阵的
 		const glm::vec3& GetPosition() const { return m_Position; }
-		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
-		glm::quat GetRotation()const { return m_Rotation; }
-		void SetRotation(glm::quat rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+		void SetPosition(const glm::vec3& position);
+		glm::quat GetRotation() const { return m_Rotation; }
+		void SetRotation(glm::quat rotation);
 
 		// 返回三个矩阵的接口, 这些数据用于设置Projection矩阵
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
@@ -34,6 +34,7 @@ namespace Hazel
 
 		glm::vec3 GetLocalForward() { return m_Rotation * glm::vec3{ 0, 0, 1 }; }
 		glm::vec3 GetLocalRight() { return m_Rotation * glm::vec3{ 1, 0, 0 }; }
+		glm::vec3 GetLocalUp() { return m_Rotation * glm::vec3{ 0, 1, 0 }; }
 		
 	private:
 		void RecalculateViewMatrix();
@@ -47,8 +48,8 @@ namespace Hazel
 		float m_ZoomLevel = 1.0f;
 
 		glm::vec3 m_Position = glm::vec3(0, 0, 3.0f);	// 正交投影下的相机位置不重要
-		// WXYZ
-		glm::quat m_Rotation = { 1, 0, 0, 0 };// 正交投影下的相机只会有绕Z轴的旋转
+		// WXYZ, 初始方向朝-Z方向
+		glm::quat m_Rotation = { 0, 1, 0, 0 };// 正交投影下的相机只会有绕Z轴的旋转
 
 		ProjectionType m_Type = ProjectionType::Perspective;
 	};

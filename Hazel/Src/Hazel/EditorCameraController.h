@@ -19,6 +19,7 @@ namespace Hazel
 
 	private:
 		void OnZoomCamera(float scrollOffset);
+		void RotatePerspectiveCamera(glm::quat& outQ, float deltaX, float deltaY);
 
 	private:
 		float m_ZoomLevel = 0.8f;
@@ -26,7 +27,8 @@ namespace Hazel
 		float m_AspectRadio = 1.77778f;
 		float m_RotateSpeed = 20.0f;
 		bool m_Rotatable = true;
+		glm::vec2 m_LastMousePos = { -1, -1 };
+		glm::vec2 m_DeltaPos = { 0, 0 };// Used only for perspective camera
 		EditorCamera m_Camera;
 	};
-
 }
