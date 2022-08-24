@@ -13,7 +13,6 @@ namespace Hazel
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferId);
 
 		for (size_t i = 0; i < spec.colorAttachmentCnt; i++)
-		//for (size_t i = 0; i < 1; i++)
 		{
 			// 创建Texture2D作为framebuffer的output image
 			GLuint textureId;

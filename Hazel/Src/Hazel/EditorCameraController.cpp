@@ -50,8 +50,9 @@ namespace Hazel
 					m_CameraPosition += m_Camera.GetLocalForward() * (float)ts;
 				else if (Input::IsKeyPressed(HZ_KEY_S))
 					m_CameraPosition -= m_Camera.GetLocalForward() * (float)ts;
-				else if (m_DeltaPos.x != 0 || m_DeltaPos.y != 0)
-				  RotatePerspectiveCamera(m_CameraRotation, m_DeltaPos.x * ts, m_DeltaPos.y * ts);
+				
+				if (m_DeltaPos.x != 0 || m_DeltaPos.y != 0)
+				  RotatePerspectiveCamera(m_CameraRotation, m_DeltaPos.x * ts * 0.1f, m_DeltaPos.y * ts * 0.1f);
 
 				m_DeltaPos = { 0, 0 };
 			}
@@ -121,17 +122,18 @@ namespace Hazel
 
 	void EditorCameraController::RotatePerspectiveCamera(glm::quat& outQ, float deltaX, float deltaY)
 	{
+		// 这里的rotate只会绕世界的y轴和z轴转, 是为了防止产生相机在forward方向的旋转
+		// 引擎里Viewport的相机只可能产生picth和yaw, 不可能产生roll角
 		if (deltaX)
 		{
-			auto localUp = m_Camera.GetLocalUp();
-			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaX, localUp);
+			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaX, { 0, -1, 0 });
 			outQ = outQ * glm::toQuat(deltaM);
 		}
 
 		if (deltaY)
 		{
-			auto localRight = m_Camera.GetLocalRight();
-			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaY, localRight);
+			//float yawSign = m_Camera.GetLocalUp().y < 0 ? -1.0f : 1.0f;
+			auto deltaM = glm::rotate(glm::mat4(1.0f), deltaY, { 1, 0, 0 });
 			outQ = outQ * glm::toQuat(deltaM);
 		}
 	}
