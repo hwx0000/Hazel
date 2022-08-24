@@ -1,5 +1,5 @@
 #include "hzpch.h"
-#include "Renderer2D.h"
+#include "RenderCommandRegister.h"
 #include "Hazel/Renderer/RenderCommand.h"
 #include <filesystem>
 
@@ -61,12 +61,12 @@ namespace Hazel
 		std::unordered_map<std::shared_ptr<Texture2D>, uint32_t> AddedTextures;
 
 		// Debug Stuff
-		Renderer2D::Statistics Stats;
+		RenderCommandRegister::Statistics Stats;
 	};
 
 	static Renderer2DData s_Data;
 
-	void Renderer2D::Init()
+	void RenderCommandRegister::Init()
 	{
 		// 创建Vertex Array前要先创建VertexBuffer和IndexBuffer
 
@@ -133,11 +133,11 @@ namespace Hazel
 		s_Data.Vertices.reset(new QuadVertex[s_Data.MaxVerticesCnt]);// 好像跟shared_ptr的写法不一样, 不能用make_shared
 	}
 
-	void Renderer2D::Shutdown()
+	void RenderCommandRegister::Shutdown()
 	{
 	}
 
-	void Renderer2D::BeginScene(const EditorCamera & camera)
+	void RenderCommandRegister::BeginScene(const EditorCamera & camera)
 	{
 		s_SceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 
@@ -152,7 +152,7 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt = 0;
 	}
 
-	void Renderer2D::BeginScene(const CameraComponent & camera, const glm::mat4& transform)
+	void RenderCommandRegister::BeginScene(const CameraComponent & camera, const glm::mat4& transform)
 	{
 		s_SceneData.ViewProjectionMatrix = camera.GetProjectionMatrix() * glm::inverse(transform);
 
@@ -168,48 +168,48 @@ namespace Hazel
 	}
 
 
-	void Renderer2D::EndScene()
+	void RenderCommandRegister::EndScene()
 	{
 		Flush();
 	}
 
 	// 这里的position的z值要注意在相机的near和far之间, 比如[-1,1]之间
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
+	void RenderCommandRegister::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
 	{
-		DrawRotatedQuad(globalPos, size, 0.0f, color);
+		DrawRotatedQuad2D(globalPos, size, 0.0f, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
+	void RenderCommandRegister::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const glm::vec4 & color)
 	{
-		DrawRotatedQuad({ globalPos.x, globalPos.y, 0 }, size, 0.0f, color);
+		DrawRotatedQuad2D({ globalPos.x, globalPos.y, 0 }, size, 0.0f, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(globalPos, size, 0.0f, texture, tilingFactor, tintColor);
+		DrawRotatedQuad2D(globalPos, size, 0.0f, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawQuad(const glm::vec2 & globalPos, const glm::vec2 & size, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad({ globalPos.x, globalPos.y, 0.0f }, size, 0.0f, texture, tilingFactor, tintColor);
+		DrawRotatedQuad2D({ globalPos.x, globalPos.y, 0.0f }, size, 0.0f, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawQuad(const glm::vec3 & globalPos, const glm::vec2 & size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(globalPos, size, 0, subTexture, tilingFactor, tintColor);
+		DrawRotatedQuad2D(globalPos, size, 0, subTexture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::vec3 & globalPos, float rotatedAngle, const glm::vec2 & size, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::mat4 & transform, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(globalPos, size, rotatedAngle, spriteRenderer.GetColor());
+		DrawRotatedQuad(transform, spriteRenderer.GetColor());
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, 0, subTexture, tilingFactor, tintColor);
+		DrawRotatedQuad2D(glm::vec3(globalPos.x, globalPos.y, 0), size, 0, subTexture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -243,12 +243,12 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec2 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec2 & globalPos, const glm::vec2 & size, float rotatedAngle, const glm::vec4 & color)
 	{
-		DrawRotatedQuad({ globalPos.x, globalPos.y, 0 }, size, rotatedAngle, color);
+		DrawRotatedQuad2D({ globalPos.x, globalPos.y, 0 }, size, rotatedAngle, color);
 	}
 	
-	void Renderer2D::DrawRotatedQuad(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec3 & globalPos, const glm::vec2 & size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -290,12 +290,12 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	Renderer2D::Statistics Renderer2D::GetStatistics()
+	RenderCommandRegister::Statistics RenderCommandRegister::GetStatistics()
 	{
 		return s_Data.Stats;
 	}
 
-	void Renderer2D::Flush()
+	void RenderCommandRegister::Flush()
 	{
 		s_Data.QuadVertexArray->GetVertexBuffers()[0]->SetData(0, &s_Data.Vertices[0],
 			s_Data.DrawedVerticesSize);
@@ -305,7 +305,7 @@ namespace Hazel
 	}
 
 	// 在每次的批处理完成绘制后, 调用此函数
-	void Renderer2D::ResetBatchParams()
+	void RenderCommandRegister::ResetBatchParams()
 	{
 		s_Data.DrawedVerticesSize = 0;
 		s_Data.DrawedTrianglesCnt = 0;
@@ -314,17 +314,17 @@ namespace Hazel
 		s_Data.AddedTextures[s_Data.WhiteTexture] = 0;
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
+		DrawRotatedQuad2D(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec2& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawRotatedQuad(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, subTexture, tilingFactor, tintColor);
+		DrawRotatedQuad2D(glm::vec3(globalPos.x, globalPos.y, 0), size, rotatedAngle, subTexture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawRotatedQuad2D(const glm::vec3& globalPos, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -354,6 +354,40 @@ namespace Hazel
 			vertices[i].TexCoord = subTexture->GetTexCoords()[i];
 			vertices[i].TextureId = texId;
 			vertices[i].TilingFactor = tilingFactor;
+		}
+
+		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
+			s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
+
+		s_Data.DrawedVerticesCnt += 4;
+		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
+		s_Data.DrawedTrianglesCnt += 2;
+
+		// Debugging
+		s_Data.Stats.DrawQuadCnt++;
+	}
+
+	void RenderCommandRegister::DrawRotatedQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
+		{
+			ResetBatchParams();
+			Flush();
+		}
+
+		s_Data.WhiteTexture->Bind(0);
+
+		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), rotatedAngle, { 0, 0, 1 }) *
+		//	glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
+		QuadVertex vertices[4];
+		for (size_t i = 0; i < 4; i++)
+		{
+			vertices[i].Color = color;
+			glm::vec4 v0 = transform * s_Data.QuadVertices[i];
+			vertices[i].Position = { v0.x, v0.y, v0.z };
+			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
+			vertices[i].TextureId = 0;
 		}
 
 		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)

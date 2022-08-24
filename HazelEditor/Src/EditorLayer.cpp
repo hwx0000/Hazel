@@ -2,7 +2,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Renderer/Renderer2D.h"
+#include "Renderer/RenderCommandRegister.h"
 #include "Math/Random.h"
 #include <filesystem>
 #include "ECS/Components/Transform.h"
@@ -27,7 +27,7 @@ namespace Hazel
 		m_EditorCameraController(45.0f, 1.6667f, 0.01f, 1000.0f)
 	{
 		
-		Hazel::Renderer2D::Init();
+		Hazel::RenderCommandRegister::Init();
 
 		//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";
 		std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\TextureAtlas.png";
@@ -54,7 +54,7 @@ namespace Hazel
 
 	EditorLayer::~EditorLayer()
 	{
-		Hazel::Renderer2D::Shutdown();
+		Hazel::RenderCommandRegister::Shutdown();
 	}
 
 	void EditorLayer::OnAttach()
@@ -157,9 +157,9 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		Hazel::Renderer2D::BeginScene(m_EditorCameraController.GetCamera());
+		Hazel::RenderCommandRegister::BeginScene(m_EditorCameraController.GetCamera());
 		Render();
-		Hazel::Renderer2D::EndScene();
+		Hazel::RenderCommandRegister::EndScene();
 		m_ViewportFramebuffer->Unbind();
 
 		// 再渲染各个CameraComponent
@@ -176,9 +176,9 @@ namespace Hazel
 				const Hazel::GameObject& go = gos[0];
 				Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
-				Hazel::Renderer2D::BeginScene(cam, go.GetTransformMat());
+				Hazel::RenderCommandRegister::BeginScene(cam, go.GetTransformMat());
 				Render();
-				Hazel::Renderer2D::EndScene();
+				Hazel::RenderCommandRegister::EndScene();
 			}
 
 			m_CameraComponentFramebuffer->Unbind();
@@ -285,7 +285,7 @@ namespace Hazel
 		ImGui::End();
 
 		ImGui::Begin("Render Stats");
-		auto& stats = Hazel::Renderer2D::GetStatistics();
+		auto& stats = Hazel::RenderCommandRegister::GetStatistics();
 
 		ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
 		ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
@@ -376,7 +376,7 @@ namespace Hazel
 			Hazel::GameObject& go = gos[i];
 			Hazel::SpriteRenderer& sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
 			Hazel::Transform& t = go.GetComponent<Hazel::Transform>();
-			Hazel::Renderer2D::DrawSpriteRenderer(sRenderer, t.Translation, t.Rotation.z, { t.Scale.x, t.Scale.y });
+			Hazel::RenderCommandRegister::DrawSpriteRenderer(sRenderer, t.GetTransformMat());
 		}
 	}
 

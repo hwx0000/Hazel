@@ -1,14 +1,14 @@
 #include "Renderer2DTestLayer.h"
 #include "imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Renderer/Renderer2D.h"
+#include "Renderer/RenderCommandRegister.h"
 #include "Math/Random.h"
 #include <filesystem>
 
 Renderer2DTestLayer::Renderer2DTestLayer(const std::string& name) :
 m_OrthoCameraController(1.6667f, 1.0f)
 {
-	Hazel::Renderer2D::Init();
+	Hazel::RenderCommandRegister::Init();
 
 	//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";
 	std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\TextureAtlas.png";
@@ -35,7 +35,7 @@ static std::unordered_map<char, std::shared_ptr<Hazel::SubTexture2D>> s_Map;
 
 Renderer2DTestLayer::~Renderer2DTestLayer()
 {
-	Hazel::Renderer2D::Shutdown();
+	Hazel::RenderCommandRegister::Shutdown();
 }
 
 void Renderer2DTestLayer::OnAttach()
@@ -85,7 +85,7 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 	Hazel::RenderCommand::Clear();
 	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
-	Hazel::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+	Hazel::RenderCommandRegister::BeginScene(m_OrthoCameraController.GetCamera());
 	{
 		m_Framebuffer->Bind();
 		//Hazel::Renderer2D::DrawQuad({ -0.4f, 0.1f }, { 1.5f, 1.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
@@ -107,10 +107,10 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 				float xPos = -width / 2.0f + x * tileSize;
 				float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
-				Hazel::Renderer2D::DrawRotatedQuad({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
+				Hazel::RenderCommandRegister::DrawRotatedQuad2D({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
 			}
 	}
-	Hazel::Renderer2D::EndScene();
+	Hazel::RenderCommandRegister::EndScene();
 
 	m_Framebuffer->Unbind();
 }
@@ -129,7 +129,7 @@ void Renderer2DTestLayer::OnImGuiRender()
 	//	ImGui::Text(label, result.Time);// 打印Profile条目的名字和time
 	//}
 
-	auto& stats = Hazel::Renderer2D::GetStatistics();
+	auto& stats = Hazel::RenderCommandRegister::GetStatistics();
 
 	ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
 	ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
