@@ -73,7 +73,9 @@ namespace Hazel
 		std::shared_ptr<Hazel::SubTexture2D> roadSignTex = std::make_shared<Hazel::SubTexture2D>(subT3);
 		s_Map['S'] = roadSignTex;
 
-		m_ViewportFramebuffer = Hazel::Framebuffer::Create(1280, 720);
+		Hazel::FramebufferSpecification spec;
+		spec.colorAttachmentCnt = 2;
+		m_ViewportFramebuffer = Hazel::Framebuffer::Create(spec);
 
 		m_Scene = std::make_shared<Hazel::Scene>();
 
@@ -88,7 +90,10 @@ namespace Hazel
 		//camera.SetRenderTargetSize(300, 300);
 
 		// TODO: 暂时默认绑定到第一个CameraComponent上, 实际应该是点谁, 就绑定到谁
-		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(350, 350);
+		Hazel::FramebufferSpecification camSpec;
+		camSpec.width = 350;
+		camSpec.height = 350;
+		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(camSpec);
 
 		//// 3. 创建MySquare2对象
 		//Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");

@@ -3,10 +3,19 @@
 
 namespace Hazel 
 {
+	struct FramebufferSpecification
+	{
+		uint32_t width = 800;
+		uint32_t height = 600;
+		int32_t colorAttachmentCnt = 1;
+		int32_t depthAttachmentCnt = -1;
+		int32_t stencilAttachmentCnt = -1;
+	};
+
 	class Framebuffer
 	{
 	public:
-		static std::shared_ptr<Framebuffer>Create(uint32_t width, uint32_t height);
+		static std::shared_ptr<Framebuffer> Create(const FramebufferSpecification& spec);
 		Framebuffer(uint32_t w, uint32_t h) : m_Width(w), m_Height(h) {}
 		virtual ~Framebuffer() = default;
 

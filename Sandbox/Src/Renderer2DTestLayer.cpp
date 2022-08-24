@@ -55,7 +55,8 @@ void Renderer2DTestLayer::OnAttach()
 	std::shared_ptr<Hazel::SubTexture2D> roadSignTex = std::make_shared<Hazel::SubTexture2D>(subT3);
 	s_Map['S'] = roadSignTex;
 
-	m_Framebuffer = Hazel::Framebuffer::Create(1280, 720);
+	Hazel::FramebufferSpecification spec;
+	m_Framebuffer = Hazel::Framebuffer::Create(spec);
 }
 
 void Renderer2DTestLayer::OnDetach()

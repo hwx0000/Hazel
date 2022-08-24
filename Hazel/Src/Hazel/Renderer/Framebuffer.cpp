@@ -6,7 +6,7 @@
 
 namespace Hazel
 {
-	std::shared_ptr<Framebuffer> Framebuffer::Create(uint32_t width, uint32_t height)
+	std::shared_ptr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -18,7 +18,7 @@ namespace Hazel
 		}
 		case RendererAPI::APIType::OpenGL:
 		{
-			return std::shared_ptr<Framebuffer>(new OpenGLFramebuffer(width, height));
+			return std::shared_ptr<Framebuffer>(new OpenGLFramebuffer(spec));
 
 			break;
 		}

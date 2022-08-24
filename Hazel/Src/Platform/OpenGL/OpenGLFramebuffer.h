@@ -9,7 +9,7 @@ namespace Hazel
 	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
-		OpenGLFramebuffer(uint32_t width, uint32_t height);
+		OpenGLFramebuffer(const FramebufferSpecification&);
 		~OpenGLFramebuffer() override;
 		GLuint GetColorAttachmentId();
 
@@ -19,7 +19,7 @@ namespace Hazel
 		virtual void ResizeColorAttachment(uint32_t width, uint32_t height) override;
 		
 	private:
-		GLuint m_FramebufferId = -1;
-		GLuint m_ColorAttachmentTextureId = -1;
+		GLuint m_FramebufferId;
+		std::vector<GLuint> m_ColorAttachmentTexIndices;
 	};
 }
