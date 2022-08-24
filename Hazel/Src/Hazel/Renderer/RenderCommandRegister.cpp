@@ -390,7 +390,7 @@ namespace Hazel
 			vertices[i].Position = { v0.x, v0.y, v0.z };
 			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
 			vertices[i].TextureId = 0;
-			vertices[i].TextureId = 0;
+			vertices[i].GameObjectInstanceId = goId;
 		}
 
 		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
