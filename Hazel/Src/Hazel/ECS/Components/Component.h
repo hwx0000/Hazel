@@ -15,8 +15,9 @@ namespace Hazel
 		Component& operator=(const Component&) = delete;
 		Component& operator=(Component&&) = default;
 
-
 		virtual ~Component() = default;
+
+		uint32_t InstanceId = 0;
 
 		//protected:
 		//	std::weak_ptr<GameObject> m_GameObject;

@@ -26,7 +26,6 @@ namespace Hazel
 		//m_EditorCameraController(1.6667f, 1.0f);
 		m_EditorCameraController(45.0f, 1.6667f, 0.01f, 1000.0f)
 	{
-		
 		Hazel::RenderCommandRegister::Init();
 
 		//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";

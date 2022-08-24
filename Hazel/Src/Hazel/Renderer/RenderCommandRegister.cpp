@@ -22,6 +22,7 @@ namespace Hazel
 		glm::vec4 Color;			// 加了个Color
 		uint32_t TextureId;
 		float TilingFactor = 1.0f;
+		int32_t GameObjectInstanceId;
 		// TODO: texid, normal,.etc
 	};
 
@@ -82,7 +83,8 @@ namespace Hazel
 			{ ShaderDataType::FLOAT2, "a_Tex" },
 			{ ShaderDataType::FLOAT4, "a_Col" },
 			{ ShaderDataType::INT, "a_TexIndex" },
-			{ ShaderDataType::FLOAT, "a_TilingFactor" }
+			{ ShaderDataType::FLOAT, "a_TilingFactor" },
+			{ ShaderDataType::INT, "a_InstanceId" }
 		};
 
 		quadVertexBuffer->SetBufferLayout(layout);
@@ -201,7 +203,7 @@ namespace Hazel
 
 	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::mat4 & transform, const glm::vec4 & tintColor)
 	{
-		DrawRotatedQuad(transform, spriteRenderer.GetColor());
+		DrawQuad(transform, spriteRenderer.GetColor(), spriteRenderer.InstanceId);
 	}
 
 	void RenderCommandRegister::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
@@ -367,7 +369,7 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	void RenderCommandRegister::DrawRotatedQuad(const glm::mat4& transform, const glm::vec4& color)
+	void RenderCommandRegister::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -387,6 +389,7 @@ namespace Hazel
 			glm::vec4 v0 = transform * s_Data.QuadVertices[i];
 			vertices[i].Position = { v0.x, v0.y, v0.z };
 			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
+			vertices[i].TextureId = 0;
 			vertices[i].TextureId = 0;
 		}
 
