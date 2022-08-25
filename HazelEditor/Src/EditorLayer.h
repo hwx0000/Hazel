@@ -31,6 +31,10 @@ namespace Hazel
 
 		glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 		glm::vec2 m_LastViewportSize = { 0, 0 };
+		//glm::vec2 m_HoverPosInViewport = { 0, 0 };// Hover Position in viewport window
+
+		glm::vec2 m_ViewportMin = { 0, 0 };
+		glm::vec2 m_ViewportMax = { 0, 0 };
 
 		// 添加一个数组, 每个数组元素代表每个Timer的结果
 		std::vector<Hazel::ProfileResult> m_ProfileResults;

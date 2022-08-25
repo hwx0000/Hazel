@@ -19,7 +19,10 @@ namespace Hazel
 			glGenTextures(1, &textureId);
 			glBindTexture(GL_TEXTURE_2D, textureId);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			if(i == 0)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			else
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, spec.width, spec.height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, NULL);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_NEAREST);
@@ -30,23 +33,25 @@ namespace Hazel
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureId, 0);
 			m_ColorAttachmentTexIndices.push_back(textureId);
 		}
-
 		// Stencil和Depth Buffer的Attachment暂时不加了
 
 		HAZEL_CORE_ASSERT((bool)(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Framebuffer incomplete");
+
+		const GLenum buffers[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, buffers);
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_FramebufferId);
-	
-		for(GLuint id : m_ColorAttachmentTexIndices)
+
+		for (GLuint id : m_ColorAttachmentTexIndices)
 			glDeleteTextures(1, &id);
 	}
 
-	GLuint OpenGLFramebuffer::GetColorAttachmentId()
+	GLuint OpenGLFramebuffer::GetColorAttachmentId(uint32_t id)
 	{
-		return m_ColorAttachmentTexIndices[0];// TODO: TEMP
+		return m_ColorAttachmentTexIndices[id];
 	}
 
 	void OpenGLFramebuffer::Bind()
@@ -85,5 +90,15 @@ namespace Hazel
 			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		}
+	}
+
+	// 获取单点pixel的像素值
+	int OpenGLFramebuffer::ReadPixel(uint32_t colorAttachmentId, int x, int y)
+	{
+		Bind();
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + colorAttachmentId);
+		int pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+		return pixelData;
 	}
 }

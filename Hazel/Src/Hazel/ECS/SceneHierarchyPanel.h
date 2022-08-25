@@ -17,6 +17,7 @@ namespace Hazel
 		void DrawComponentsForSelectedGameObject();
 
 		void SetSelectedGameObject(const GameObject&);
+		void SetSelectedGameObjectId(const uint32_t&);
 		uint32_t GetSelectedGameObjectId();
 
 	private:

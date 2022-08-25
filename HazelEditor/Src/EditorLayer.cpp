@@ -136,6 +136,39 @@ namespace Hazel
 			}
 		}
 		
+		if (e.GetEventType() == Hazel::EventType::MouseButtonPressed)
+		{
+			Hazel::MouseButtonPressedEvent* ep = dynamic_cast<Hazel::MouseButtonPressedEvent*>(&e);
+			if (ep)
+			{
+				if (ep->GetMouseButton() == 0 && m_ViewportFocused)
+				{
+					auto p = ImGui::GetMousePos();
+					if (p.x >= m_ViewportMin.x && p.x <= m_ViewportMax.x
+						&& p.y >= m_ViewportMin.y && p.y <= m_ViewportMax.y)
+					{
+						p.x = p.x - m_ViewportMin.x;
+						p.y = p.y - m_ViewportMin.y;
+
+						float height = m_ViewportMax.y - m_ViewportMin.y;
+						p.y = height - p.y;
+
+						int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
+
+						if (id > -1)
+							m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
+					}
+				}
+				
+				//if(ep->GetMouseButton() == 1 && !m_ViewportFocused)// 右键也要focus到viewport创建
+				//{
+				//	// if click on viewport
+
+				//}
+
+			}
+		}
+
 		m_EditorCameraController.OnEvent(e);
 	}
 
@@ -186,7 +219,7 @@ namespace Hazel
 
 	void EditorLayer::OnImGuiRender()
 	{
-		// 下面是绘制Dockspace的代码
+		// 绘制Dockspace的代码
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -224,75 +257,78 @@ namespace Hazel
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		static bool s = true;
 		static bool* s_bool = &s;
+		// 负责主窗口的绘制, 这个窗口的title被隐藏了
 		ImGui::Begin("DockSpace Demo", s_bool, window_flags);
-		//ImGui::Begin("DockSpace Demo", p_open, window_flags);
-		if (!opt_padding)
-			ImGui::PopStyleVar();
-
-		if (opt_fullscreen)
-			ImGui::PopStyleVar(2);
-
-		// DockSpace
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		}
+			//ImGui::Begin("DockSpace Demo", p_open, window_flags);
+			if (!opt_padding)
+				ImGui::PopStyleVar();
 
-		// 绘制toolbar
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
+			if (opt_fullscreen)
+				ImGui::PopStyleVar(2);
+
+			// DockSpace
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 			{
-				if (ImGui::MenuItem("Save Scene")) 
+				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+			}
+
+			// 绘制toolbar
+			if (ImGui::BeginMainMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
 				{
-					// 返回的是绝对路径
-					std::optional<std::string> filePath = FileDialogWindowUtils::SaveFile("Hazel Scene (*.scene)\0*.scene\0");
-
-					if (filePath.has_value())
+					if (ImGui::MenuItem("Save Scene"))
 					{
-						std::string path = filePath.value();
+						// 返回的是绝对路径
+						std::optional<std::string> filePath = FileDialogWindowUtils::SaveFile("Hazel Scene (*.scene)\0*.scene\0");
 
-						if (!hasEnding(path, ".scene"))
-							path = path + ".scene";
-
-						if (m_Scene)
-							SceneSerializer::Serialize(m_Scene, path.c_str());
-					}
-				}
-
-				if (ImGui::MenuItem("Load Scene"))
-				{
-					if (m_Scene)
-					{
-						std::optional<std::string> filePath = FileDialogWindowUtils::OpenFile("Hazel Scene (*.scene)\0*.scene\0");
 						if (filePath.has_value())
 						{
-							// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
+							std::string path = filePath.value();
+
+							if (!hasEnding(path, ".scene"))
+								path = path + ".scene";
+
 							if (m_Scene)
-								SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+								SceneSerializer::Serialize(m_Scene, path.c_str());
 						}
 					}
+
+					if (ImGui::MenuItem("Load Scene"))
+					{
+						if (m_Scene)
+						{
+							std::optional<std::string> filePath = FileDialogWindowUtils::OpenFile("Hazel Scene (*.scene)\0*.scene\0");
+							if (filePath.has_value())
+							{
+								// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
+								if (m_Scene)
+									SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+							}
+						}
+					}
+
+					ImGui::EndMenu();
 				}
-
-				ImGui::EndMenu();
+				ImGui::EndMainMenuBar();
 			}
-			ImGui::EndMainMenuBar();
 		}
-
 		ImGui::End();
 
 		ImGui::Begin("Render Stats");
-		auto& stats = Hazel::RenderCommandRegister::GetStatistics();
+		{
+			auto& stats = Hazel::RenderCommandRegister::GetStatistics();
 
-		ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
-		ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
-		ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
-		ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
+			ImGui::Text("DrawCalls: %d", stats.DrawCallCnt);
+			ImGui::Text("DrawQuads: %d", stats.DrawQuadCnt);
+			ImGui::Text("DrawVertices: %d", stats.DrawVerticesCnt());
+			ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
-		ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
-
+			ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
+		}
 		ImGui::End();
 
 		// 绘制CameraComponent对应的Window, 感觉放到HazelEditor里比Hazel里更好一点
@@ -318,44 +354,54 @@ namespace Hazel
 
 
 		ImGui::Begin("Viewport");
-
-		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_ViewportHovered = ImGui::IsWindowHovered();
-		Hazel::Application::Get().GetImGuiLayer()->SetViewportFocusedStatus(m_ViewportFocused);
-		Hazel::Application::Get().GetImGuiLayer()->SetViewportHoveredStatus(m_ViewportHovered);
-
-		ImVec2 size = ImGui::GetContentRegionAvail();
-		glm::vec2 viewportSize = { size.x, size.y };
-
-		// 当Viewport的Size改变时, 更新Framebuffer的ColorAttachment的Size, 同时调用其他函数
-		// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
-		if (viewportSize != m_LastViewportSize)
 		{
-			// 先Resize Framebuffer
-			m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-			m_EditorCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-			m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
-		}
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			m_ViewportHovered = ImGui::IsWindowHovered();
 
-		ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+			// 计算viewport窗口内部可视范围的相对坐标(去掉Margin之后的可视部分) 
+			auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+			auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+			auto viewportOffset = ImGui::GetWindowPos();
+			// 计算Viewport窗口在屏幕坐标系的Rect
+			m_ViewportMin = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+			m_ViewportMax = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
-		m_LastViewportSize = viewportSize;
+			Hazel::Application::Get().GetImGuiLayer()->SetViewportFocusedStatus(m_ViewportFocused);
+			Hazel::Application::Get().GetImGuiLayer()->SetViewportHoveredStatus(m_ViewportHovered);
 
-		uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
-		bool succ;
-		GameObject& selected = m_Scene->GetGameObjectById(id, succ);
-		if (succ)
-		{
-			bool bOrthographic = m_EditorCameraController.GetCamera().IsOrthographicCamera();
-			ImGuizmo::SetOrthographic(bOrthographic);
-			ImGuizmo::BeginFrame();
+			ImVec2 size = ImGui::GetContentRegionAvail();
+			glm::vec2 viewportSize = { size.x, size.y };
 
-			glm::mat4 v = m_EditorCameraController.GetCamera().GetViewMatrix();
-			glm::mat4 p = m_EditorCameraController.GetCamera().GetProjectionMatrix();
-			glm::mat4 trans = selected.GetTransformMat();
-			EditTransform((float*)(&v), (float*)(&p), (float*)(&trans), true);
-			if(trans != selected.GetTransformMat())
-				selected.SetTransformMat(trans);
+			// 当Viewport的Size改变时, 更新Framebuffer的ColorAttachment的Size, 同时调用其他函数
+			// 放前面先画, 是为了防止重新生成Framebuffer的ColorAttachment以后, 当前帧渲染会出现黑屏的情况
+			if (viewportSize != m_LastViewportSize)
+			{
+				// 先Resize Framebuffer
+				m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+				m_EditorCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+				m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
+			}
+
+			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+
+			m_LastViewportSize = viewportSize;
+
+			uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
+			bool succ;
+			GameObject& selected = m_Scene->GetGameObjectById(id, succ);
+			if (succ)
+			{
+				bool bOrthographic = m_EditorCameraController.GetCamera().IsOrthographicCamera();
+				ImGuizmo::SetOrthographic(bOrthographic);
+				ImGuizmo::BeginFrame();
+
+				glm::mat4 v = m_EditorCameraController.GetCamera().GetViewMatrix();
+				glm::mat4 p = m_EditorCameraController.GetCamera().GetProjectionMatrix();
+				glm::mat4 trans = selected.GetTransformMat();
+				EditTransform((float*)(&v), (float*)(&p), (float*)(&trans), true);
+				if (trans != selected.GetTransformMat())
+					selected.SetTransformMat(trans);
+			}
 		}
 		ImGui::End();
 

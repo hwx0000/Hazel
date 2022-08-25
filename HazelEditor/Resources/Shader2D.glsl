@@ -36,22 +36,15 @@ flat in int v_TexIndex;
 in float v_TilingFactor;
 flat in int v_InstanceId;
 
-out vec4 color;
+
+layout (location = 0) out vec4 out_color;
+layout (location = 1) out int out_InstanceId;
+
+
 uniform sampler2D u_Texture[32];
 
 void main()
 {
-	color = texture(u_Texture[v_TexIndex], v_TexCoord * v_TilingFactor) * v_Color;
-	//int s = v_InstanceId;
-	//
-	//if(s == 0)
-	//	color = vec4(1, 1, 0, 1);
-	//else if(s == 1)
-	//	color = vec4(0, 1, 1, 1);
-	//else if(s == 2)
-	//	color = vec4(0, 1, 1, 1);
-	//else if(s == 3)
-	//	color = vec4(0.5, 1, 1, 1);
-	//else 
-	//   color = vec4(0, 0, 1, 1);
+	out_color = texture(u_Texture[v_TexIndex], v_TexCoord * v_TilingFactor) * v_Color;
+	out_InstanceId = v_InstanceId;
 }

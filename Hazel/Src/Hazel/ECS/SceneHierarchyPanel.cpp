@@ -330,6 +330,11 @@ namespace Hazel
 		m_SelectedGOId = go.GetInstanceId();
 	}
 
+	void SceneHierarchyPanel::SetSelectedGameObjectId(const uint32_t& goId)
+	{
+		m_SelectedGOId = goId;
+	}
+
 	uint32_t SceneHierarchyPanel::GetSelectedGameObjectId()
 	{
 		return m_SelectedGOId;
