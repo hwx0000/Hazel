@@ -76,7 +76,8 @@ def YesOrNo():
 # Vulkan是在Setup.py相同路径下的Vulkan.py文件
 from pathlib import Path
 from io import BytesIO
-from urllib.request import urlopen
+# urllib.requests是python提供打开和读取URL的库
+from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
 # VULKAN_SDK代表系统环境变量里存的VULKAN_SDK的版本
@@ -130,7 +131,10 @@ def CheckVulkanSDKDebugLibs():
     if (not shadercdLib.exists()):
         print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
         print("Downloading", VulkanSDKDebugLibsURL)
-        with urlopen(VulkanSDKDebugLibsURL) as zipresp:
+        # with关键词是为了在urlopen失败时
+        req = Request(url=VulkanSDKDebugLibsURL, headers={'User-Agent': 'Toby'})
+        #with urlopen(VulkanSDKDebugLibsURL) as zipresp:
+        with urlopen(req) as zipresp:
             with ZipFile(BytesIO(zipresp.read())) as zfile:
                 zfile.extractall(OutputDirectory)
 
@@ -143,10 +147,10 @@ def CheckVulkanSDKDebugLibs():
 if (not CheckVulkanSDK()):
     print("Vulkan SDK not installed.")
     
-# if (not CheckVulkanSDKDebugLibs()):
-#     print("Vulkan SDK debug libs not found.")
+if (not CheckVulkanSDKDebugLibs()):
+    print("Vulkan SDK debug libs not found.")
 
 
 #  =============================  4.Call premake5.exe to build solution  ======================================
 print("Running premake...")
-subprocess.call(["vendor/bin/premake/premake5.exe", "vs2019"])
+subprocess.call(["vendor/bin/premake/premake5.exe", "vs2017"])
