@@ -19,9 +19,11 @@ namespace Hazel
 			glGenTextures(1, &textureId);
 			glBindTexture(GL_TEXTURE_2D, textureId);
 
+			// TODO: 这样写死并不合适
 			if(i == 0)
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, spec.width, spec.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 			else
+				// R32I应该是代表32位interger, 意思是这32位都只存一个integer
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, spec.width, spec.height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, NULL);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST);
@@ -44,7 +46,7 @@ namespace Hazel
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_FramebufferId);
-
+		
 		for (GLuint id : m_ColorAttachmentTexIndices)
 			glDeleteTextures(1, &id);
 	}
