@@ -190,15 +190,15 @@ project "HazelEditor"
 		 defines { "HZ_PLATFORM_WINDOWS"}
 
     filter { "configurations:Debug"}
-        defines { "DEBUG"}
+        defines { "HZ_DEBUG"}
         symbols "On"
 
     filter { "configurations:Release"}
-        defines { "NDEBUG" }
+        defines { "HZ_RELEASE" }
         optimize "On"
 
     filter { "configurations:Dist"}
-		defines { "NDEBUG"}
+		defines { "HZ_DIST"}
 		optimize "On"
 
 
