@@ -1,3 +1,5 @@
+VULKAN_SDK = os.getenv("VULKAN_SDK")
+
 workspace "Hazel"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
@@ -7,6 +9,7 @@ workspace "Hazel"
 --create outputdir macro
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+--使用submodule的premake5.lua文件
 include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
@@ -51,7 +54,8 @@ project "Hazel"
 		"%{prj.name}/vendor/stb_image",
 		"%{prj.name}/vendor/entt/include",
 		"%{prj.name}/vendor/yaml-cpp/include",
-		"%{prj.name}/vendor/imguizmo"
+		"%{prj.name}/vendor/imguizmo",
+		"%{VULKAN_SDK}/Include"
 	}
 	
 	--filter "files:'%{prj.name}'/vendor/imguizmo/ImGuizmo.cpp"
@@ -63,6 +67,7 @@ project "Hazel"
 	    systemversion "latest"
 		defines {"HZ_PLATFORM_WINDOWS", "GLFW_INCLUDE_NONE", "HZ_ENABLE_ASSERTS"}
 		
+		
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
@@ -71,18 +76,45 @@ project "Hazel"
 		}
 
     filter { "configurations:Debug" }
-        defines { "DEBUG", "HZ_BUILD_DLL"}
+        defines { "HZ_DEBUG"}
+		-- in VS2019 that is Additional Library Directories
+		libdirs
+		{
+			"%{wks.location}/Hazel/vendor/VulkanSDK/Lib"
+		}
+		
+		links
+		{
+			"shaderc_sharedd.lib",
+			"spirv-cross-cored.lib",
+			"spirv-cross-glsld.lib",
+			"SPIRV-Toolsd.lib"
+		}
+		
         symbols "On"
 		runtime "Debug" -- 运行时链接的dll是debug类型的	
 
     filter { "configurations:Release"}
-        defines { "NDEBUG", "HZ_BUILD_DLL"}
+        defines { "HZ_RELEASE"}
         optimize "On"
+		-- in VS2019 that is Additional Library Directories
+		libdirs
+		{
+			"%VULKAN_SDK/Lib"
+		}
+		
+		links
+		{
+			"shaderc_shared.lib",
+			"spirv-cross-core.lib",
+			"spirv-cross-glsl.lib",
+			--"SPIRV-Tools.lib"
+		}
 		runtime "Release" -- 运行时链接的dll是release类型的
 
 
     filter { "configurations:Dist"}
-		defines { "NDEBUG", "HZ_BUILD_DLL"}
+		defines { "HZ_DIST"}
 	    optimize "On"
 
 project "Sandbox"
