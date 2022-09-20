@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include "Hazel/Renderer/Shader.h"
 
 namespace Hazel
 {
@@ -9,6 +11,8 @@ namespace Hazel
 		{
 			return "Cache/ShaderCache";
 		}
+
+		static const std::string& GetShaderTypeString(ShaderType type);
 
 	private:
 	};

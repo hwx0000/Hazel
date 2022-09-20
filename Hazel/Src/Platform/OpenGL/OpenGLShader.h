@@ -22,16 +22,16 @@ namespace Hazel
 
 	private:
 		void CompileOrGetOpenGLBinaries();
-		void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources);
-		void Reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
+		void CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& shaderSources);
+		void Reflect(ShaderType stage, const std::vector<uint32_t>& shaderData);
 
 	private:
-		//m_VulkanSPIRVCache相当于一个缓存的unordered_map, key是子着色器类型
+		// m_VulkanSPIRVCache相当于一个缓存的unordered_map, key是子着色器类型
 		// value是一个uint32的数组, 代表着Spir-V对应的编译结果
-		std::unordered_map<GLenum, std::vector<uint32_t>> m_VulkanSPIRVCache;
-		std::unordered_map<GLenum, std::vector<uint32_t>> m_OpenGLSPIRVCache;
+		std::unordered_map<ShaderType, std::vector<uint32_t>> m_VulkanSPIRVCache;
+		std::unordered_map<ShaderType, std::vector<uint32_t>> m_OpenGLSPIRVCache;
 
-		std::unordered_map<GLenum, std::string> m_OpenGLSourceCode;
+		std::unordered_map<ShaderType, std::string> m_OpenGLSourceCode;
 
 		std::string m_FilePath;
 	};
