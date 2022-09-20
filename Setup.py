@@ -83,8 +83,8 @@ from zipfile import ZipFile
 # VULKAN_SDK代表系统环境变量里存的VULKAN_SDK的版本
 VULKAN_SDK = os.environ.get('VULKAN_SDK')
 # 官网上下载的url路径
-VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/vulkan_sdk.exe'
-HAZEL_VULKAN_VERSION = '1.2.170.0'
+VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.216.0/windows/vulkan_sdk.exe'
+HAZEL_VULKAN_VERSION = '1.3.216.0'
 # 下载到本地的相对路径
 VULKAN_SDK_EXE_PATH = 'Hazel/vendor/VulkanSDK/VulkanSDK.exe'
 
@@ -147,8 +147,8 @@ def CheckVulkanSDKDebugLibs():
 if (not CheckVulkanSDK()):
     print("Vulkan SDK not installed.")
     
-if (not CheckVulkanSDKDebugLibs()):
-    print("Vulkan SDK debug libs not found.")
+#if (not CheckVulkanSDKDebugLibs()):
+    #print("Vulkan SDK debug libs not found.")
 
 
 #  =============================  4.Call premake5.exe to build solution  ======================================

@@ -80,7 +80,7 @@ project "Hazel"
 		-- in VS2019 that is Additional Library Directories
 		libdirs
 		{
-			"%{wks.location}/Hazel/vendor/VulkanSDK/Lib"
+			"%{VULKAN_SDK}/Lib"
 		}
 		
 		links
@@ -100,7 +100,7 @@ project "Hazel"
 		-- in VS2019 that is Additional Library Directories
 		libdirs
 		{
-			"%VULKAN_SDK/Lib"
+			"%{VULKAN_SDK}/Lib"
 		}
 		
 		links
