@@ -12,7 +12,10 @@ namespace Hazel
 			return "Cache/ShaderCache";
 		}
 
-		static const std::string& GetShaderTypeString(ShaderType type);
+		static std::string GetCurrentDirectory();
+
+		static std::string ShaderTypeToString(ShaderType type);
+		static ShaderType GetShaderTypeFromString(const std::string& typeName);
 
 	private:
 	};
