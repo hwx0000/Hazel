@@ -1,12 +1,12 @@
 #include "hzpch.h"
-#include "Framebuffer.h"
+#include "UniformBuffer.h"
 #include "Renderer/RendererAPI.h"
 #include "Renderer/Renderer.h"
-#include "Platform/OpenGL/OpenGLFramebuffer.h"
+#include "Platform/OpenGL/OpenGLUniformBuffer.h"
 
 namespace Hazel
 {
-	std::shared_ptr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+	std::shared_ptr<UniformBuffer> UniformBuffer::Create(uint32_t size, uint32_t binding)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -18,13 +18,13 @@ namespace Hazel
 		}
 		case RendererAPI::APIType::OpenGL:
 		{
-			return std::make_shared<OpenGLFramebuffer>(spec);
+			return std::make_shared<OpenGLUniformBuffer>(size, binding);
 			break;
 		}
 		default:
 			break;
 		}
 
-		return std::shared_ptr<Framebuffer>();
+		return std::shared_ptr<UniformBuffer>();
 	}
 }
