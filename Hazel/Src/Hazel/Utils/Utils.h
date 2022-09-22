@@ -2,6 +2,7 @@
 #include <string>
 #include "Hazel/Renderer/Shader.h"
 #include <shaderc/shaderc.hpp>
+#include <glad/glad.h>
 
 namespace Hazel
 {
@@ -20,6 +21,7 @@ namespace Hazel
 		static ShaderType GetShaderTypeFromString(const std::string& typeName);
 
 		static shaderc_shader_kind ShaderTypeToShaderCKind(ShaderType type);
+		static GLenum ShaderTypeToOpenGL(ShaderType type);
 
 	private:
 	};

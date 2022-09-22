@@ -54,6 +54,25 @@ namespace Hazel
 		}
 	}
 
+	GLenum Utils::ShaderTypeToOpenGL(ShaderType type)
+	{
+		switch (type)
+		{
+		case Hazel::ShaderType::InValid:
+			return GL_INVALID_ENUM;
+		case Hazel::ShaderType::Vertex:
+			return GL_VERTEX_SHADER;
+		case Hazel::ShaderType::Fragement:
+			return GL_FRAGMENT_SHADER;
+		case Hazel::ShaderType::Compute:
+			return GL_COMPUTE_SHADER;
+		case Hazel::ShaderType::Geometry:
+			return GL_GEOMETRY_SHADER;
+		default:
+			return GL_INVALID_ENUM;
+		}
+	}
+
 	std::string Utils::GetCurrentDirectory()
 	{
 		return std::filesystem::current_path().string();
