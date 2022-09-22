@@ -15,11 +15,11 @@ layout(std140, binding = 0) uniform Transform
     mat4 u_ViewProjection;
 };
 
-out vec2 v_TexCoord;
-out vec4 v_Color;
-flat out int v_TexIndex;
-out float v_TilingFactor;
-flat out int v_InstanceId;
+layout(location = 0) out vec2 v_TexCoord;
+layout(location = 1) out vec4 v_Color;
+layout(location = 2) flat out int v_TexIndex;
+layout(location = 3) out float v_TilingFactor;
+layout(location = 4) flat out int v_InstanceId;
 
 void main()
 {
@@ -35,18 +35,19 @@ void main()
 
 #version 450 core
 
-in vec2 v_TexCoord;
-in vec4 v_Color;
-flat in int v_TexIndex;
-in float v_TilingFactor;
-flat in int v_InstanceId;
+layout(location = 0) in vec2 v_TexCoord;
+layout(location = 1) in vec4 v_Color;
+layout(location = 2) flat in int v_TexIndex;
+layout(location = 3) in float v_TilingFactor;
+layout(location = 4) flat in int v_InstanceId;
 
 
 layout (location = 0) out vec4 out_color;
 layout (location = 1) out int out_InstanceId;
 
 
-uniform sampler2D u_Texture[32];
+// 这个就没有必要用Uniform Buffer了
+layout (binding = 0) uniform sampler2D u_Texture[32];
 
 void main()
 {
