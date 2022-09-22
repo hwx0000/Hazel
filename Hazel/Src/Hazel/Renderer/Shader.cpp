@@ -11,9 +11,7 @@ namespace Hazel
 		switch (type)
 		{
 		case RendererAPI::APIType::OpenGL:
-		{
 			return std::make_shared<OpenGLShader>(path);
-		}
 		case RendererAPI::APIType::None:
 			return nullptr;
 		default:

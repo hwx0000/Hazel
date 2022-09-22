@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "RenderCommandRegister.h"
 #include "Hazel/Renderer/RenderCommand.h"
+#include "Hazel/Renderer/UniformBuffer.h"
 #include <filesystem>
 
 namespace Hazel
@@ -42,7 +43,7 @@ namespace Hazel
 			{  0.5f,  0.5f, 0.0f, 1.0f } 
 		};
 
-		 const glm::vec2 QuadTexCoords[4]
+		const glm::vec2 QuadTexCoords[4]
 		{
 			{ 0.0f, 0.0f },
 			{ 1.0f, 0.0f },
@@ -60,6 +61,8 @@ namespace Hazel
 		uint32_t DrawedTrianglesCnt = 0;
 
 		std::unordered_map<std::shared_ptr<Texture2D>, uint32_t> AddedTextures;
+
+		std::shared_ptr<UniformBuffer> CameraUniformBuffer;
 
 		// Debug Stuff
 		RenderCommandRegister::Statistics Stats;
@@ -130,6 +133,8 @@ namespace Hazel
 		s_Data.Shader->Bind();
 		s_Data.Shader->UploadUniformIntArr("u_Texture", 32, texIndices);
 
+		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(glm::mat4), 0);
+
 		s_Data.AddedTextures[s_Data.WhiteTexture] = 0;
 
 		s_Data.Vertices.reset(new QuadVertex[s_Data.MaxVerticesCnt]);// 好像跟shared_ptr的写法不一样, 不能用make_shared
@@ -144,7 +149,10 @@ namespace Hazel
 		s_SceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 
 		s_Data.Shader->Bind();
-		s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
+
+		// Change from uniform to UniformBuffer
+		//s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
+		s_Data.CameraUniformBuffer->SetData(glm::value_ptr(s_SceneData.ViewProjectionMatrix), sizeof(s_SceneData.ViewProjectionMatrix), 0);
 
 		// Reset Batch
 		ResetBatchParams();
@@ -152,6 +160,7 @@ namespace Hazel
 		// Reset Renderer Stats, For Debugging, called only in BeginScene
 		s_Data.Stats.DrawCallCnt = 0;
 		s_Data.Stats.DrawQuadCnt = 0;
+
 	}
 
 	void RenderCommandRegister::BeginScene(const CameraComponent & camera, const glm::mat4& transform)
@@ -159,7 +168,10 @@ namespace Hazel
 		s_SceneData.ViewProjectionMatrix = camera.GetProjectionMatrix() * glm::inverse(transform);
 
 		s_Data.Shader->Bind();
-		s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
+
+		// Change from uniform to UniformBuffer
+		//s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
+		s_Data.CameraUniformBuffer->SetData(glm::value_ptr(s_SceneData.ViewProjectionMatrix), sizeof(s_SceneData.ViewProjectionMatrix), 0);
 
 		// Reset Batch
 		ResetBatchParams();

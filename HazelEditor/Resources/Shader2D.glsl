@@ -8,7 +8,12 @@ layout(location = 3) in int aTexIndex;
 layout(location = 4) in float aTilingFactor;
 layout(location = 5) in int aInstanceId;
 
-uniform mat4 u_ViewProjection;
+
+// 这里的binding类似于layout(location = 1)的location，应该是绑定到0号槽位的uniform buffer上
+layout(std140, binding = 0) uniform Transform
+{
+    mat4 u_ViewProjection;
+};
 
 out vec2 v_TexCoord;
 out vec4 v_Color;
