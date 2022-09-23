@@ -73,6 +73,35 @@ namespace Hazel
 		}
 	}
 
+	char* Utils::ReadBytes(const std::string& filepath, uint32_t* outSize)
+	{
+		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
+
+
+		if (!stream)
+		{
+			LOG_ERROR("Failed to open the file:" + filepath);
+			return nullptr;
+		}
+
+		std::streampos end = stream.tellg();
+		stream.seekg(0, std::ios::beg);
+		uint32_t size = end - stream.tellg();
+
+		if (!size)
+		{
+			LOG("File is empty:" + filepath);
+			return nullptr;
+		}
+
+		char* buffer = new char[size];
+		stream.read((char*)buffer, size);
+		stream.close();
+
+		*outSize = size;
+		return buffer;
+	}
+
 	std::string Utils::GetCurrentDirectory()
 	{
 		return std::filesystem::current_path().string();

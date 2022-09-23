@@ -23,6 +23,7 @@ namespace Hazel
 		static shaderc_shader_kind ShaderTypeToShaderCKind(ShaderType type);
 		static GLenum ShaderTypeToOpenGL(ShaderType type);
 
+		static char* ReadBytes(const std::string& filepath, uint32_t* outSize);
 	private:
 	};
 }

@@ -55,7 +55,8 @@ project "Hazel"
 		"%{prj.name}/vendor/entt/include",
 		"%{prj.name}/vendor/yaml-cpp/include",
 		"%{prj.name}/vendor/imguizmo",
-		"%{VULKAN_SDK}/Include"
+		"%{VULKAN_SDK}/Include",
+		"%{prj.name}/vendor/Mono/include"
 	}
 	
 	--filter "files:'%{prj.name}'/vendor/imguizmo/ImGuizmo.cpp"
@@ -80,7 +81,8 @@ project "Hazel"
 		-- in VS2019 that is Additional Library Directories
 		libdirs
 		{
-			"%{VULKAN_SDK}/Lib"
+			"%{VULKAN_SDK}/Lib",
+			"%{prj.name}/vendor/Mono/lib/Debug"
 		}
 		
 		links
@@ -88,7 +90,8 @@ project "Hazel"
 			"shaderc_sharedd.lib",
 			"spirv-cross-cored.lib",
 			"spirv-cross-glsld.lib",
-			"SPIRV-Toolsd.lib"
+			"SPIRV-Toolsd.lib",
+			"libmono-static-sgen.lib"
 		}
 		
         symbols "On"
@@ -100,7 +103,8 @@ project "Hazel"
 		-- in VS2019 that is Additional Library Directories
 		libdirs
 		{
-			"%{VULKAN_SDK}/Lib"
+			"%{VULKAN_SDK}/Lib",
+			"%{prj.name}/vendor/Mono/lib/Release"
 		}
 		
 		links
@@ -108,7 +112,8 @@ project "Hazel"
 			"shaderc_shared.lib",
 			"spirv-cross-core.lib",
 			"spirv-cross-glsl.lib",
-			--"SPIRV-Tools.lib"
+			--"SPIRV-Tools.lib",
+			"libmono-static-sgen.lib"
 		}
 		runtime "Release" -- 运行时链接的dll是release类型的
 
@@ -180,7 +185,8 @@ project "HazelEditor"
 		"Hazel/vendor/imgui",
 		"Hazel/vendor/entt/include",
 		"Hazel/vendor/yaml-cpp/include",
-		"Hazel/vendor/imguizmo"
+		"Hazel/vendor/imguizmo",
+		"Hazel/vendor/Mono/include"
 	}
 
 	links { "Hazel" }
@@ -202,3 +208,16 @@ project "HazelEditor"
 		optimize "On"
 
 
+project "Hazel-ScriptCore"
+	location "%{prj.name}"
+	kind "SharedLib"
+	language "C#"
+	dotnetframework "4.7.2"
+	
+	targetdir ("%{prj.name}/Build")
+	objdir ("%{prj.name}/Intermediates")
+
+	files 
+	{
+		"%{prj.name}/Scripts/**.cs"
+	}
