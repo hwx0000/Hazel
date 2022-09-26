@@ -9,6 +9,7 @@
 #include "ECS/SceneSerializer.h"
 #include "Utils/PlatformUtils.h"
 #include "ImGuizmo.h"
+#include "Hazel/Scripting/Scripting.h"
 
 namespace Hazel
 {
@@ -102,6 +103,9 @@ namespace Hazel
 		SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
 
 		m_SceneHierarchyPanel.SetContext(m_Scene);
+
+		Scripting s;
+		s.LoadCSharpAssembly("./Hazel-ScriptCore/Build/Hazel-ScriptCore.dll");
 	}
 
 	void EditorLayer::OnDetach()

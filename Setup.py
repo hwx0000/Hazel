@@ -83,8 +83,8 @@ from zipfile import ZipFile
 # VULKAN_SDK代表系统环境变量里存的VULKAN_SDK的版本
 VULKAN_SDK = os.environ.get('VULKAN_SDK')
 # 官网上下载的url路径
-VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/vulkan_sdk.exe'
-HAZEL_VULKAN_VERSION = '1.2.170.0'
+VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.216.0/windows/vulkan_sdk.exe'
+HAZEL_VULKAN_VERSION = '1.3.216.0'
 # 下载到本地的相对路径
 VULKAN_SDK_EXE_PATH = 'Hazel/vendor/VulkanSDK/VulkanSDK.exe'
 
@@ -122,35 +122,11 @@ def CheckVulkanSDK():
     print(f"Correct Vulkan SDK located at {VULKAN_SDK}")
     return True
 
-VulkanSDKDebugLibsURL = 'https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/VulkanSDK-1.2.170.0-DebugLibs.zip'
-OutputDirectory = "Hazel/vendor/VulkanSDK"
-TempZipFile = f"{OutputDirectory}/VulkanSDK.zip"
-
-def CheckVulkanSDKDebugLibs():
-    shadercdLib = Path(f"{OutputDirectory}/Lib/shaderc_sharedd.lib")
-    if (not shadercdLib.exists()):
-        print(f"No Vulkan SDK debug libs found. (Checked {shadercdLib})")
-        print("Downloading", VulkanSDKDebugLibsURL)
-        # with关键词是为了在urlopen失败时
-        req = Request(url=VulkanSDKDebugLibsURL, headers={'User-Agent': 'Toby'})
-        #with urlopen(VulkanSDKDebugLibsURL) as zipresp:
-        with urlopen(req) as zipresp:
-            with ZipFile(BytesIO(zipresp.read())) as zfile:
-                zfile.extractall(OutputDirectory)
-
-    print(f"Vulkan SDK debug libs located at {OutputDirectory}")
-    return True
-
-
 
 # 调用CheckVulkanSDK函数
 if (not CheckVulkanSDK()):
     print("Vulkan SDK not installed.")
     
-if (not CheckVulkanSDKDebugLibs()):
-    print("Vulkan SDK debug libs not found.")
-
-
 #  =============================  4.Call premake5.exe to build solution  ======================================
 print("Running premake...")
 subprocess.call(["vendor/bin/premake/premake5.exe", "vs2019"])

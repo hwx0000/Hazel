@@ -3,6 +3,7 @@
 
 // TODO: 
 #include <GLFW/glfw3.h>
+#include "Hazel/Scripting/Scripting.h"
 
 namespace Hazel
 {

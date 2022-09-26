@@ -18,8 +18,7 @@ namespace Hazel
 		}
 		case RendererAPI::APIType::OpenGL:
 		{
-			return std::shared_ptr<Framebuffer>(new OpenGLFramebuffer(spec));
-
+			return std::make_shared<OpenGLFramebuffer>(spec);
 			break;
 		}
 		default:
