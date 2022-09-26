@@ -105,7 +105,7 @@ namespace Hazel
 		m_SceneHierarchyPanel.SetContext(m_Scene);
 
 		Scripting s;
-		s.LoadCSharpAssembly("./Hazel-ScriptCore/Build/Hazel-ScriptCore.dll");
+		s.LoadCSharpAssembly("../Hazel-ScriptCore/Build/Hazel-ScriptCore.dll");
 	}
 
 	void EditorLayer::OnDetach()

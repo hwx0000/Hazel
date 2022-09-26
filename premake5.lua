@@ -74,7 +74,8 @@ project "Hazel"
 		    -- windows needed libs for mono
 			"Ws2_32.lib",
 			"Bcrypt.lib",
-			"Version.lib"
+			"Version.lib",
+			"Winmm.lib"
 		}
 		
 		postbuildcommands
