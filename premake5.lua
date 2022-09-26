@@ -69,6 +69,14 @@ project "Hazel"
 		defines {"HZ_PLATFORM_WINDOWS", "GLFW_INCLUDE_NONE", "HZ_ENABLE_ASSERTS"}
 		
 		
+		links
+		{
+		    -- windows needed libs for mono
+			"Ws2_32.lib",
+			"Bcrypt.lib",
+			"Version.lib"
+		}
+		
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
