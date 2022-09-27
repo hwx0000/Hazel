@@ -1,9 +1,7 @@
 #include "hzpch.h"
 #include "Hazel/Utils/Utils.h"
 #include "mono/metadata/assembly.h"
-#include "mono/metadata/image.h"
 #include "Scripting.h"
-#include "mono/jit/jit.h"
 
 namespace Hazel
 {
@@ -108,13 +106,13 @@ namespace Hazel
         return classInstance;
     }
 
-    void Scripting::CallMethod(MonoObject* objectInstance, const std::string& methodName)
+    void Scripting::CallMethod(MonoObject* objectInstance, const char* methodName)
     {
         // Get the MonoClass pointer from the instance
         MonoClass* instanceClass = mono_object_get_class(objectInstance);
 
         // Get a reference to the method in the class
-        MonoMethod* method = mono_class_get_method_from_name(instanceClass, methodName.c_str(), 0);
+        MonoMethod* method = mono_class_get_method_from_name(instanceClass, methodName, 0);
 
         if (!method) 
             return;
@@ -126,8 +124,20 @@ namespace Hazel
         // TODO: Handle the exception
     }
 
-    // ...
-    // MonoObject* testInstance = InstantiateClass("", "CSharpTesting");
-    // CallPrintFloatVarMethod(testInstance);
+    // 注意, MonoClassField本身不含Field数据, 里面存的是数据相对于object的offset
+    MonoClassField* Scripting::GetFieldRef(MonoObject* objInstance, const char* fieldName)
+    {
+        MonoClass* testingClass = mono_object_get_class(objInstance);
 
+        // Get a reference to the public field called "MyPublicFloatVar"
+        return mono_class_get_field_from_name(testingClass, fieldName);
+    }
+
+    MonoProperty* Scripting::GetPropertyRef(MonoObject* objInstance, const char* propertyName)
+    {
+        MonoClass* testingClass = mono_object_get_class(objInstance);
+
+        // Get a reference to the public field called "MyPublicFloatVar"
+        return mono_class_get_property_from_name(testingClass, propertyName);
+    }
 }

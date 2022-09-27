@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "mono/metadata/image.h"
+#include "mono/jit/jit.h"
 
 namespace Hazel
 {
@@ -25,8 +26,27 @@ namespace Hazel
 		// mono_runtime_invoke can invoke any method with any parameters, and from what I understand mono_runtime_invoke also does a lot more error checking and validation on the object you pass, as well as the parameters.
 
 		// 在编译期不知道Method签名时, 适合用mono_runtime_invoke, 每秒高频率调用(10fps)的Method适合用Unmanaged Method Thunks, 
-		void CallMethod(MonoObject* instance, const std::string& methodName);
+		void CallMethod(MonoObject* instance, const char* methodName);
 
-		void GetFieldRef();
+		// Field can be public or private
+		MonoClassField* GetFieldRef(MonoObject* instance, const char* fieldName);
+
+		template<class T>
+		const T& GetFieldValue(MonoObject* instance, MonoClassField* field)
+		{
+			T value;
+			mono_field_get_value(instance, field, &value);
+			return value;
+		}
+
+		MonoProperty* GetPropertyRef(MonoObject* instance, const char* fieldName);
+
+		template<class T>
+		const T& GetPropertyValue(MonoObject* instance, MonoProperty* prop)
+		{
+			T value;
+			mono_property_get_value(instance, prop, &value);
+			return value;
+		}
 	};
 }

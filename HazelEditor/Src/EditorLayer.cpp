@@ -110,6 +110,13 @@ namespace Hazel
 		MonoClass* p2 = s.GetClassInAssembly(p, "MyNamespace", "Program");
 		MonoObject* objP = s.CreateInstance(p2);
 		s.CallMethod(objP, "PrintFloatVar");
+
+		MonoClassField* fieldP = s.GetFieldRef(objP, "MyPublicFloatVar");
+
+		float val = s.GetFieldValue<float>(objP, fieldP);
+		// 很奇怪, 直接这么打log, 输出的反而是0, 用std::cout都不会出这个问题, 感觉是spdlog的问题
+		//LOG("float: {:.2f}", s.GetFieldValue<float>(objP, fieldP));
+		LOG("float: {:03.2f}", val);
 	}
 
 	void EditorLayer::OnDetach()
