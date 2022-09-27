@@ -5,6 +5,11 @@
 
 namespace Hazel
 {
+    static void PrintFuncForCSharp()
+    {
+        LOG("PrintFuncForCSharp");
+    }
+
     static MonoDomain* s_CSharpDomain;
 
     // 读取一个C# dll到Mono里, 然后返回对应的Assembly指针
@@ -50,6 +55,9 @@ namespace Hazel
 
         // Don't forget to free the file data
         delete[] fileData;
+
+        // TODO temp
+        mono_add_internal_call("MyNamespace.Program::Print", &PrintFuncForCSharp);
 
         return assembly;
     }

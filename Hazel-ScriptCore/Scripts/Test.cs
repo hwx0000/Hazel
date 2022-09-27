@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace MyNamespace
 {
@@ -8,6 +9,11 @@ namespace MyNamespace
         public void PrintFloatVar()
         {
             Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
+            Print();
         }
+
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        extern static void Print();
     }
 }
