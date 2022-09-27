@@ -1,6 +1,6 @@
 using System;
 
-namespace MyNameSpace
+namespace MyNamespace
 {
     public class Program
     {

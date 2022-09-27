@@ -7,6 +7,8 @@
 
 namespace Hazel
 {
+    static MonoDomain* s_CSharpDomain;
+
     // 读取一个C# dll到Mono里, 然后返回对应的Assembly指针
     MonoAssembly* Scripting::LoadCSharpAssembly(const std::string& assemblyPath)
     {
@@ -25,9 +27,8 @@ namespace Hazel
 		//s_RootDomain = rootDomain;
 
 		// Create an App Domain
-		auto s_AppDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
-		mono_domain_set(s_AppDomain, true);
-
+        s_CSharpDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
+		mono_domain_set(s_CSharpDomain, true);
 
         uint32_t fileSize = 0;
         // 用于直接读取C#的.dll文件, 把它读作bytes数组
@@ -79,5 +80,29 @@ namespace Hazel
 
             printf("%s.%s\n", nameSpace, name);
         }
+    }
+
+    MonoClass* Scripting::GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className)
+    {
+        MonoImage* image = mono_assembly_get_image(assembly);
+        MonoClass* klass = mono_class_from_name(image, namespaceName, className);
+
+        if (klass == nullptr)
+        {
+            // Log error here
+            return nullptr;
+        }
+
+        return klass;
+    }
+
+    void Scripting::CreateInstanceInAssembly(MonoClass* p)
+    {
+        if (!p) return;
+
+        MonoObject* classInstance = mono_object_new(s_CSharpDomain, p);
+
+        // Call the parameterless (default) constructor
+        mono_runtime_object_init(classInstance);
     }
 }
