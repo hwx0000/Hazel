@@ -10,10 +10,15 @@ namespace MyNamespace
         {
             Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
             Print();
+            PrintString("PrintString");
         }
 
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern static void Print();
+
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        extern static void PrintString(string s);
     }
 }
