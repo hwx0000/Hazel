@@ -12,11 +12,8 @@ namespace Hazel
     {
 		// InitMono部分
 		// Let Mono know where the .NET libraries are located.
-		mono_set_assemblies_path("mono/lib");
-		//mono_set_assemblies_path("../Hazel/vendor/Mono/DotNetLibs/4.5");
-		//mono_set_assemblies_path("C:/GitRepository/Hazel/Hazel/Hazel/vendor/Mono/DotNetLibs");
-	
-
+	    mono_set_assemblies_path("../Hazel/vendor/Mono/DotNetLibs/4.5");
+    
 		MonoDomain* rootDomain = mono_jit_init("MyScriptRuntime");
 		if (rootDomain == nullptr)
 		{
