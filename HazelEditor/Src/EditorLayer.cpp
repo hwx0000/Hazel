@@ -108,6 +108,8 @@ namespace Hazel
 		MonoAssembly* p = s.LoadCSharpAssembly("../Hazel-ScriptCore/Build/Hazel-ScriptCore.dll");
 		s.PrintAssemblyTypes(p);
 		MonoClass* p2 = s.GetClassInAssembly(p, "MyNamespace", "Program");
+		MonoObject* objP = s.CreateInstance(p2);
+		s.CallMethod(objP, "PrintFloatVar");
 	}
 
 	void EditorLayer::OnDetach()

@@ -95,14 +95,39 @@ namespace Hazel
 
         return klass;
     }
-
-    void Scripting::CreateInstanceInAssembly(MonoClass* p)
+    
+    MonoObject* Scripting::CreateInstance(MonoClass* p)
     {
-        if (!p) return;
+        if (!p) return nullptr;
 
         MonoObject* classInstance = mono_object_new(s_CSharpDomain, p);
 
         // Call the parameterless (default) constructor
         mono_runtime_object_init(classInstance);
+
+        return classInstance;
     }
+
+    void Scripting::CallMethod(MonoObject* objectInstance, const std::string& methodName)
+    {
+        // Get the MonoClass pointer from the instance
+        MonoClass* instanceClass = mono_object_get_class(objectInstance);
+
+        // Get a reference to the method in the class
+        MonoMethod* method = mono_class_get_method_from_name(instanceClass, methodName.c_str(), 0);
+
+        if (!method) 
+            return;
+
+        // Call the C# method on the objectInstance instance, and get any potential exceptions
+        MonoObject* exception = nullptr;
+        mono_runtime_invoke(method, objectInstance, nullptr, &exception);
+
+        // TODO: Handle the exception
+    }
+
+    // ...
+    // MonoObject* testInstance = InstantiateClass("", "CSharpTesting");
+    // CallPrintFloatVarMethod(testInstance);
+
 }
