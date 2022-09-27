@@ -1,10 +1,13 @@
 using System;
 
-public class Program
+namespace MyNameSpace
 {
-    public float MyPublicFloatVar = 5.0f;
-    public void PrintFloatVar()
+    public class Program
     {
-        Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
+        public float MyPublicFloatVar = 5.0f;
+        public void PrintFloatVar()
+        {
+            Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
+        }
     }
 }

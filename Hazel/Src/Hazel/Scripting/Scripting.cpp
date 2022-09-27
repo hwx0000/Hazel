@@ -54,4 +54,30 @@ namespace Hazel
 
         return assembly;
     }
+
+    // iterate through all the type definitions in our assembly
+    void Scripting::PrintAssemblyTypes(MonoAssembly* assembly)
+    {
+        MonoImage* image = mono_assembly_get_image(assembly);
+
+        // 从assembly的meta信息里读取meta data table, 这里读取的是Type对应的Table, 表里的每一行
+        // 代表一个Type
+        const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+        int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+
+        // 遍历Table里的每行, 这里的numTypes最小为1, 因为C#的DLL和EXEs默认都会有一个Module类型的Type, 代表整个
+        // assembly的module
+        for (int32_t i = 1; i < numTypes; i++)
+        {
+            // 每一行的每列元素记录了Type的相关信息, 比如namespace和type name
+            uint32_t cols[MONO_TYPEDEF_SIZE];
+            mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+            // 还可以获取field list和method list等
+            const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+            const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+            printf("%s.%s\n", nameSpace, name);
+        }
+    }
 }

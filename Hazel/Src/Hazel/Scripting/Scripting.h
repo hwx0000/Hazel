@@ -8,5 +8,7 @@ namespace Hazel
 	{
 	public:
 		MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath);
+
+		void PrintAssemblyTypes(MonoAssembly* assembly);
 	};
 }
