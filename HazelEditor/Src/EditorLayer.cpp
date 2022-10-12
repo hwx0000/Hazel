@@ -423,6 +423,7 @@ namespace Hazel
 		//m_ProfileResults.clear();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
+		m_ContentBrowserPanel.OnImGuiRender();
 	}
 
 

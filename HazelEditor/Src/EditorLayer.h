@@ -1,6 +1,7 @@
 #pragma once
 #include "Hazel.h"
 #include "Renderer/Framebuffer.h"
+#include "ContentBrowserPanel.h"
 
 namespace Hazel
 {
@@ -45,6 +46,7 @@ namespace Hazel
 		bool m_ShowCameraComponent = false;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 
 		enum class ToolbarOptions
 		{
