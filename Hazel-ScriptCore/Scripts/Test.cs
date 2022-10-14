@@ -10,7 +10,7 @@ namespace MyNamespace
         {
             Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
             Print();
-            PrintString("PrintString");
+            //PrintString("PrintString");
         }
 
 
@@ -18,7 +18,7 @@ namespace MyNamespace
         extern static void Print();
 
 
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        extern static void PrintString(string s);
+        //[MethodImplAttribute(MethodImplOptions.InternalCall)]
+        //extern static void PrintString(string s);
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Hazel.h"
+#include <filesystem>
 
 namespace Hazel
 {
@@ -7,5 +8,8 @@ namespace Hazel
 	{
 	public:
 		void OnImGuiRender();
+
+	private:
+		std::filesystem::path m_SelectedPath;
 	};
 };
