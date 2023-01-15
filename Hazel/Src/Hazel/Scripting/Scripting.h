@@ -5,11 +5,13 @@
 
 namespace Hazel
 {
+	// 此类负责在C++端调用C#端的代码, 比如Call Method, 读写Property和Field的值等操作
 	// 类似于Unity, C#这边的脚本层分为核心层和用户层两块
 	// 核心层的代码(C#这边的源码)应该是和C++的代码会存在相互调用的情况的
 	class Scripting
 	{
 	public:
+		// C++端读取C#这边的Assembly(以MonoAssembly的形式)
 		MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath);
 
 		void PrintAssemblyTypes(MonoAssembly* assembly);
@@ -17,15 +19,10 @@ namespace Hazel
 		// 根据C++这边输入的class name, 返回对应的MonoClass, 如果想在C++端创建C#上的对象, 需要借助此API
 		MonoClass* GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
 
+		// C++创建C#这边的对象
 		MonoObject* CreateInstance(MonoClass* p);
 
-		// Mono gives us two ways of calling C# methods: mono_runtime_invoke and Unmanaged Method Thunks. 
-		// This Api will only cover mono_runtime_invoke
-
-		// Using mono_runtime_invoke is slower compared to Unmanaged Method Thunks, but it's also safe and more flexible. 
-		// mono_runtime_invoke can invoke any method with any parameters, and from what I understand mono_runtime_invoke also does a lot more error checking and validation on the object you pass, as well as the parameters.
-
-		// 在编译期不知道Method签名时, 适合用mono_runtime_invoke, 每秒高频率调用(10fps)的Method适合用Unmanaged Method Thunks, 
+		// C++调用C#这边的Method
 		void CallMethod(MonoObject* instance, const char* methodName);
 
 		// Field can be public or private

@@ -10,6 +10,7 @@ namespace Hazel
 		void OnImGuiRender();
 
 	private:
-		std::filesystem::path m_SelectedPath;
+		std::filesystem::path m_CurSelectedPath;
+		std::filesystem::path m_LastSelectedPath;
 	};
 };
