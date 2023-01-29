@@ -103,6 +103,7 @@ namespace Hazel
 		SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
 
 		m_SceneHierarchyPanel.SetContext(m_Scene);
+		m_ContentBrowserPanel.Init();
 
 		Scripting s;
 		MonoAssembly* p = s.LoadCSharpAssembly("../Hazel-ScriptCore/Build/Hazel-ScriptCore.dll");
