@@ -12,8 +12,6 @@ namespace Hazel
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
-		//ImGui::ShowDemoWindow();
-
 		ImGui::Begin("ContentBrowser");
 		{
 			std::filesystem::path p;
@@ -31,7 +29,7 @@ namespace Hazel
 					m_CurSelectedPath = m_LastSelectedPath;
 			}
 
-			// 打印所有p路径下的子文件
+			// 绘制项目根目录下的所有内容
 			for (const std::filesystem::directory_entry& pp : std::filesystem::directory_iterator(p))
 			{
 				bool isDir = pp.is_directory();
@@ -44,14 +42,31 @@ namespace Hazel
 				else
 					ImGui::Image((ImTextureID)m_FileTex->GetTextureId(), size, { 0, 0 }, { 1, 1 });
 				ImGui::SameLine();
-				if (ImGui::Button(pp.path().string().c_str()))
+
+				// 不再直接判断Button是否点击了, 而是通过ImGui的MouseDoubleClick状态和是否hover来判断双击的
+				// 其实这里的ImGui::Button改成ImGui::Text也可以双击, 无非是没有hover时的高亮button效果了
+				ImGui::Button(pp.path().string().c_str());
+			/*	
+				if(ImGui::BeginDragDropSource())
+				{
+					ImGui::SetDragDropPayload("ContentBrowser", "fdafda", 6);
+					ImGui::EndDragDropSource();
+				}
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					const ImGuiPayload* ss = ImGui::AcceptDragDropPayload("ContentBrowser" );
+					ImGui::EndDragDropTarget();
+				}*/
+
+				
+				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
 					if (isDir)
 					{
 						m_LastSelectedPath = m_CurSelectedPath;
 						m_CurSelectedPath = pp;
 					}
-					LOG(m_CurSelectedPath);
 				}
 			}
 		}
