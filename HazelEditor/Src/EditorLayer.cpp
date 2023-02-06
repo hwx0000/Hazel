@@ -344,6 +344,16 @@ namespace Hazel
 			ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
 			ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					LOG("OpenScene");
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 		ImGui::End();
 

@@ -46,7 +46,26 @@ namespace Hazel
 				// 不再直接判断Button是否点击了, 而是通过ImGui的MouseDoubleClick状态和是否hover来判断双击的
 				// 其实这里的ImGui::Button改成ImGui::Text也可以双击, 无非是没有hover时的高亮button效果了
 				ImGui::Button(pp.path().string().c_str());
-			/*	
+			
+				if (ImGui::BeginDragDropSource())
+				{
+					const wchar_t* itemPath = std::filesystem::path("FDASSSFDA").c_str();
+					ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
+					ImGui::EndDragDropSource();
+				}
+
+				//if (ImGui::BeginDragDropTarget())
+				//{
+				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				//	{
+				//		const wchar_t* path = (const wchar_t*)payload->Data;
+				//		LOG("OpenScene");
+				//	}
+				//	ImGui::EndDragDropTarget();
+				//}
+				
+				
+				/*	
 				if(ImGui::BeginDragDropSource())
 				{
 					ImGui::SetDragDropPayload("ContentBrowser", "fdafda", 6);
