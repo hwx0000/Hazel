@@ -344,16 +344,6 @@ namespace Hazel
 			ImGui::Text("DrawTiangles: %d", stats.DrawTrianglesCnt());
 
 			ImGui::Checkbox("Show Camera Component Window", &m_ShowCameraComponent);
-
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-				{
-					const wchar_t* path = (const wchar_t*)payload->Data;
-					LOG("OpenScene");
-				}
-				ImGui::EndDragDropTarget();
-			}
 		}
 		ImGui::End();
 
@@ -409,6 +399,16 @@ namespace Hazel
 			}
 
 			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const char* path = (const char*)payload->Data;
+					LOG(path);
+				}
+				ImGui::EndDragDropTarget();
+			}
 
 			m_LastViewportSize = viewportSize;
 

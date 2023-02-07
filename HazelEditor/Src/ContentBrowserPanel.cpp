@@ -43,42 +43,27 @@ namespace Hazel
 					ImGui::Image((ImTextureID)m_FileTex->GetTextureId(), size, { 0, 0 }, { 1, 1 });
 				ImGui::SameLine();
 
+				const auto& path = pp.path();
 				// 不再直接判断Button是否点击了, 而是通过ImGui的MouseDoubleClick状态和是否hover来判断双击的
 				// 其实这里的ImGui::Button改成ImGui::Text也可以双击, 无非是没有hover时的高亮button效果了
-				ImGui::Button(pp.path().string().c_str());
+				ImGui::Button(path.string().c_str());
 			
-				if (ImGui::BeginDragDropSource())
+				if (path.extension() == ".scene")
 				{
-					const wchar_t* itemPath = std::filesystem::path("FDASSSFDA").c_str();
-					ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
-					ImGui::EndDragDropSource();
+					// 拖拽时传入拖拽的item的path
+					if (ImGui::BeginDragDropSource())
+					{
+						const wchar_t* itemPath = path.c_str();
+						int len = wcslen(itemPath) + 1;
+						// Convert w_char array to char arr(deep copy)
+						char* itemPathArr = new char[len];
+						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
+
+						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPathArr, (len) * sizeof(char));
+						ImGui::EndDragDropSource();
+					}
 				}
 
-				//if (ImGui::BeginDragDropTarget())
-				//{
-				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-				//	{
-				//		const wchar_t* path = (const wchar_t*)payload->Data;
-				//		LOG("OpenScene");
-				//	}
-				//	ImGui::EndDragDropTarget();
-				//}
-				
-				
-				/*	
-				if(ImGui::BeginDragDropSource())
-				{
-					ImGui::SetDragDropPayload("ContentBrowser", "fdafda", 6);
-					ImGui::EndDragDropSource();
-				}
-
-				if (ImGui::BeginDragDropTarget())
-				{
-					const ImGuiPayload* ss = ImGui::AcceptDragDropPayload("ContentBrowser" );
-					ImGui::EndDragDropTarget();
-				}*/
-
-				
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
 					if (isDir)
