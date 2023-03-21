@@ -3,6 +3,7 @@
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/UniformBuffer.h"
 #include <filesystem>
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Hazel
 {
@@ -212,12 +213,19 @@ namespace Hazel
 		DrawRotatedQuad2D(globalPos, size, 0, subTexture, tilingFactor, tintColor);
 	}
 
-	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::mat4 & transform, uint32_t goId)
+	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, uint32_t goId)
 	{
+		glm::vec3 scale;
+		glm::quat rotation;
+		glm::vec3 translation;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(transform, scale, rotation, translation, skew, perspective);
+
 		if (spriteRenderer.GetTexture())
-			DrawQuad(transform, spriteRenderer.GetTintColor(), goId, (int)spriteRenderer.GetTexture()->GetTextureId(), spriteRenderer.GetTilingFactor());
+			DrawQuad(translation, glm::vec2{ scale.x, scale.y }, spriteRenderer.GetTexture(), spriteRenderer.GetTilingFactor().x, spriteRenderer.GetTintColor());
 		else
-			DrawQuad(transform, spriteRenderer.GetTintColor(), goId, 0, { 1, 1 });
+			DrawQuad(translation, glm::vec2{ scale.x, scale.y }, spriteRenderer.GetTintColor());
 	}
 
 	void RenderCommandRegister::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
@@ -383,36 +391,43 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	void RenderCommandRegister::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId, int textureId, const glm::vec2& tilingFactor)
-	{
-		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
-		{
-			Flush();
-			ResetBatchParams();
-		}
+	//void RenderCommandRegister::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId, const std::shared_ptr<Texture2D> tex, const glm::vec2& tilingFactor)
+	//{
+	//	if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
+	//	{
+	//		Flush();
+	//		ResetBatchParams();
+	//	}
 
-		// 白色的Texture意味着没有tint color的纯色quad
-		s_Data.WhiteTexture->Bind(0);
+	//	if (s_Data.AddedTextures.find(tex) == s_Data.AddedTextures.end())
+	//	{
+	//		uint32_t id = (uint32_t)s_Data.AddedTextures.size();
+	//		s_Data.AddedTextures[tex] = id;
+	//	}
 
-		QuadVertex vertices[4];
-		for (size_t i = 0; i < 4; i++)
-		{
-			vertices[i].Color = color;
-			glm::vec4 v0 = transform * s_Data.QuadVertices[i];
-			vertices[i].Position = { v0.x, v0.y, v0.z };
-			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
-			vertices[i].TextureId = textureId;
-			vertices[i].GameObjectInstanceId = goId;
-		}
+	//	int texId = s_Data.AddedTextures[tex];
+	//	atlas->Bind(texId);
 
-		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
-			s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
 
-		s_Data.DrawedVerticesCnt += 4;
-		s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
-		s_Data.DrawedTrianglesCnt += 2;
+	//	QuadVertex vertices[4];
+	//	for (size_t i = 0; i < 4; i++)
+	//	{
+	//		vertices[i].Color = color;
+	//		glm::vec4 v0 = transform * s_Data.QuadVertices[i];
+	//		vertices[i].Position = { v0.x, v0.y, v0.z };
+	//		vertices[i].TexCoord = s_Data.QuadTexCoords[i];
+	//		vertices[i].TextureId = textureId;
+	//		vertices[i].GameObjectInstanceId = goId;
+	//	}
 
-		// Debugging
-		s_Data.Stats.DrawQuadCnt++;
-	}
+	//	for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
+	//		s_Data.Vertices[i] = vertices[i - s_Data.DrawedVerticesCnt];
+
+	//	s_Data.DrawedVerticesCnt += 4;
+	//	s_Data.DrawedVerticesSize += sizeof(QuadVertex) * 4;
+	//	s_Data.DrawedTrianglesCnt += 2;
+
+	//	// Debugging
+	//	s_Data.Stats.DrawQuadCnt++;
+	//}
 }

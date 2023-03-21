@@ -27,6 +27,7 @@ namespace Hazel
 
 		// 添加各种类型的DrawQuad函数, 包含了position、rotation、texture、tiling和tintColor
 
+		// TODO: tiling factor应该是二维的
 		// Without Rotation
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
@@ -45,8 +46,6 @@ namespace Hazel
 		static void DrawRotatedQuad2D(const glm::vec3& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 		static void DrawRotatedQuad2D(const glm::vec2& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 		static void DrawRotatedQuad2D(const glm::vec3& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
-
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId, int textureId = 0, const glm::vec2& tilingFactor = {1, 1});
 
 		// For Debugging
 		struct Statistics
