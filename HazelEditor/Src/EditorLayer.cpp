@@ -402,10 +402,10 @@ namespace Hazel
 
 			if (ImGui::BeginDragDropTarget())
 			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM_SCENE"))
 				{
 					const char* path = (const char*)payload->Data;
-					LOG(path);
+					LOG(path);// TODO Load scene files
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -448,7 +448,7 @@ namespace Hazel
 			Hazel::GameObject& go = gos[i];
 			Hazel::SpriteRenderer& sRenderer = go.GetComponent<Hazel::SpriteRenderer>();
 			Hazel::Transform& t = go.GetComponent<Hazel::Transform>();
-			Hazel::RenderCommandRegister::DrawSpriteRenderer(sRenderer, t.GetTransformMat());
+			Hazel::RenderCommandRegister::DrawSpriteRenderer(sRenderer, t.GetTransformMat(), go.GetInstanceId());
 		}
 	}
 

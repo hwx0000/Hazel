@@ -85,7 +85,7 @@ namespace Hazel
 				if (spriteRendererComponent)
 				{
 					auto& src = deserializedEntity.AddComponent<SpriteRenderer>();
-					glm::vec4& col = src.GetColor();
+					glm::vec4& col = src.GetTintColor();
 					col = spriteRendererComponent["Color"].as<glm::vec4>();
 				}
 			}
@@ -141,7 +141,7 @@ namespace Hazel
 			out << YAML::BeginMap;
 
 			auto& spriteRendererComponent = go.GetComponent<SpriteRenderer>();
-			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.GetColor();
+			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.GetTintColor();
 
 			out << YAML::EndMap;
 		}

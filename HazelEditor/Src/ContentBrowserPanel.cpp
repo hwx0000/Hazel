@@ -59,7 +59,22 @@ namespace Hazel
 						char* itemPathArr = new char[len];
 						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
 
-						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPathArr, (len) * sizeof(char));
+						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_SCENE", itemPathArr, (len) * sizeof(char));
+						ImGui::EndDragDropSource();
+					}
+				}
+				if (path.extension() == ".png" || path.extension() == ".jpg")
+				{
+					// 拖拽时传入拖拽的item的path
+					if (ImGui::BeginDragDropSource())
+					{
+						const wchar_t* itemPath = path.c_str();
+						int len = wcslen(itemPath) + 1;
+						// Convert w_char array to char arr(deep copy)
+						char* itemPathArr = new char[len];
+						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
+
+						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_IMAGE", itemPathArr, (len) * sizeof(char));
 						ImGui::EndDragDropSource();
 					}
 				}

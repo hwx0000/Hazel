@@ -319,9 +319,26 @@ namespace Hazel
 		if (go.HasComponent<SpriteRenderer>())
 		{
 			DrawComponent<SpriteRenderer>("SpriteRenderer", go, [](SpriteRenderer& sr)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(sr.GetTintColor()));
+
+				// 贴图槽位其实是用Button绘制的, 这里并没有绘制出贴图的略缩图
+				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				if (ImGui::BeginDragDropTarget())
 				{
-					ImGui::ColorEdit4("Color", glm::value_ptr(sr.GetColor()));
-				});
+					// 在Content Panel里做了相关文件拽出的代码, 这里只要做接受的代码即可
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM_IMAGE"))
+					{
+						const char* path = (const char*)payload->Data;
+						std::filesystem::path texturePath = path;
+						sr.SetTexture(Texture2D::Create(texturePath.string()));
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::DragFloat("Tiling Factor X", &sr.GetTilingFactor().x, 0.1f, 0.0f, 100.0f);
+				ImGui::DragFloat("Tiling Factor Y", &sr.GetTilingFactor().y, 0.1f, 0.0f, 100.0f);
+			});
 		}
 	}
 

@@ -36,7 +36,7 @@ namespace Hazel
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 
 		// TODO: 临时的
-		static void DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4 & transform, const glm::vec4& tintColor = { 1,1,1,1 });
+		static void DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, uint32_t goId);
 
 		// With Rotation
 		static void DrawRotatedQuad2D(const glm::vec2& position, const glm::vec2& size, float rotatedAngle, const glm::vec4& color);
@@ -46,7 +46,7 @@ namespace Hazel
 		static void DrawRotatedQuad2D(const glm::vec2& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 		static void DrawRotatedQuad2D(const glm::vec3& position, const glm::vec2& size, float rotatedAngle, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId, int textureId = 0, const glm::vec2& tilingFactor = {1, 1});
 
 		// For Debugging
 		struct Statistics

@@ -160,7 +160,6 @@ namespace Hazel
 		// Reset Renderer Stats, For Debugging, called only in BeginScene
 		s_Data.Stats.DrawCallCnt = 0;
 		s_Data.Stats.DrawQuadCnt = 0;
-
 	}
 
 	void RenderCommandRegister::BeginScene(const CameraComponent & camera, const glm::mat4& transform)
@@ -213,9 +212,12 @@ namespace Hazel
 		DrawRotatedQuad2D(globalPos, size, 0, subTexture, tilingFactor, tintColor);
 	}
 
-	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::mat4 & transform, const glm::vec4 & tintColor)
+	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer & spriteRenderer, const glm::mat4 & transform, uint32_t goId)
 	{
-		DrawQuad(transform, spriteRenderer.GetColor(), spriteRenderer.InstanceId);
+		if (spriteRenderer.GetTexture())
+			DrawQuad(transform, spriteRenderer.GetTintColor(), goId, (int)spriteRenderer.GetTexture()->GetTextureId(), spriteRenderer.GetTilingFactor());
+		else
+			DrawQuad(transform, spriteRenderer.GetTintColor(), goId, 0, { 1, 1 });
 	}
 
 	void RenderCommandRegister::DrawQuad(const glm::vec2& globalPos, const glm::vec2& size, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4 & tintColor)
@@ -227,8 +229,8 @@ namespace Hazel
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
-			ResetBatchParams();
 			Flush();
+			ResetBatchParams();
 		}
 
 		s_Data.WhiteTexture->Bind(0);
@@ -381,18 +383,16 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	void RenderCommandRegister::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId)
+	void RenderCommandRegister::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t goId, int textureId, const glm::vec2& tilingFactor)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
-			ResetBatchParams();
 			Flush();
+			ResetBatchParams();
 		}
 
+		// 白色的Texture意味着没有tint color的纯色quad
 		s_Data.WhiteTexture->Bind(0);
-
-		//glm::mat4 transform = glm::translate(glm::mat4(1.0f), globalPos) * glm::rotate(glm::mat4(1.0f), rotatedAngle, { 0, 0, 1 }) *
-		//	glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		QuadVertex vertices[4];
 		for (size_t i = 0; i < 4; i++)
@@ -401,7 +401,7 @@ namespace Hazel
 			glm::vec4 v0 = transform * s_Data.QuadVertices[i];
 			vertices[i].Position = { v0.x, v0.y, v0.z };
 			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
-			vertices[i].TextureId = 0;
+			vertices[i].TextureId = textureId;
 			vertices[i].GameObjectInstanceId = goId;
 		}
 
