@@ -5,6 +5,13 @@
 
 namespace Hazel
 {
+	enum class PlayMode
+	{
+		Edit,
+		Play
+	};
+
+
 	class EditorLayer : public Hazel::Layer
 	{
 	public:
@@ -18,7 +25,10 @@ namespace Hazel
 		void Render();
 
 	private:
+		void DrawUIToolbar();
 		void EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition);
+		void OnScenePlay();
+		void OnSceneStop();
 
 	private:
 
@@ -57,5 +67,10 @@ namespace Hazel
 		};
 
 		ToolbarOptions m_Option = ToolbarOptions::Translate;
+
+		PlayMode m_PlayMode = PlayMode::Edit;
+
+		std::shared_ptr<Texture2D> m_IconPlay;
+		std::shared_ptr<Texture2D> m_IconStop;
 	};
 }

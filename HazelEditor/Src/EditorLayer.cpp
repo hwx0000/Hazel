@@ -118,6 +118,9 @@ namespace Hazel
 		// 很奇怪, 直接这么打log, 输出的反而是0, 用std::cout都不会出这个问题, 感觉是spdlog的问题
 		//LOG("float: {:.2f}", s.GetFieldValue<float>(objP, fieldP));
 		LOG("float: {:03.2f}", val);
+
+		m_IconPlay = Texture2D::Create("Resources/Icons/PlayButton.png");
+		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
 	}
 
 	void EditorLayer::OnDetach()
@@ -332,7 +335,6 @@ namespace Hazel
 				ImGui::EndMainMenuBar();
 			}
 		}
-		ImGui::End();
 
 		ImGui::Begin("Render Stats");
 		{
@@ -367,7 +369,6 @@ namespace Hazel
 			ImGui::Image(m_CameraComponentFramebuffer->GetColorAttachmentTexture2DId(), {280, 280}, { 0,1 }, { 1,0 });
 			ImGui::End();
 		}
-
 
 		ImGui::Begin("Viewport");
 		{
@@ -431,6 +432,10 @@ namespace Hazel
 		}
 		ImGui::End();
 
+		DrawUIToolbar();	
+
+		ImGui::End();
+
 		//m_ProfileResults.clear();
 
 		m_SceneHierarchyPanel.OnImGuiRender();
@@ -454,6 +459,37 @@ namespace Hazel
 
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 	
+	// 思路是绘制一个小窗口, 然后拖到Dock里布局好, 此横向小窗口作为Toolbar, 中间绘制PlayButton
+	void EditorLayer::DrawUIToolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		{
+			float size = ImGui::GetWindowHeight() - 4.0f;
+			std::shared_ptr<Texture2D> icon = m_PlayMode == PlayMode::Edit ? m_IconPlay : m_IconStop;
+			ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+			if (ImGui::ImageButton((ImTextureID)icon->GetTextureId(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+			{
+				if (m_PlayMode == PlayMode::Edit)
+					OnScenePlay();
+				else if (m_PlayMode == PlayMode::Play)
+					OnSceneStop();
+			}
+
+			ImGui::PopStyleVar(2);
+			ImGui::PopStyleColor(3);
+		}
+		ImGui::End();
+	}
+
 	// 绘制Viewport对应的窗口, 从而绘制gizmos, 传入的是camera的V和P矩阵, matrix的Transform对应的矩阵
 	void EditorLayer::EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition)
 	{
@@ -513,4 +549,13 @@ namespace Hazel
 		//ImGuizmo::ViewManipulate(cameraView, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
 	}
 
+	void EditorLayer::OnScenePlay()
+	{
+		m_PlayMode = PlayMode::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_PlayMode = PlayMode::Edit;
+	}
 }	
