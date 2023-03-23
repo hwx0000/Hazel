@@ -7,7 +7,7 @@ namespace Hazel
 	class Scene;
 	class GameObject;
 	class SceneSerializer
-	{
+	{ 
 	public:	
 		static void Serialize(std::shared_ptr<Scene>, const char* path);
 		static bool Deserialize(std::shared_ptr<Scene> scene, const char* path);
