@@ -19,3 +19,6 @@
 [submodule "box2d"]
 	path = Hazel/vendor/box2d
 	url = https://github.com/hwx0000/box2d
+[submodule "Hazel/vendor/box2D"]
+	path = Hazel/vendor/box2D
+	url = https://github.com/hwx0000/box2d/
