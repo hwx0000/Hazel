@@ -14,6 +14,7 @@ include "Hazel/vendor/GLFW"
 include "Hazel/vendor/Glad"
 include "Hazel/vendor/imgui"
 include "Hazel/vendor/yaml-cpp"
+include "Hazel/vendor/box2D"
 
 project "Hazel"
     location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
@@ -56,7 +57,8 @@ project "Hazel"
 		"%{prj.name}/vendor/yaml-cpp/include",
 		"%{prj.name}/vendor/imguizmo",
 		"%{VULKAN_SDK}/Include",
-		"%{prj.name}/vendor/Mono/include"
+		"%{prj.name}/vendor/Mono/include",
+		"%{prj.name}/vendor/box2D/include"
 	}
 	
 	--filter "files:'%{prj.name}'/vendor/imguizmo/ImGuizmo.cpp"
@@ -195,7 +197,8 @@ project "HazelEditor"
 		"Hazel/vendor/entt/include",
 		"Hazel/vendor/yaml-cpp/include",
 		"Hazel/vendor/imguizmo",
-		"Hazel/vendor/Mono/include"
+		"Hazel/vendor/Mono/include",
+		"Hazel/vendor/box2D/include"
 	}
 
 	links { "Hazel" }

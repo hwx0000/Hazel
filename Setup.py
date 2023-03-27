@@ -129,4 +129,4 @@ if (not CheckVulkanSDK()):
     
 #  =============================  4.Call premake5.exe to build solution  ======================================
 print("Running premake...")
-subprocess.call(["vendor/bin/premake/premake5.exe", "vs2019"])
+subprocess.call(["vendor/bin/premake/premake5.exe", "vs2022"])

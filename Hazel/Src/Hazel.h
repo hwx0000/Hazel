@@ -34,3 +34,5 @@
 #include "Hazel/ECS/Components/Component.h"
 #include "Hazel/ECS/Components/ScriptComponent.h"
 #include "Hazel/ECS/SceneHierarchyPanel.h"
+
+#include "Hazel/Physics/Physics2D.h"
