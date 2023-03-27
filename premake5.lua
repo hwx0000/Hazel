@@ -153,7 +153,8 @@ project "Sandbox"
 		"Hazel/vendor/glm",
 		"Hazel/vendor/imgui",
 		"Hazel/vendor/entt/include",
-		"Hazel/vendor/yaml-cpp/include"
+		"Hazel/vendor/yaml-cpp/include",
+		"Hazel/vendor/box2D/include"
 	}
 
 	links { "Hazel" }
