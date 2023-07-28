@@ -236,6 +236,7 @@ namespace Hazel
 		}
 	}
 
+	// - Called by Application::Run() as the last layer
 	void EditorLayer::OnImGuiRender()
 	{
 		// 绘制Dockspace的代码
@@ -438,7 +439,10 @@ namespace Hazel
 
 		//m_ProfileResults.clear();
 
+		// Draw SceneHierarchy
 		m_SceneHierarchyPanel.OnImGuiRender();
+
+		// Draw Content Browser
 		m_ContentBrowserPanel.OnImGuiRender();
 	}
 

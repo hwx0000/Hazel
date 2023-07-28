@@ -15,16 +15,15 @@ namespace Hazel
 		static const int positionIterations = 1;
 
 	public:
-		void Init(float gravityX = 0.0f, float gravityY = -10.0f);
-		void Update();
-		std::shared_ptr<Collider2D>& CreateCollider2D();
-		std::shared_ptr<Rigidbody2D>& CreateRigidbody2D(const std::shared_ptr<b2World>& world, const float& x = 0.0f, const float& y = 0.0f, Rigidbody2DType type = Rigidbody2DType::Static);
+		static void Init(float gravityX = 0.0f, float gravityY = -10.0f);
+		static void Update();
+		static const std::shared_ptr<b2World>& GetWorld()  { return m_World; }
 
-		float GetFixedTimeStep() const { return m_FixedTimeStep; }
-		float SetFixedTimeStep(const float& fixedTimeStep) { m_FixedTimeStep = fixedTimeStep; }
+		static float GetFixedTimeStep() { return m_FixedTimeStep; }
+		static float SetFixedTimeStep(const float& fixedTimeStep) { m_FixedTimeStep = fixedTimeStep; }
 
 	private:
-		std::shared_ptr<b2World> m_World;
-		float m_FixedTimeStep;
+		static std::shared_ptr<b2World> m_World;
+		static float m_FixedTimeStep;
 	};
 }

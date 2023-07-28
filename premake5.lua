@@ -24,14 +24,14 @@ project "Hazel"
 	cppdialect "C++17"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
 	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
-	links {"GLFW", "opengl32.lib", "Glad", "imgui", "YAML_CPP"}
+	links {"GLFW", "opengl32.lib", "Glad", "imgui", "YAML_CPP", "2DPhysicsEngine"}
 
     pchheader "hzpch.h"
     pchsource "%{prj.name}/Src/hzpch.cpp"
 
 	defines
 	{
-	    "_CRT_SECURE_NO_WARNINGS", "YAML_CPP_STATIC_DEFINE"
+	    "_CRT_SECURE_NO_WARNINGS", "YAML_CPP_STATIC_DEFINE",
 	}
 	
 	files

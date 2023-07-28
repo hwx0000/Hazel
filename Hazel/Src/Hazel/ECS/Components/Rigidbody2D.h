@@ -11,14 +11,34 @@ namespace Hazel
 		Kinematic
 	};
 
+	/*
+	* Box2D内部的类型为
+		e_circle = 0,
+		e_edge = 1,
+		e_polygon = 2,
+		e_chain = 3,
+		e_typeCount = 4
+	*/
+
+	enum class Rigidbody2DShape
+	{
+		Box,
+		Circle,
+		Polygon,
+		Line
+	};
+
+
 	class Rigidbody2D : public Component
 	{
 	public:
-		Rigidbody2D(const std::shared_ptr<b2World>& world, const float& x = 0.0f, const float& y = 0.0f, Rigidbody2DType type = Rigidbody2DType::Static);
+		//Rigidbody2D() = delete;
+		Rigidbody2D(const float& x = 0.0f, const float& y = 0.0f,
+			const Rigidbody2DType& type = Rigidbody2DType::Static, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
 
 	private:
 		b2BodyDef m_BodyDef;
-		std::shared_ptr<b2Body> m_BodyPtr;
 		Rigidbody2DType m_Type;
+		Rigidbody2DShape m_Shape;
 	};
 }

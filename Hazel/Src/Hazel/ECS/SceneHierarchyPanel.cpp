@@ -86,8 +86,10 @@ namespace Hazel
 		ImGui::PopID();
 	}
 
+	// SceneHierarchyPanel分为两个子窗口, Hierarchy窗口和Inspector窗口
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
+		// Draw Hierarchy
 		ImGui::Begin("SceneHierarchyPanel");
 		{
 			std::vector<GameObject>& gos = m_Scene->GetGameObjects();
@@ -131,6 +133,7 @@ namespace Hazel
 		}
 		ImGui::End();
 
+		// Draw Inspector
 		ImGui::Begin("Inspector");
 		{
 			if (m_SelectedGOId != INVALID_INSTANCE_ID)
@@ -175,7 +178,7 @@ namespace Hazel
 
 	void SceneHierarchyPanel::DrawComponentsForSelectedGameObject()
 	{
-		// Draw name for GameObject
+		// 1. Draw name for GameObject
 		bool suc;
 		GameObject& go = m_Scene->GetGameObjectById(m_SelectedGOId, suc);
 		if (!suc) return;
@@ -199,7 +202,8 @@ namespace Hazel
 
 		//ImGui::SameLine();
 		ImGui::SameLine(ImGui::GetWindowWidth() - 110.0f);
-		// Draw AddComponent Menu
+
+		// 2. Draw AddComponent Menu
 		if (ImGui::Button("Add Component"))
 			ImGui::OpenPopup("AddComponent");
 
@@ -221,11 +225,19 @@ namespace Hazel
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Rigidbody2D"))
+			{
+				if (!go.HasComponent<Rigidbody2D>())
+					go.AddComponent<Rigidbody2D>();
+				
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 		
 
-		// Draw Transform Component
+		// 3. Draw Transform Component
 		HAZEL_ASSERT(go.HasComponent<Transform>(), "Invalid GameObject Without Transform Component!");
 		if (go.HasComponent<Transform>())
 		{
@@ -241,7 +253,7 @@ namespace Hazel
 			);
 		}
 
-		// Draw Camera Component
+		// 4. Draw Camera Component
 		if (go.HasComponent<CameraComponent>())
 		{
 			DrawComponent<CameraComponent>("CameraComponent", go, [](CameraComponent& cam)
@@ -315,7 +327,7 @@ namespace Hazel
 			);
 		}
 	
-		// Draw SpriteRendererComponent
+		// 5. Draw SpriteRendererComponent
 		if (go.HasComponent<SpriteRenderer>())
 		{
 			DrawComponent<SpriteRenderer>("SpriteRenderer", go, [](SpriteRenderer& sr)
@@ -339,6 +351,15 @@ namespace Hazel
 				ImGui::DragFloat("Tiling Factor X", &sr.GetTilingFactor().x, 0.1f, 0.0f, 100.0f);
 				ImGui::DragFloat("Tiling Factor Y", &sr.GetTilingFactor().y, 0.1f, 0.0f, 100.0f);
 			});
+		}
+
+		// 6. Draw Rigidbody2DComponent
+		if (go.HasComponent<Rigidbody2D>())
+		{
+			DrawComponent<Rigidbody2D>("Rigidbody2D", go, [](Rigidbody2D& sr)
+				{
+					ImGui::LabelText("Rigidbody2D TODO", "%s");
+				});
 		}
 	}
 
