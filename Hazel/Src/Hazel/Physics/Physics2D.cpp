@@ -15,7 +15,7 @@ namespace Hazel
 			// b2World is the physics hub that manages memory, objects, and simulation.
 			m_World = std::make_shared<b2World>(gravity);
 		}
-
+		
 		m_FixedTimeStep = 1.f / 60.f;
 	}
 

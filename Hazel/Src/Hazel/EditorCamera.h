@@ -4,8 +4,7 @@
 
 namespace Hazel
 {
-	// 这应该是一个与渲染平台无关的类, 后续会派生为不同的平台对应的Camera?
-	// 目前把它认为是一个2D的Camera, 因为目前相机的旋转只有一个维度
+	// 与具体渲染platform无关的类, 后续会派生为不同的平台对应的Camera
 	class EditorCamera
 	{
 	public:
@@ -49,7 +48,7 @@ namespace Hazel
 
 		glm::vec3 m_Position = glm::vec3(0, 0, 3.0f);	// 正交投影下的相机位置不重要
 		// WXYZ, 初始方向朝-Z方向
-		glm::quat m_Rotation = { 0, 1, 0, 0 };// 正交投影下的相机只会有绕Z轴的旋转
+		glm::quat m_Rotation = { 0, 0, 1, 0 };// 正交投影下的相机只会有绕Z轴的旋转
 
 		ProjectionType m_Type = ProjectionType::Perspective;
 	};
