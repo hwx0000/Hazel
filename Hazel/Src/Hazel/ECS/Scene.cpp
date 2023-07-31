@@ -25,6 +25,11 @@ namespace Hazel
 	{
 	}
 
+	void Scene::Clear()
+	{
+		ClearAllGameObjectsInScene();
+	}
+
 	void Scene::Update(const float& deltaTime)
 	{
 
@@ -45,6 +50,11 @@ namespace Hazel
 			if (!cam->IsFixedAspectRatio())
 				cam->SetAspectRatio(width, height);
 		}
+	}
+
+	void Scene::ClearAllGameObjectsInScene()
+	{
+		m_GameObjects.clear();
 	}
 
 	GameObject& Scene::CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name)

@@ -334,7 +334,10 @@ namespace Hazel
 							{
 								// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
 								if (m_Scene)
+								{
+									m_Scene->Clear();
 									SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+								}
 							}
 						}
 					}

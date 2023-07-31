@@ -17,9 +17,12 @@ namespace Hazel
 		void Pause();
 		void Stop();
 		void Update(const float& deltaTime);
-
+		void Clear();
 
 		void OnViewportResized(uint32_t width, uint32_t height);
+
+		// TODO: 删除所有的GameObjects in scene
+		void ClearAllGameObjectsInScene();
 
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name = "Default Name");
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
