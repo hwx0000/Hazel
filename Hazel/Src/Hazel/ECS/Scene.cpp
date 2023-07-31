@@ -13,8 +13,27 @@ namespace Hazel
 		m_Registry.clear();
 	}
 
-	void Scene::Update()
+	void Scene::Begin()
 	{
+	}
+
+	void Scene::Pause()
+	{
+	}
+
+	void Scene::Stop()
+	{
+	}
+
+	void Scene::Update(const float& deltaTime)
+	{
+
+		// ----  Update Physics -----
+		// TODO 物理部分的更新可能得稳定一分钟固定次数
+		Physics2D::Update();
+
+		// 根据Physics计算得到的rigidBody的结果, 反过来应用到GameObject的Transform上
+		UpdateTransformsAfterPhysicsSim();
 	}
 
 	void Scene::OnViewportResized(uint32_t width, uint32_t height)
@@ -75,5 +94,20 @@ namespace Hazel
 		auto& go = GetGameObjectById(id, suc);
 		if(suc)
 			DestroyGameObject(go);
+	}
+
+	void Scene::UpdateTransformsAfterPhysicsSim()
+	{
+		std::vector<GameObject>gos = GetGameObjectsByComponent<Rigidbody2D>();
+
+		for (size_t i = 0; i < gos.size(); i++)
+		{
+			Rigidbody2D& rb = gos[i].GetComponent<Rigidbody2D>();
+			Transform& t = gos[i].GetComponent<Transform>();
+
+			t.Translation.x = rb.GetLocation().x;
+			t.Translation.y = rb.GetLocation().y;
+			t.Rotation.z = rb.GetAngle();
+		}
 	}
 }

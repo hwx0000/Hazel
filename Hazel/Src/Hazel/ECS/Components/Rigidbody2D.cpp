@@ -22,19 +22,21 @@ namespace Hazel
 		}
 	}
 
-	b2Shape* CreateB2Shape(const Rigidbody2DShape& shape)
+	b2PolygonShape CreateB2Shape(const Rigidbody2DShape& shape)
 	{
 		switch (shape)
 		{
 		case Rigidbody2DShape::Box:
 		{
+			// TODO: 这里是否会有问题?
 			b2PolygonShape dynamicBox;
 			dynamicBox.SetAsBox(1.0f, 1.0f);
-			return &dynamicBox;
+			return dynamicBox;
 		}
 		default:
 		{
-			return nullptr;
+			b2PolygonShape dynamicBox;
+			return dynamicBox;
 		}
 		}
 	}
@@ -50,16 +52,35 @@ namespace Hazel
 			return;
 		}
 
+		// 注意, 调用CreateBody之前要把b2BodyDef里的参数都填好
 		m_BodyDef.position.Set(x, y);
-		b2Body* body = world->CreateBody(&m_BodyDef);
-
 		m_BodyDef.type = Rigidbody2DTypeToB2BodyType(type);
+		m_Body = world->CreateBody(&m_BodyDef);
+
 
 		// 添加Fixture(即Collider)
 		b2FixtureDef fixtureDef;
-		fixtureDef.shape = CreateB2Shape(shape);
+		b2PolygonShape dynamicBox = CreateB2Shape(shape);
+		fixtureDef.shape = &dynamicBox;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
-		body->CreateFixture(&fixtureDef);
+		m_Body->CreateFixture(&fixtureDef);
+	}
+
+
+	glm::vec2 Rigidbody2D::GetLocation()
+	{
+		if (m_Body)
+			return glm::vec2(m_Body->GetPosition().x, m_Body->GetPosition().y);
+
+		return { 0,0 };
+	}
+	
+	float Rigidbody2D::GetAngle()
+	{
+		if (m_Body)
+			return m_Body->GetAngle();
+
+		return 0;
 	}
 }

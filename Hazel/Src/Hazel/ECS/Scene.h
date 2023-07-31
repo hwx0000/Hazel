@@ -13,7 +13,12 @@ namespace Hazel
 		Scene();
 		~Scene();
 
-		void Update();
+		void Begin();
+		void Pause();
+		void Stop();
+		void Update(const float& deltaTime);
+
+
 		void OnViewportResized(uint32_t width, uint32_t height);
 
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name = "Default Name");
@@ -70,6 +75,10 @@ namespace Hazel
 		void DestroyGameObject(const GameObject& go);
 
 		void DestroyGameObjectById(uint32_t id);
+
+	private:
+		void UpdateTransformsAfterPhysicsSim();
+
 
 	private:
 		entt::registry m_Registry;

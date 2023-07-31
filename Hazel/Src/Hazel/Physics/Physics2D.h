@@ -12,7 +12,7 @@ namespace Hazel
 	class Physics2D
 	{
 		static const int velocityIterations = 6;
-		static const int positionIterations = 1;
+		static const int positionIterations = 2;
 
 	public:
 		static void Init(float gravityX = 0.0f, float gravityY = -10.0f);

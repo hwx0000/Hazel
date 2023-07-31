@@ -13,7 +13,7 @@ namespace Hazel
 		void SetTransformMat(const glm::mat4& trans);
 
 		glm::vec3 Translation = { 0, 0, 0 };
-		glm::vec3 Rotation = { 0, 0, 0 };
+		glm::vec3 Rotation = { 0, 0, 0 };//Radians
 		glm::vec3 Scale = { 1, 1, 1 };
 	};
 }

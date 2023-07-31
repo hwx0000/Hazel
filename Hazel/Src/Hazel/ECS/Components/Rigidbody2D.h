@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "box2d/box2d.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Hazel
 {
@@ -34,11 +35,15 @@ namespace Hazel
 	public:
 		//Rigidbody2D() = delete;
 		Rigidbody2D(const float& x = 0.0f, const float& y = 0.0f,
-			const Rigidbody2DType& type = Rigidbody2DType::Static, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
+			const Rigidbody2DType& type = Rigidbody2DType::Dynamic, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
+
+		glm::vec2 GetLocation();
+		float GetAngle();
 
 	private:
 		b2BodyDef m_BodyDef;
 		Rigidbody2DType m_Type;
 		Rigidbody2DShape m_Shape;
+		b2Body* m_Body;
 	};
 }

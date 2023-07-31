@@ -121,6 +121,8 @@ namespace Hazel
 
 		m_IconPlay = Texture2D::Create("Resources/Icons/PlayButton.png");
 		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
+
+		Physics2D::Init();
 	}
 
 	void EditorLayer::OnDetach()
@@ -193,6 +195,12 @@ namespace Hazel
 
 	void EditorLayer::OnUpdate(const Hazel::Timestep& ts)
 	{
+		if (m_PlayMode == PlayMode::Play)
+		{
+			// 更新游戏逻辑
+			m_Scene->Update(ts);
+		}
+
 		if (m_ViewportFocused && m_ViewportHovered)
 			m_EditorCameraController.OnUpdate(ts);
 
@@ -556,10 +564,12 @@ namespace Hazel
 	void EditorLayer::OnScenePlay()
 	{
 		m_PlayMode = PlayMode::Play;
+		m_Scene->Begin();
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		m_PlayMode = PlayMode::Edit;
+		m_Scene->Stop();
 	}
 }	
