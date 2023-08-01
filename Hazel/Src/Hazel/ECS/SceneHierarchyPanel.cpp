@@ -357,9 +357,72 @@ namespace Hazel
 		// 6. Draw Rigidbody2DComponent
 		if (go.HasComponent<Rigidbody2D>())
 		{
-			DrawComponent<Rigidbody2D>("Rigidbody2D", go, [](Rigidbody2D& sr)
+			DrawComponent<Rigidbody2D>("Rigidbody2D", go, [](Rigidbody2D& rb)
 				{
-					ImGui::LabelText("Rigidbody2D TODO", "%s");
+					// TODO: 这种绘制Menu的东西应该封装一下
+
+					const int typesCnt = 3;
+					const char* typeChoices[typesCnt] = { "Static", "Dynamic", "Kinematic" };
+					// 当前选项从数组中找
+					const char* curChoice = typeChoices[(int)rb.GetType()];
+
+					//bool bTypeChanged = false;
+
+					if (ImGui::BeginCombo(" ", curChoice))
+					{
+						for (int i = 0; i < typesCnt; i++)
+						{
+							bool isSelected = curChoice == typeChoices[i];
+							if (ImGui::Selectable(typeChoices[i], isSelected))
+							{
+								if ((int)rb.GetType() != i)
+								{
+									curChoice = typeChoices[i];
+									rb.SetType((Rigidbody2DType)i);
+									//bTypeChanged = true;
+								}
+							}
+
+							// 高亮当前已经选择的Item
+							if (isSelected)
+								ImGui::SetItemDefaultFocus();
+						}
+
+						ImGui::EndCombo();
+					}
+
+
+					//	const int shapsCnt = 4;
+					//	const char* shapesChoices[typesCnt] = { "Box", "CirCle", "Polygon", "Line" };
+					//	// 当前选项从数组中找
+					//	const char* curChoice = typeChoices[(int)rb.GetType()];
+
+					//	//bool bTypeChanged = false;
+
+					//	// BeginCombo是ImGui绘制EnumPopup的方法
+					//	if (ImGui::BeginCombo("", curChoice))
+					//	{
+					//		for (int i = 0; i < typesCnt; i++)
+					//		{
+					//			bool isSelected = curChoice == typeChoices[i];
+					//			if (ImGui::Selectable(typeChoices[i], isSelected))
+					//			{
+					//				if ((int)rb.GetType() != i)
+					//				{
+					//					curChoice = typeChoices[i];
+					//					rb.SetType((Rigidbody2DType)i);
+					//					//bTypeChanged = true;
+					//				}
+					//			}
+
+					//			// 高亮当前已经选择的Item
+					//			if (isSelected)
+					//				ImGui::SetItemDefaultFocus();
+					//		}
+
+					//		ImGui::EndCombo();
+					//	
+				
 				});
 		}
 	}

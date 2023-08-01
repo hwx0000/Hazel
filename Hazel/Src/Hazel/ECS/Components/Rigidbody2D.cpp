@@ -42,7 +42,13 @@ namespace Hazel
 	}
 
 	Rigidbody2D::Rigidbody2D(const float& x, const float& y, 
-		const Rigidbody2DType& type, const Rigidbody2DShape& shape) : m_Type(type), m_Shape(shape)
+		const Rigidbody2DType& type, const Rigidbody2DShape& shape) : m_Pos(x, y), m_Type(type), m_Shape(shape)
+	{
+		// TODO: 准确的说, 这部分内容不应该在AddComponent时调用, 而应该在PlayMode下调用
+		Init();
+	}
+
+	void Rigidbody2D::Init()
 	{
 		const std::shared_ptr<b2World>& world = Physics2D::GetWorld();
 
@@ -53,20 +59,19 @@ namespace Hazel
 		}
 
 		// 注意, 调用CreateBody之前要把b2BodyDef里的参数都填好
-		m_BodyDef.position.Set(x, y);
-		m_BodyDef.type = Rigidbody2DTypeToB2BodyType(type);
+		m_BodyDef.position.Set(m_Pos.x, m_Pos.y);
+		m_BodyDef.type = Rigidbody2DTypeToB2BodyType(m_Type);
 		m_Body = world->CreateBody(&m_BodyDef);
 
 
 		// 添加Fixture(即Collider)
 		b2FixtureDef fixtureDef;
-		b2PolygonShape dynamicBox = CreateB2Shape(shape);
+		b2PolygonShape dynamicBox = CreateB2Shape(m_Shape);
 		fixtureDef.shape = &dynamicBox;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		m_Body->CreateFixture(&fixtureDef);
 	}
-
 
 	glm::vec2 Rigidbody2D::GetLocation()
 	{
@@ -76,11 +81,21 @@ namespace Hazel
 		return { 0,0 };
 	}
 	
+
 	float Rigidbody2D::GetAngle()
 	{
 		if (m_Body)
 			return m_Body->GetAngle();
 
 		return 0;
+	}
+
+	void Rigidbody2D::SetType(const Rigidbody2DType& type)
+	{
+		if (m_Body)
+		{
+			m_Type = type;
+			m_Body->SetType(Rigidbody2DTypeToB2BodyType(type));
+		}
 	}
 }

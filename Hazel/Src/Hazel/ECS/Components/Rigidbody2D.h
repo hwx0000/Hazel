@@ -40,10 +40,19 @@ namespace Hazel
 		glm::vec2 GetLocation();
 		float GetAngle();
 
+		Rigidbody2DType GetType() { return m_Type; }
+		void SetType(const Rigidbody2DType&);
+
+	protected:
+		void Init();
+
+
 	private:
 		b2BodyDef m_BodyDef;
 		Rigidbody2DType m_Type;
 		Rigidbody2DShape m_Shape;
 		b2Body* m_Body;
+
+		glm::vec2 m_Pos;
 	};
 }

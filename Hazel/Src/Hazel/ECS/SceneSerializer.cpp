@@ -5,6 +5,11 @@
 
 namespace Hazel 
 {
+	void ReadNodeValueFailure()
+	{
+	
+	}
+
 	void SceneSerializer::Serialize(std::shared_ptr<Scene> scene, const char* savePath)
 	{
 		YAML::Emitter out;
@@ -66,6 +71,7 @@ namespace Hazel
 				{
 					auto& cc = deserializedEntity.AddComponent<CameraComponent>();
 
+					// TODO: 这些as全应该像radio一样做check
 					cc.SetProjectionType((CameraComponent::ProjectionType)cameraComponent["ProjectionType"].as<int>());
 
 					cc.SetPerspectiveVerticalFOV(cameraComponent["PerspectiveFOV"].as<float>());
@@ -78,7 +84,9 @@ namespace Hazel
 
 					//cc.Primary = cameraComponent["Primary"].as<bool>();
 					bool& radio = cc.GetFixedAspectRatio();
-					radio = cameraComponent["FixedAspectRatio"].as<bool>();
+					auto node = cameraComponent["FixedAspectRatio"];
+					if(node)
+						radio = node.as<bool>();
 				}
 
 				auto spriteRendererComponent = entity["SpriteRendererComponent"];
@@ -86,7 +94,20 @@ namespace Hazel
 				{
 					auto& src = deserializedEntity.AddComponent<SpriteRenderer>();
 					glm::vec4& col = src.GetTintColor();
-					col = spriteRendererComponent["Color"].as<glm::vec4>();
+
+					auto node = spriteRendererComponent["Color"];
+					if (node)
+						col = node.as<glm::vec4>();
+				}
+
+				auto rigidbody2DComponent = entity["Rigidbody2DComponent"];
+				if (rigidbody2DComponent)
+				{
+					auto& src = deserializedEntity.AddComponent<Rigidbody2D>();
+					Rigidbody2DType type = src.GetType();
+					auto node = rigidbody2DComponent["Type"];
+					if(node)
+						src.SetType((Rigidbody2DType)node.as<int>());
 				}
 			}
 		}
@@ -143,6 +164,15 @@ namespace Hazel
 			auto& spriteRendererComponent = go.GetComponent<SpriteRenderer>();
 			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.GetTintColor();
 
+			out << YAML::EndMap;
+		}
+
+		if (go.HasComponent<Rigidbody2D>())
+		{
+			out << YAML::Key << "Rigidbody2DComponent";
+			out << YAML::BeginMap;
+			auto& rigidbody2DComponent = go.GetComponent<Rigidbody2D>();
+			out << YAML::Key << "Type" << YAML::Value << (int)rigidbody2DComponent.GetType();
 			out << YAML::EndMap;
 		}
 

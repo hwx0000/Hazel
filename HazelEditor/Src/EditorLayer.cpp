@@ -122,6 +122,7 @@ namespace Hazel
 		m_IconPlay = Texture2D::Create("Resources/Icons/PlayButton.png");
 		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
 
+		// TODO: 准确的说, 这部分内容不应该在AddComponent时调用, 而应该在PlayMode下调用
 		Physics2D::Init();
 	}
 

@@ -1,0 +1,35 @@
+Scene: Untitled
+GameObjects:
+  - Name: MySquare
+    InstanceID: 3
+    TransformComponent:
+      Translation: [-0.5, -0.762924194, 0]
+      Rotation: [0, 0.69999969, 0]
+      Scale: [6, 0.100000001, 0.999999821]
+    SpriteRendererComponent:
+      Color: [0.100000001, 0.800000012, 0.100000001, 1]
+  - Name: MainCamera
+    InstanceID: 4
+    TransformComponent:
+      Translation: [0.300000012, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: 1
+      PerspectiveFOV: 0.785398185
+      PerspectiveNear: 0.00999999978
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: -1
+      OrthographicFar: 1
+      FixedAspectRatio: false
+  - Name: MySquare2
+    InstanceID: 5
+    TransformComponent:
+      Translation: [0.232002243, 0.579017639, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.800000012, 0.100000001, 0.100000001, 1]
+    Rigidbody2DComponent:
+      Type: 1
