@@ -34,7 +34,7 @@ namespace Hazel
 	{
 	public:
 		//Rigidbody2D() = delete;
-		Rigidbody2D(const float& x = 0.0f, const float& y = 0.0f,
+		Rigidbody2D(const float& x, const float& y,
 			const Rigidbody2DType& type = Rigidbody2DType::Dynamic, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
 
 		glm::vec2 GetLocation();

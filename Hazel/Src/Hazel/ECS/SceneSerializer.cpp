@@ -5,11 +5,6 @@
 
 namespace Hazel 
 {
-	void ReadNodeValueFailure()
-	{
-	
-	}
-
 	void SceneSerializer::Serialize(std::shared_ptr<Scene> scene, const char* savePath)
 	{
 		YAML::Emitter out;
@@ -103,7 +98,11 @@ namespace Hazel
 				auto rigidbody2DComponent = entity["Rigidbody2DComponent"];
 				if (rigidbody2DComponent)
 				{
-					auto& src = deserializedEntity.AddComponent<Rigidbody2D>();
+					// TODO: ASSERT
+					Transform& tc = deserializedEntity.GetComponent<Transform>();
+					tc.Translation = transformComponent["Translation"].as<glm::vec3>();
+
+					auto& src = deserializedEntity.AddComponent<Rigidbody2D>(tc.Translation.x, tc.Translation.y);
 					Rigidbody2DType type = src.GetType();
 					auto node = rigidbody2DComponent["Type"];
 					if(node)

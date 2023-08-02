@@ -30,7 +30,7 @@ namespace Hazel
 		{
 			// TODO: 这里是否会有问题?
 			b2PolygonShape dynamicBox;
-			dynamicBox.SetAsBox(1.0f, 1.0f);
+			dynamicBox.SetAsBox(0.5f, 0.5f);// 对应1m*1m的Box
 			return dynamicBox;
 		}
 		default:
