@@ -38,6 +38,8 @@ namespace Hazel
 			const Rigidbody2DType& type = Rigidbody2DType::Dynamic, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
 
 		glm::vec2 GetLocation();
+		glm::vec2& GetExtents() { return m_Extents; }
+		void SetExtents(const glm::vec2&);
 		float GetAngle();
 
 		Rigidbody2DType GetType() { return m_Type; }
@@ -54,5 +56,6 @@ namespace Hazel
 		b2Body* m_Body;
 
 		glm::vec2 m_Pos;
+		glm::vec2 m_Extents;
 	};
 }

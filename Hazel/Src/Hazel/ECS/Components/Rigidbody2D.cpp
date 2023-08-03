@@ -81,6 +81,20 @@ namespace Hazel
 		return { 0,0 };
 	}
 	
+	void Rigidbody2D::SetExtents(const glm::vec2& extents)
+	{
+		m_Extents = extents;
+
+		if (m_Body)
+		{
+			b2PolygonShape* p = dynamic_cast<b2PolygonShape*>(m_Body->GetFixtureList()[0].GetShape());
+			if (p)
+				p->SetAsBox(m_Extents.x, m_Extents.y);
+			else
+				LOG_ERROR("The rigidbody2D component doesn't have b2PolygonShape");
+		}
+	}
+
 
 	float Rigidbody2D::GetAngle()
 	{
@@ -92,10 +106,9 @@ namespace Hazel
 
 	void Rigidbody2D::SetType(const Rigidbody2DType& type)
 	{
+		m_Type = type;
+
 		if (m_Body)
-		{
-			m_Type = type;
 			m_Body->SetType(Rigidbody2DTypeToB2BodyType(type));
-		}
 	}
 }

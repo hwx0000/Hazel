@@ -107,6 +107,11 @@ namespace Hazel
 					auto node = rigidbody2DComponent["Type"];
 					if(node)
 						src.SetType((Rigidbody2DType)node.as<int>());
+
+					glm::vec2& extents = src.GetExtents();
+					auto extentsNode = rigidbody2DComponent["Extents"];
+					if (extentsNode)
+						src.SetExtents(extentsNode.as<glm::vec2>());
 				}
 			}
 		}
@@ -172,6 +177,7 @@ namespace Hazel
 			out << YAML::BeginMap;
 			auto& rigidbody2DComponent = go.GetComponent<Rigidbody2D>();
 			out << YAML::Key << "Type" << YAML::Value << (int)rigidbody2DComponent.GetType();
+			out << YAML::Key << "Extents" << YAML::Value << rigidbody2DComponent.GetExtents();
 			out << YAML::EndMap;
 		}
 

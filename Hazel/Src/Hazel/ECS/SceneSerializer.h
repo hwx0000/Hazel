@@ -18,6 +18,15 @@ namespace Hazel
 
 namespace YAML
 {
+	// 为了让Yaml能写入自定义类, 需要重载oprator <<
+	
+	// operator <<
+	inline Emitter& operator<<(Emitter& emitter, const glm::vec2& v2)
+	{
+		return emitter << YAML::Flow << std::vector<float>{v2.x, v2.y};
+	}
+
+
 	// operator <<
 	inline Emitter& operator<<(Emitter& emitter, const glm::vec3& v3)
 	{
@@ -29,6 +38,41 @@ namespace YAML
 	{
 		return emitter << YAML::Flow << std::vector<float>{v4.x, v4.y, v4.z, v4.w};
 	}
+
+	
+	// 为了让Yaml能解析出glm::vec3这个class, 需要定义convert模板特化
+	
+	template <>
+	struct convert<glm::vec2>
+	{
+	private:
+		static bool isNodeValid(const Node& node)
+		{
+			return node.IsSequence() && node.size() == 2;
+		}
+
+	public:
+		static Node encode(const glm::vec2& rhs)
+		{
+			Node node(NodeType::Sequence);
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+
+			return node;
+		}
+
+		static bool decode(const Node& node, glm::vec2& res)
+		{
+			if (!isNodeValid(node))
+				return false;
+
+			res.x = node[0].as<float>();
+			res.y = node[1].as<float>();
+
+			return true;
+		}
+	};
+
 
 	template <>
 	struct convert<glm::vec3> 
