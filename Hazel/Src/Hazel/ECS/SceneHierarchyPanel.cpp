@@ -391,6 +391,10 @@ namespace Hazel
 						ImGui::EndCombo();
 					}
 
+					// 临时绘制Vec3代表Vec2
+					glm::vec3 ext(rb.GetExtents().x, rb.GetExtents().y, 0);
+					DrawVec3Control("BoxExtent", ext);
+					rb.GetExtents() = { ext.x, ext.y };
 
 					//	const int shapsCnt = 4;
 					//	const char* shapesChoices[typesCnt] = { "Box", "CirCle", "Polygon", "Line" };

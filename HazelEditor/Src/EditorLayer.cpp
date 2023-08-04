@@ -110,7 +110,9 @@ namespace Hazel
 		s.PrintAssemblyTypes(p);
 		MonoClass* p2 = s.GetClassInAssembly(p, "MyNamespace", "Program");
 		MonoObject* objP = s.CreateInstance(p2);
-		s.CallMethod(objP, "PrintFloatVar");
+		s.CallMethod(p2, objP, "PrintFloatVar");
+
+		s.CallMethod(p2, nullptr, "PrintVarStatic");
 
 		MonoClassField* fieldP = s.GetFieldRef(objP, "MyPublicFloatVar");
 

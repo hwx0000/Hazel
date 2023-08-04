@@ -11,6 +11,11 @@ namespace MyNamespace
             Console.WriteLine("MyPublicFloatVar = {0:F}", MyPublicFloatVar);
             Print();
             //PrintString("PrintString");
+		}
+
+        public static void PrintVarStatic()
+        {
+            Console.WriteLine("MyPublicFloatVar = {0:F}", 5000.0f);
         }
 
 

@@ -118,13 +118,13 @@ namespace Hazel
     // This Api will only cover mono_runtime_invoke
     // Using mono_runtime_invoke is slower compared to Unmanaged Method Thunks, but it's also safe and more flexible. 
     // mono_runtime_invoke can invoke any method with any parameters, and from what I understand mono_runtime_invoke also does a lot more error checking and validation on the object you pass, as well as the parameters.
-    void Scripting::CallMethod(MonoObject* objectInstance, const char* methodName)
+    void Scripting::CallMethod(MonoClass* monoClass, MonoObject* objectInstance, const char* methodName)
     {
-        // Get the MonoClass pointer from the instance
-        MonoClass* instanceClass = mono_object_get_class(objectInstance);
+        //// Get the MonoClass pointer from the instance
+        //MonoClass* instanceClass = mono_object_get_class(objectInstance);
 
         // Get a reference to the method in the class
-        MonoMethod* method = mono_class_get_method_from_name(instanceClass, methodName, 0);
+        MonoMethod* method = mono_class_get_method_from_name(monoClass, methodName, 0);
 
         if (!method) 
             return;
@@ -132,6 +132,8 @@ namespace Hazel
         // Call the C# method on the objectInstance instance, and get any potential exceptions
         // 在编译期不知道Method签名时, 适合用mono_runtime_invoke, 每秒高频率调用(10fps)的Method适合用Unmanaged Method Thunks
         MonoObject* exception = nullptr;
+
+        // 如果传入的objectInstance为nulltpr, 说明调用的是静态method
         mono_runtime_invoke(method, objectInstance, nullptr, &exception);
 
         // TODO: Handle the exception

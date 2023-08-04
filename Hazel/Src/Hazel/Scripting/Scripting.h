@@ -23,7 +23,7 @@ namespace Hazel
 		MonoObject* CreateInstance(MonoClass* p);
 
 		// C++调用C#这边的Method
-		void CallMethod(MonoObject* instance, const char* methodName);
+		void CallMethod(MonoClass* monoClass, MonoObject* instance, const char* methodName);
 
 		// Field can be public or private
 		MonoClassField* GetFieldRef(MonoObject* instance, const char* fieldName);

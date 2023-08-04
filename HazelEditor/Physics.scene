@@ -1,17 +1,18 @@
 Scene: Untitled
 GameObjects:
   - Name: MySquare
-    InstanceID: 10
+    InstanceID: 6
     TransformComponent:
-      Translation: [-0.5, -2.48730278, 0]
-      Rotation: [0, 0.69999969, 0]
+      Translation: [0, -1, 0]
+      Rotation: [0, 0, 0]
       Scale: [5.99999952, 0.100000001, 0.999999821]
     SpriteRendererComponent:
       Color: [0.100000001, 0.800000012, 0.100000001, 1]
     Rigidbody2DComponent:
       Type: 0
+      Extents: [3, 0.0500000007]
   - Name: MainCamera
-    InstanceID: 11
+    InstanceID: 7
     TransformComponent:
       Translation: [0.300000012, 0, 0]
       Rotation: [0, 0, 0]
@@ -26,12 +27,13 @@ GameObjects:
       OrthographicFar: 1
       FixedAspectRatio: false
   - Name: MySquare2
-    InstanceID: 12
+    InstanceID: 8
     TransformComponent:
-      Translation: [0.237571791, 1.25171769, 0]
+      Translation: [0, 1.25171769, 0]
       Rotation: [0, 0, -0.000211079343]
       Scale: [0.999997795, 0.999997795, 1]
     SpriteRendererComponent:
       Color: [0.800000012, 0.100000001, 0.100000001, 1]
     Rigidbody2DComponent:
       Type: 1
+      Extents: [0.5, 0.5]

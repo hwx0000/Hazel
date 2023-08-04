@@ -67,6 +67,7 @@ namespace Hazel
 		// 添加Fixture(即Collider)
 		b2FixtureDef fixtureDef;
 		b2PolygonShape dynamicBox = CreateB2Shape(m_Shape);
+		m_Extents = { 0.5f, 0.5f };
 		fixtureDef.shape = &dynamicBox;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
