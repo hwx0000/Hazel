@@ -29,9 +29,9 @@ namespace Hazel
 
 		static void DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, uint32_t goId);
 
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
-		static void DrawQuad(const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
-		static void DrawQuad(const glm::mat4& transform, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
+		static void DrawQuad(uint32_t goId, const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(uint32_t goId, const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
+		static void DrawQuad(uint32_t goId, const glm::mat4& transform, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 
 		// For Debugging
 		struct Statistics
