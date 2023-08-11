@@ -1,6 +1,7 @@
 #pragma once
 #include "entt.hpp"
 #include "Scene.h"
+#include "UUID.h"
 
 namespace Hazel
 {
@@ -10,6 +11,7 @@ namespace Hazel
 	public:
 		GameObject() = default;
 		GameObject(const std::shared_ptr<Scene>& ps, const entt::entity& entity, const std::string& name = "Default GameObject");
+		GameObject(const std::shared_ptr<Scene>& ps, const entt::entity& entity, const uint64_t& id, const std::string& name = "Default GameObject");
 
 		template<class T, class... Args>
 		T& AddComponent(Args&& ...args)
@@ -72,6 +74,7 @@ namespace Hazel
 		const std::string& ToString() CONST { return m_Name; }
 		//std::string& ToString() { return m_Name; }
 		const uint32_t GetInstanceId() const { return (uint32_t)m_InsanceId; }
+		const uint64_t GetUUID() const { return (*m_ID); }
 
 
 		glm::vec3 GetPosition();
@@ -87,5 +90,6 @@ namespace Hazel
 		entt::entity m_InsanceId;
 		std::weak_ptr<Scene> m_Scene;
 		std::string m_Name;
+		std::shared_ptr<UUID> m_ID;
 	};
 }

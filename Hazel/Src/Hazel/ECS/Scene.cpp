@@ -65,6 +65,14 @@ namespace Hazel
 		return m_GameObjects[m_GameObjects.size() - 1];
 	}
 
+	GameObject& Scene::CreateGameObjectInSceneWithUUID(const std::shared_ptr<Scene>& ps, const uint64_t& id, const std::string& name)
+	{
+		GameObject go(ps, m_Registry.create(), id, name);
+		go.AddComponent<Transform>();
+		m_GameObjects.push_back(go);
+		return m_GameObjects[m_GameObjects.size() - 1];
+	}
+
 	std::vector<GameObject>& Scene::GetGameObjects()
 	{
 		return m_GameObjects;

@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Components/Transform.h"
 #include "Components/CameraComponent.h"
+#include "UUID.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Hazel
@@ -9,6 +11,14 @@ namespace Hazel
 	GameObject::GameObject(const std::shared_ptr<Scene>& ps, const entt::entity & entity, const std::string& name)
 		: m_Scene(ps), m_InsanceId(entity), m_Name(name)
 	{
+		m_ID = std::make_shared<UUID>();
+	}
+
+	GameObject::GameObject(const std::shared_ptr<Scene>& ps, const entt::entity& entity, const uint64_t& id, const std::string& name)
+		: m_Scene(ps), m_InsanceId(entity), m_Name(name)
+	{
+		m_ID = std::make_shared<UUID>();
+		m_ID->SetId(id);
 	}
 
 	glm::vec3 GameObject::GetPosition()

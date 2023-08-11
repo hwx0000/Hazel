@@ -47,9 +47,20 @@ namespace Hazel
 				std::string name = entity["Name"].as<std::string>();
 
 				// TODO, 这里的uuid需要赋值给deserializedEntity, 但是底层register又会Create一个id
-				uint64_t uuid = entity["InstanceID"].as<uint64_t>();
+				uint64_t instanceId = entity["InstanceID"].as<uint32_t>();
+				auto uuidEnt = entity["UUID"];
+				
 
-				GameObject deserializedEntity = scene->CreateGameObjectInScene(scene, name);
+				GameObject deserializedEntity;
+				
+				if(uuidEnt)
+				{
+					uint64_t uuid = uuidEnt.as<uint64_t>();
+					deserializedEntity = scene->CreateGameObjectInSceneWithUUID(scene, uuid, name);
+				}
+				else
+					deserializedEntity = scene->CreateGameObjectInScene(scene, name);
+						
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)
@@ -125,6 +136,7 @@ namespace Hazel
 		out << YAML::BeginMap;
 		out << YAML::Key << "Name" << YAML::Value << go.ToString();
 		out << YAML::Key << "InstanceID" << YAML::Value << go.GetInstanceId();
+		out << YAML::Key << "UUID" << YAML::Value << go.GetUUID();
 
 		if (go.HasComponent<Transform>())
 		{

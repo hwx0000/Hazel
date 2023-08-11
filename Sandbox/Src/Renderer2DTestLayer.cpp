@@ -107,7 +107,7 @@ void Renderer2DTestLayer::OnUpdate(const Hazel::Timestep& ts)
 
 				float xPos = -width / 2.0f + x * tileSize;
 				float yPos = -(-height / 2.0f + y * tileSize);// y轴坐标取相反数, 是为了跟绘制的地图char数组相同
-				Hazel::RenderCommandRegister::DrawRotatedQuad2D({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
+				//Hazel::RenderCommandRegister::DrawRotatedQuad2D({ xPos, yPos, 0.1f }, { tileSize, tileSize }, rotatedAngle, s_Map[t], 1.0f);
 			}
 	}
 	Hazel::RenderCommandRegister::EndScene();

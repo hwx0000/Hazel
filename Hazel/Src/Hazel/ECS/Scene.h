@@ -25,6 +25,7 @@ namespace Hazel
 		void ClearAllGameObjectsInScene();
 
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name = "Default Name");
+		GameObject& CreateGameObjectInSceneWithUUID(const std::shared_ptr<Scene>& ps, const uint64_t& id, const std::string& name = "Default Name");
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
 		GameObject& GetGameObjectById(uint32_t id, bool& success);
 		
