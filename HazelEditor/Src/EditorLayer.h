@@ -43,7 +43,7 @@ namespace Hazel
 		std::shared_ptr<Hazel::Scene> m_Scene;
 
 		glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
-		glm::vec2 m_LastViewportSize = { 0, 0 };
+		glm::vec2 m_LastViewportSize = { 800, 600 };
 		//glm::vec2 m_HoverPosInViewport = { 0, 0 };// Hover Position in viewport window
 
 		glm::vec2 m_ViewportMin = { 0, 0 };
@@ -56,7 +56,7 @@ namespace Hazel
 		bool m_ViewportHovered;
 
 		bool m_ShowCameraComponent = false;
-		bool m_EnableMSAATex = false;
+		bool m_EnableMSAATex = true;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;

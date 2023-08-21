@@ -118,7 +118,11 @@ namespace Hazel
 		{
 			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
 			if (glShader)
+			{
 				glShader->CreateDownScaleFramebuffer();
+				m_ViewportFramebuffer->SetColorAttachmentTexture2DId(0, glShader->screenTexture);
+				m_ViewportFramebuffer->SetColorAttachmentTexture2DId(1, glShader->instanceIdTexture);
+			}
 		}
 	}
 
@@ -177,7 +181,6 @@ namespace Hazel
 							if (glShader)
 							{
 								int id = m_ViewportFramebuffer->ReadPixel(glShader->intermediateFBO, p.x, p.y);
-
 								if (id > -1)
 									m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
 							}
@@ -237,7 +240,7 @@ namespace Hazel
 		{
 			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
 			if (glShader)
-				glShader->DrawDownScaleFramebuffer(m_ViewportFramebuffer->GetFramebufferId(), glShader->intermediateFBO, 800, 600);
+				glShader->DrawDownScaleFramebuffer(m_ViewportFramebuffer->GetFramebufferId(), glShader->intermediateFBO, m_LastViewportSize.x, m_LastViewportSize.y);
 		}
 
 

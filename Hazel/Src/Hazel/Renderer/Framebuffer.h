@@ -26,6 +26,7 @@ namespace Hazel
 		virtual void Unbind() = 0;
 		virtual void ResizeColorAttachment(uint32_t width, uint32_t height) = 0;
 		virtual void* GetColorAttachmentTexture2DId() = 0;
+		virtual void SetColorAttachmentTexture2DId(uint32_t id, uint32_t value) = 0;
 		virtual int ReadPixel(uint32_t colorAttachmentId, int x, int y) = 0;
 		virtual void SetShader(const std::shared_ptr<Shader>& s) { m_Shader = s; }
 		virtual std::shared_ptr<Shader>& GetShader() { return m_Shader; }

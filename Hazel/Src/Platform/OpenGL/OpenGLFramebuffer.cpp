@@ -54,13 +54,12 @@ namespace Hazel
 				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureId, 0);
 
-				m_ColorAttachmentTexIndices.push_back(textureId);
+				// 填充-1占位
+				m_ColorAttachmentTexIndices.push_back(-1);
 			}
 
 			// 2. 
-			if(true)
 			{
-				
 				// 创建Texture2D作为framebuffer的output image
 				GLuint textureId;
 				glGenTextures(1, &textureId);
@@ -70,27 +69,8 @@ namespace Hazel
 
 				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 1);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, textureId, 0);
-
-				m_ColorAttachmentTexIndices.push_back(textureId);
-
-				/*
-				// 创建Texture2D作为framebuffer的output image
-				GLuint textureId;
-				glGenTextures(1, &textureId);
-				glBindTexture(GL_TEXTURE_2D, textureId);
-
-				// R32I应该是代表32位interger, 意思是这32位都只存一个integer
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, spec.width, spec.height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, NULL);
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
-
-				m_ColorAttachmentTexIndices.push_back(textureId);
-				*/
+				
+				m_ColorAttachmentTexIndices.push_back(-1);
 			}
 		}
 		// Stencil和Depth Buffer的Attachment暂时不加了
@@ -103,9 +83,6 @@ namespace Hazel
 		// 目前每个Camera只output两张贴图, 第一张代表Viewport里的贴图, 第二张代表InstanceID贴图
 		const GLenum buffers[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 		glDrawBuffers(2, buffers);
-
-		//const GLenum buffers[]{ GL_COLOR_ATTACHMENT0 };
-		//glDrawBuffers(1, buffers);
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
@@ -134,13 +111,6 @@ namespace Hazel
 
 	void* OpenGLFramebuffer::GetColorAttachmentTexture2DId()
 	{
-		if (m_EnableMSAA)
-			return (void*)m_MSAATexId;
-		
-		//OpenGLShader* glShader = (OpenGLShader*)&*m_ViewportDrawData.m_Shader;
-		//ImGui::Image((void*)glShader->screenTexture, size, { 0,1 }, { 1,0 });
-
-
 #if _WIN64
 		// 强行使用C++的四个转型字符, 就只能用这个了
 		// TODO: 丑陋的代码
@@ -160,41 +130,18 @@ namespace Hazel
 
 			// 注意, 这里不需要BindFramebuffer
 			// TODO: TEMP
-			if (!m_EnableMSAA)
-			{
-				glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-				//glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
-				//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, NULL);
-
-				//glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
-				//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-			}
-			else
-			{
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[0]);
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
-				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[0], 0);
-
-
-				//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R32I, spec.width, spec.height, GL_TRUE);
-				//glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 1);
-				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, textureId, 0);
-
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[1]);
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R32I, width, height, GL_TRUE);
-				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[1], 0);
-			}
+			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		}
 	}
 
 	// 获取单点pixel的像素值
-	int OpenGLFramebuffer::ReadPixel(uint32_t frameBufferID, int x, int y)
+	int OpenGLFramebuffer::ReadPixel(uint32_t id, int x, int y)
 	{
+		// when using MSAA, id is framebuffer id
 		if (m_EnableMSAA)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+			glBindFramebuffer(GL_FRAMEBUFFER, id);
 			glViewport(0, 0, m_Width, m_Height);
 			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
 			glReadBuffer(GL_COLOR_ATTACHMENT1);
@@ -204,8 +151,9 @@ namespace Hazel
 		}
 		else
 		{
+			// when not using MSAA, id is texture attachment id
 			Bind();
-			glReadBuffer(GL_COLOR_ATTACHMENT0 + frameBufferID);
+			glReadBuffer(GL_COLOR_ATTACHMENT0 + id);
 			int pixelData;
 			glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 			return pixelData;
@@ -215,5 +163,10 @@ namespace Hazel
 	uint32_t OpenGLFramebuffer::GetFramebufferId()
 	{
 		return m_FramebufferId;
+	}
+
+	void OpenGLFramebuffer::SetColorAttachmentTexture2DId(uint32_t id, uint32_t value)
+	{
+		m_ColorAttachmentTexIndices[id] = value;
 	}
 }
