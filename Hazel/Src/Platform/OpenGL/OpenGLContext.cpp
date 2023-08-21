@@ -13,7 +13,7 @@ namespace Hazel
 		CORE_LOG("OpenGL Info:");
 		CORE_LOG("    Vendor: {0}", glGetString(GL_VENDOR));// 打印厂商
 		CORE_LOG("    Renderer: {0}", glGetString(GL_RENDERER));// 打印GPU
-		CORE_LOG("    Version: {0}", glGetString(GL_VERSION));// 打印OPENGL版本
+		CORE_LOG("    OPENGL Version: {0}", glGetString(GL_VERSION));// 打印OPENGL版本
 
 		// 检查OpenGL版本
 #ifdef HZ_ENABLE_ASSERTS

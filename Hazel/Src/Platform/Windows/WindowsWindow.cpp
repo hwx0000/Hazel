@@ -16,7 +16,7 @@ namespace Hazel
 		return new WindowsWindow(props);
 	}
 
-
+	// Called in Application's ctor
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
 		Init(props);
@@ -39,6 +39,11 @@ namespace Hazel
 		m_Data.title = props.title;
 		m_Data.height = props.height;
 		m_Data.width = props.width;
+
+
+		// TODO: if opengl macro
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
+
 		m_Window = glfwCreateWindow(m_Data.width, m_Data.height, m_Data.title.c_str(), NULL, NULL);
 		HAZEL_ASSERT(m_Window, "Failed to create Windows Window!");
 		

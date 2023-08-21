@@ -8,8 +8,9 @@
 #include "ECS/Components/Transform.h"
 #include "ECS/SceneSerializer.h"
 #include "Utils/PlatformUtils.h"
-#include "ImGuizmo.h"
 #include "Hazel/Scripting/Scripting.h"
+#include "ImGuizmo.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel
 {
@@ -24,7 +25,6 @@ namespace Hazel
 	}
 
 	EditorLayer::EditorLayer(const std::string& name):
-		//m_EditorCameraController(1.6667f, 1.0f);
 		m_EditorCameraController(45.0f, 1.6667f, 0.01f, 1000.0f)
 	{
 		Hazel::RenderCommandRegister::Init();
@@ -75,30 +75,17 @@ namespace Hazel
 
 		Hazel::FramebufferSpecification spec;
 		spec.colorAttachmentCnt = 2;
+		spec.enableMSAA = m_EnableMSAATex;
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(spec);
+		m_ViewportFramebuffer->SetShader(Hazel::RenderCommandRegister::GetCurrentShader());
 
 		m_Scene = std::make_shared<Hazel::Scene>();
-
-		//// 1. 创建MySquare对象
-		//Hazel::GameObject& go = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare");
-		//go.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.1f, 0.8f, 0.1f, 1.0f });
-
-		//// 2. 创建MainCamera对象
-		//Hazel::GameObject& cameraGo = m_Scene->CreateGameObjectInScene(m_Scene, "MainCamera");
-		//// 添加CameraComponent
-		//CameraComponent& camera = cameraGo.AddComponent<Hazel::CameraComponent>();
-		//camera.SetRenderTargetSize(300, 300);
 
 		// TODO: 暂时默认绑定到第一个CameraComponent上, 实际应该是点谁, 就绑定到谁
 		Hazel::FramebufferSpecification camSpec;
 		camSpec.width = 350;
 		camSpec.height = 350;
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(camSpec);
-
-		//// 3. 创建MySquare2对象
-		//Hazel::GameObject& go2 = m_Scene->CreateGameObjectInScene(m_Scene, "MySquare2");
-		//go2.AddComponent<Hazel::SpriteRenderer>(glm::vec4{ 0.8f, 0.1f, 0.1f, 1.0f });
-		//go2.SetPosition({ 1,0,0 });
 
 		SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
 
@@ -126,6 +113,13 @@ namespace Hazel
 
 		// TODO: 准确的说, 这部分内容不应该在AddComponent时调用, 而应该在PlayMode下调用
 		Physics2D::Init();
+
+		if (m_EnableMSAATex)
+		{
+			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
+			if (glShader)
+				glShader->CreateDownScaleFramebuffer();
+		}
 	}
 
 	void EditorLayer::OnDetach()
@@ -177,10 +171,23 @@ namespace Hazel
 						float height = m_ViewportMax.y - m_ViewportMin.y;
 						p.y = height - p.y;
 
-						int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
+						if (m_EnableMSAATex)
+						{
+							OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
+							if (glShader)
+							{
+								int id = m_ViewportFramebuffer->ReadPixel(glShader->intermediateFBO, p.x, p.y);
 
-						if (id > -1)
-							m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
+								if (id > -1)
+									m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
+							}
+						}
+						else
+						{
+							int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
+							if (id > -1)
+								m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
+						}
 					}
 				}
 				
@@ -222,7 +229,17 @@ namespace Hazel
 		Hazel::RenderCommandRegister::BeginScene(m_EditorCameraController.GetCamera());
 		Render();
 		Hazel::RenderCommandRegister::EndScene();
+		
 		m_ViewportFramebuffer->Unbind();
+
+		// Cast to texture2d
+		if (m_EnableMSAATex)
+		{
+			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
+			if (glShader)
+				glShader->DrawDownScaleFramebuffer(m_ViewportFramebuffer->GetFramebufferId(), glShader->intermediateFBO, 800, 600);
+		}
+
 
 		// 再渲染各个CameraComponent
 		if (m_ShowCameraComponent)
@@ -414,7 +431,18 @@ namespace Hazel
 				m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
 			}
 
-			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+		
+			if (m_EnableMSAATex)
+			{
+				OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
+				if (glShader)
+					ImGui::Image((void*)glShader->screenTexture, size, { 0,1 }, { 1,0 });
+			}
+			else
+			{
+				ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
+			}
+
 
 			if (ImGui::BeginDragDropTarget())
 			{

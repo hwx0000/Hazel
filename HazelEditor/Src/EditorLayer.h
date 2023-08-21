@@ -2,6 +2,7 @@
 #include "Hazel.h"
 #include "Renderer/Framebuffer.h"
 #include "ContentBrowserPanel.h"
+#include "imgui.h"
 
 namespace Hazel
 {
@@ -10,7 +11,6 @@ namespace Hazel
 		Edit,
 		Play
 	};
-
 
 	class EditorLayer : public Hazel::Layer
 	{
@@ -34,8 +34,10 @@ namespace Hazel
 
 		Hazel::EditorCameraController m_EditorCameraController;
 		std::shared_ptr<Hazel::Texture2D> m_Texture2D;
+		
 		// 专属viewport的framebuffer
 		std::shared_ptr<Hazel::Framebuffer> m_ViewportFramebuffer;
+
 		// framebuffer数组, 每个元素对应一个CameraComponent
 		std::shared_ptr<Hazel::Framebuffer> m_CameraComponentFramebuffer;
 		std::shared_ptr<Hazel::Scene> m_Scene;
@@ -54,6 +56,7 @@ namespace Hazel
 		bool m_ViewportHovered;
 
 		bool m_ShowCameraComponent = false;
+		bool m_EnableMSAATex = true;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;

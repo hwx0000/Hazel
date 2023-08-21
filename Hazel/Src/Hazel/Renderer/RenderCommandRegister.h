@@ -33,6 +33,8 @@ namespace Hazel
 		static void DrawQuad(uint32_t goId, const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 		static void DrawQuad(uint32_t goId, const glm::mat4& transform, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1,1,1,1 });
 
+		static std::shared_ptr<Shader> GetCurrentShader();
+
 		// For Debugging
 		struct Statistics
 		{

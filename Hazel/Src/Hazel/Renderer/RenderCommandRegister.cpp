@@ -333,4 +333,9 @@ namespace Hazel
 		// Debugging
 		s_Data.Stats.DrawQuadCnt++;
 	}
+
+	std::shared_ptr<Shader> RenderCommandRegister::GetCurrentShader()
+	{
+		return s_Data.Shader;
+	}
 }
