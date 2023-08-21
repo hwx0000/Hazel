@@ -18,8 +18,6 @@ namespace Hazel
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		//glEnable(GL_MULTISAMPLE);
-
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(MessageCallback, 0);
 	}

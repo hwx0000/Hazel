@@ -58,7 +58,7 @@ namespace Hazel
 			}
 
 			// 2. 
-			if(false)
+			if(true)
 			{
 				
 				// 创建Texture2D作为framebuffer的output image
@@ -72,7 +72,6 @@ namespace Hazel
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, textureId, 0);
 
 				m_ColorAttachmentTexIndices.push_back(textureId);
-				//*/
 
 				/*
 				// 创建Texture2D作为framebuffer的output image
@@ -102,11 +101,11 @@ namespace Hazel
 
 
 		// 目前每个Camera只output两张贴图, 第一张代表Viewport里的贴图, 第二张代表InstanceID贴图
-		//const GLenum buffers[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-		//glDrawBuffers(2, buffers);
+		const GLenum buffers[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, buffers);
 
-		const GLenum buffers[]{ GL_COLOR_ATTACHMENT0 };
-		glDrawBuffers(1, buffers);
+		//const GLenum buffers[]{ GL_COLOR_ATTACHMENT0 };
+		//glDrawBuffers(1, buffers);
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
@@ -161,32 +160,56 @@ namespace Hazel
 
 			// 注意, 这里不需要BindFramebuffer
 			// TODO: TEMP
-			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			if (!m_EnableMSAA)
+			{
+				glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+				//glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
+				//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, NULL);
+
+				//glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[0]);
+				//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			}
+			else
+			{
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[0]);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
+				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[0], 0);
+
+
+				//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R32I, spec.width, spec.height, GL_TRUE);
+				//glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 1);
+				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, textureId, 0);
+
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[1]);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R32I, width, height, GL_TRUE);
+				//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, m_ColorAttachmentTexIndices[1], 0);
+			}
 		}
 	}
 
 	// 获取单点pixel的像素值
 	int OpenGLFramebuffer::ReadPixel(uint32_t frameBufferID, int x, int y)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-		glViewport(0, 0, m_Width, m_Height);
-		glReadBuffer(GL_COLOR_ATTACHMENT1);
-		int pixelData;
-		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
-		return pixelData;
-
-		//Bind();
-
-		//glReadBuffer(GL_COLOR_ATTACHMENT0 + colorAttachmentId);
-		// 
-		// 
-		// 
-		////glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
-		////glReadBuffer(GL_COLOR_ATTACHMENT0);
-		//int pixelData;
-		//glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
-		//return pixelData;
+		if (m_EnableMSAA)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+			glViewport(0, 0, m_Width, m_Height);
+			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
+			glReadBuffer(GL_COLOR_ATTACHMENT1);
+			int pixelData;
+			glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+			return pixelData;
+		}
+		else
+		{
+			Bind();
+			glReadBuffer(GL_COLOR_ATTACHMENT0 + frameBufferID);
+			int pixelData;
+			glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+			return pixelData;
+		}
 	}
 
 	uint32_t OpenGLFramebuffer::GetFramebufferId()

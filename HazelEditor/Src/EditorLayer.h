@@ -56,7 +56,7 @@ namespace Hazel
 		bool m_ViewportHovered;
 
 		bool m_ShowCameraComponent = false;
-		bool m_EnableMSAATex = true;
+		bool m_EnableMSAATex = false;
 
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
