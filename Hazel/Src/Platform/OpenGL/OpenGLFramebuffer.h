@@ -22,8 +22,13 @@ namespace Hazel
 		virtual int ReadPixel(uint32_t colorAttachmentId, int x, int y) override;
 		virtual uint32_t GetFramebufferId() override;
 		virtual void SetColorAttachmentTexture2DId(uint32_t id, uint32_t value) override;
+		virtual void SetUpMSAAContext() override;
+		virtual void ResolveMSAATexture(uint32_t width, uint32_t height) override;
 
-	public:
+	private:
+		OpenGLShader* GetOpenGLShader();
+
+	private:
 		GLuint m_FramebufferId;
 		GLuint m_FramebufferTempId;
 		GLuint m_FramebufferTempTex;

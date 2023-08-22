@@ -43,7 +43,7 @@ namespace Hazel
 		int m_ProgramIdBeforeBind = -1;
 
 	public:
-		uint32_t intermediateFBO;
+		uint32_t resolveFBO;
 		uint32_t quadVAO, quadVBO;
 		uint32_t screenTexture;
 		uint32_t instanceIdTexture;

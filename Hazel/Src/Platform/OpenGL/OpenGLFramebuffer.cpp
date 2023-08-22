@@ -111,6 +111,13 @@ namespace Hazel
 
 	void* OpenGLFramebuffer::GetColorAttachmentTexture2DId()
 	{
+		if (m_EnableMSAA)
+		{
+			OpenGLShader* glShader = GetOpenGLShader();
+			if (glShader)
+				return (void*)glShader->screenTexture;
+		}
+
 #if _WIN64
 		// 强行使用C++的四个转型字符, 就只能用这个了
 		// TODO: 丑陋的代码
@@ -138,12 +145,14 @@ namespace Hazel
 	// 获取单点pixel的像素值
 	int OpenGLFramebuffer::ReadPixel(uint32_t id, int x, int y)
 	{
-		// when using MSAA, id is framebuffer id
 		if (m_EnableMSAA)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, id);
+			OpenGLShader* glShader = GetOpenGLShader();
+			HAZEL_ASSERT(glShader, "OpenGLShader pointer null when read pixel!");
+
+			glBindFramebuffer(GL_FRAMEBUFFER, glShader->resolveFBO);
 			glViewport(0, 0, m_Width, m_Height);
-			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[1]);
+			glBindTexture(GL_TEXTURE_2D, m_ColorAttachmentTexIndices[id]);
 			glReadBuffer(GL_COLOR_ATTACHMENT1);
 			int pixelData;
 			glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
@@ -151,7 +160,6 @@ namespace Hazel
 		}
 		else
 		{
-			// when not using MSAA, id is texture attachment id
 			Bind();
 			glReadBuffer(GL_COLOR_ATTACHMENT0 + id);
 			int pixelData;
@@ -168,5 +176,34 @@ namespace Hazel
 	void OpenGLFramebuffer::SetColorAttachmentTexture2DId(uint32_t id, uint32_t value)
 	{
 		m_ColorAttachmentTexIndices[id] = value;
+	}
+
+	void OpenGLFramebuffer::SetUpMSAAContext()
+	{
+		m_EnableMSAA = true;
+		OpenGLShader* glShader = GetOpenGLShader();
+		if (glShader)
+		{
+			glShader->CreateDownScaleFramebuffer();
+			SetColorAttachmentTexture2DId(0, glShader->screenTexture);
+			SetColorAttachmentTexture2DId(1, glShader->instanceIdTexture);
+		}
+	}
+
+	void OpenGLFramebuffer::ResolveMSAATexture(uint32_t width, uint32_t height)
+	{
+		HAZEL_ASSERT(m_EnableMSAA, "Framebuffer must enable MSAA when resolve Textures!");
+		
+		if (m_EnableMSAA)
+		{
+			OpenGLShader* glShader = GetOpenGLShader();
+			if (glShader)
+				glShader->DrawDownScaleFramebuffer(GetFramebufferId(), glShader->resolveFBO, width, height);
+		}
+	}
+
+	OpenGLShader* OpenGLFramebuffer::GetOpenGLShader()
+	{
+		return (OpenGLShader*)(&*GetShader());
 	}
 }

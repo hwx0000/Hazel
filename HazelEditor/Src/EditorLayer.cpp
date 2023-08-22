@@ -10,7 +10,6 @@
 #include "Utils/PlatformUtils.h"
 #include "Hazel/Scripting/Scripting.h"
 #include "ImGuizmo.h"
-#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel
 {
@@ -115,15 +114,7 @@ namespace Hazel
 		Physics2D::Init();
 
 		if (m_EnableMSAATex)
-		{
-			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
-			if (glShader)
-			{
-				glShader->CreateDownScaleFramebuffer();
-				m_ViewportFramebuffer->SetColorAttachmentTexture2DId(0, glShader->screenTexture);
-				m_ViewportFramebuffer->SetColorAttachmentTexture2DId(1, glShader->instanceIdTexture);
-			}
-		}
+			m_ViewportFramebuffer->SetUpMSAAContext();
 	}
 
 	void EditorLayer::OnDetach()
@@ -175,22 +166,9 @@ namespace Hazel
 						float height = m_ViewportMax.y - m_ViewportMin.y;
 						p.y = height - p.y;
 
-						if (m_EnableMSAATex)
-						{
-							OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
-							if (glShader)
-							{
-								int id = m_ViewportFramebuffer->ReadPixel(glShader->intermediateFBO, p.x, p.y);
-								if (id > -1)
-									m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
-							}
-						}
-						else
-						{
-							int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
-							if (id > -1)
-								m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
-						}
+						int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
+						if (id > -1)
+							m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
 					}
 				}
 				
@@ -235,14 +213,9 @@ namespace Hazel
 		
 		m_ViewportFramebuffer->Unbind();
 
-		// Cast to texture2d
+		// Resolve to texture2d
 		if (m_EnableMSAATex)
-		{
-			OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
-			if (glShader)
-				glShader->DrawDownScaleFramebuffer(m_ViewportFramebuffer->GetFramebufferId(), glShader->intermediateFBO, m_LastViewportSize.x, m_LastViewportSize.y);
-		}
-
+			m_ViewportFramebuffer->ResolveMSAATexture(m_LastViewportSize.x, m_LastViewportSize.y);
 
 		// 再渲染各个CameraComponent
 		if (m_ShowCameraComponent)
@@ -434,17 +407,7 @@ namespace Hazel
 				m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
 			}
 
-		
-			if (m_EnableMSAATex)
-			{
-				OpenGLShader* glShader = (OpenGLShader*)(&*(m_ViewportFramebuffer->GetShader()));
-				if (glShader)
-					ImGui::Image((void*)glShader->screenTexture, size, { 0,1 }, { 1,0 });
-			}
-			else
-			{
-				ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
-			}
+			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
 
 
 			if (ImGui::BeginDragDropTarget())

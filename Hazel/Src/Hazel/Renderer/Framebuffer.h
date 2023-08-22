@@ -30,6 +30,8 @@ namespace Hazel
 		virtual int ReadPixel(uint32_t colorAttachmentId, int x, int y) = 0;
 		virtual void SetShader(const std::shared_ptr<Shader>& s) { m_Shader = s; }
 		virtual std::shared_ptr<Shader>& GetShader() { return m_Shader; }
+		virtual void SetUpMSAAContext() = 0;
+		virtual void ResolveMSAATexture(uint32_t width, uint32_t height) = 0;
 
 	protected:
 		uint32_t m_Width = 800;
