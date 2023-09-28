@@ -43,6 +43,7 @@ namespace Hazel
 		int m_ProgramIdBeforeBind = -1;
 
 	public:
+		// TODO: To be refactered
 		uint32_t resolveFBO;
 		uint32_t quadVAO, quadVBO;
 		uint32_t screenTexture;

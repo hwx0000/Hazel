@@ -26,7 +26,8 @@ namespace Hazel
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
-		void SetProjectionMatrix(float left, float right, float bottom, float top);
+		void SetProjectionMatrixOrtho(float left, float right, float bottom, float top);
+		void SetProjectionMatrixPersp(float fov, float aspect, float zNear, float zFar);
 	
 		bool IsProjectiveCamera() { return m_Type == ProjectionType::Perspective; }
 		bool IsOrthographicCamera() { return m_Type == ProjectionType::Orthographic; }
@@ -35,7 +36,6 @@ namespace Hazel
 		glm::vec3 GetLocalRight() { return m_Rotation * glm::vec3{ 1, 0, 0 }; }
 		glm::vec3 GetLocalUp() { return m_Rotation * glm::vec3{ 0, 1, 0 }; }
 		
-	private:
 		void RecalculateViewMatrix();
 	
 	private:

@@ -1,7 +1,7 @@
 Scene: Untitled
 GameObjects:
   - Name: MySquare
-    InstanceID: 3
+    InstanceID: 15
     UUID: 3097009515460959776
     TransformComponent:
       Translation: [0, -1, 0]
@@ -13,7 +13,7 @@ GameObjects:
       Type: 0
       Extents: [3, 0.0500000007]
   - Name: MainCamera
-    InstanceID: 4
+    InstanceID: 16
     UUID: 14059031507487531521
     TransformComponent:
       Translation: [0.300000012, 0, 0]
@@ -29,11 +29,11 @@ GameObjects:
       OrthographicFar: 1
       FixedAspectRatio: false
   - Name: MySquare2
-    InstanceID: 5
+    InstanceID: 17
     UUID: 142376502195243801
     TransformComponent:
       Translation: [0, 1.25171769, 0]
-      Rotation: [0, 0, -0.000211079343]
+      Rotation: [0, 0, 0.52359879]
       Scale: [0.999997795, 0.999997795, 1]
     SpriteRendererComponent:
       Color: [0.800000012, 0.100000001, 0.100000001, 1]
