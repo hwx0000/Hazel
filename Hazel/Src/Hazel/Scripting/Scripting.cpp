@@ -5,9 +5,15 @@
 
 namespace Hazel
 {
-    static void PrintFuncForCSharp()
+    static void PrintFuncFromCSharp()
     {
-        LOG("PrintFuncForCSharp");
+        LOG("Print Func From C#");
+    }
+
+    static void PrintStringFuncFromCSharp(MonoString* str)
+    {
+        char* arr = mono_string_to_utf8(str);
+        LOG(arr);
     }
 
     static MonoDomain* s_CSharpDomain;
@@ -57,7 +63,8 @@ namespace Hazel
         delete[] fileData;
 
         // TODO temp
-        mono_add_internal_call("MyNamespace.Program::Print", &PrintFuncForCSharp);
+        mono_add_internal_call("MyNamespace.Program::Print", &PrintFuncFromCSharp);
+        mono_add_internal_call("MyNamespace.Program::PrintString", &PrintStringFuncFromCSharp);
 
         return assembly;
     }

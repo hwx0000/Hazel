@@ -6,7 +6,7 @@ namespace Hazel
 {
 	void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
-		CORE_LOG_ERROR("OpenGL Error: {}", message);
+		//CORE_LOG_ERROR("OpenGL Error: {}", message);
 		return;
 	}
 

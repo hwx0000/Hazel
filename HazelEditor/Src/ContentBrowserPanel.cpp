@@ -1,11 +1,8 @@
 #include "ContentBrowserPanel.h"
 #include "imgui.h"
 #include <typeinfo>
-
-#include <stdio.h>
-#include <memory.h>
-#include <wchar.h>
-#include <errno.h>
+#include <filesystem>
+#include <cwchar>
 
 namespace Hazel
 {
@@ -48,23 +45,26 @@ namespace Hazel
 					ImGui::Image((ImTextureID)m_FileTex->GetTextureId(), size, { 0, 0 }, { 1, 1 });
 				ImGui::SameLine();
 
-				const auto& path = pp.path();
+				const std::filesystem::path& path = pp.path();
 				// 不再直接判断Button是否点击了, 而是通过ImGui的MouseDoubleClick状态和是否hover来判断双击的
 				// 其实这里的ImGui::Button改成ImGui::Text也可以双击, 无非是没有hover时的高亮button效果了
 				ImGui::Button(path.string().c_str());
 			
+				// 在ContentBrowser里拖拽scene文件时, 在这里发出请求
 				if (path.extension() == ".scene")
 				{
 					// 拖拽时传入拖拽的item的path
 					if (ImGui::BeginDragDropSource())
 					{
+						// 把path返回的const wchar_t*数组转换成正常的char*数组
 						const wchar_t* itemPath = path.c_str();
 						size_t len = wcslen(itemPath) + 1;
 						// Convert w_char array to char arr(deep copy)
 						char* itemPathArr = new char[len];
-						//size_t resLength;
-						//wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
-						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
+						
+						// wcsrtombs: Convert wide-character string to multibyte string
+						size_t resLength;
+						wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
 
 						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_SCENE", itemPathArr, (len) * sizeof(char));
 						ImGui::EndDragDropSource();
@@ -79,9 +79,8 @@ namespace Hazel
 						size_t len = wcslen(itemPath) + 1;
 						// Convert w_char array to char arr(deep copy)
 						char* itemPathArr = new char[len];
-						//size_t resLength;
-						//wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
-						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
+						size_t resLength;
+						wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
 
 						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_IMAGE", itemPathArr, (len) * sizeof(char));
 						ImGui::EndDragDropSource();
