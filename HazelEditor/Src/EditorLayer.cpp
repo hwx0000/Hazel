@@ -24,7 +24,7 @@ namespace Hazel
 	}
 
 	EditorLayer::EditorLayer(const std::string& name):
-		m_EditorCameraController(45.0f, 1.6667f, 0.01f, 1000.0f)
+		m_EditorCameraController(45.0f, 1.6667f, 0.1f, 100.0f)
 	{
 		Hazel::RenderCommandRegister::Init();
 
@@ -74,6 +74,7 @@ namespace Hazel
 
 		Hazel::FramebufferSpecification spec;
 		spec.colorAttachmentCnt = 2;
+		spec.depthAttachmentCnt = 1;
 		spec.enableMSAA = m_EnableMSAATex;
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(spec);
 		m_ViewportFramebuffer->SetShader(Hazel::RenderCommandRegister::GetCurrentShader());
@@ -84,6 +85,7 @@ namespace Hazel
 		Hazel::FramebufferSpecification camSpec;
 		camSpec.width = 350;
 		camSpec.height = 350;
+		camSpec.enableMSAA = m_EnableMSAATex;
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(camSpec);
 
 		SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");

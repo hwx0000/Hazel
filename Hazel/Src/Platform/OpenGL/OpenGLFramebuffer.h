@@ -33,6 +33,7 @@ namespace Hazel
 		GLuint m_FramebufferTempId;
 		GLuint m_FramebufferTempTex;
 		std::vector<GLuint> m_ColorAttachmentTexIndices;
+		std::vector<GLuint> m_RboAttachmentIndices;
 		bool m_EnableMSAA;
 	};
 }

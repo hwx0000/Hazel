@@ -40,6 +40,18 @@ namespace Hazel
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textureId, 0);
 				m_ColorAttachmentTexIndices.push_back(textureId);
 			}
+
+			// TODO: 这里的Depth和Stencil共享一个render buffer的操作与FramebufferSpecification里的设置有所冲突
+			for (size_t i = 0; i < spec.depthAttachmentCnt; i++)
+			{
+				// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+				unsigned int rbo;
+				glGenRenderbuffers(1, &rbo);
+				glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, spec.width, spec.height); // use a single renderbuffer object for both a depth AND stencil buffer.
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+				m_RboAttachmentIndices.push_back(rbo);
+			}
 		}
 		else
 		{
@@ -72,8 +84,19 @@ namespace Hazel
 				
 				m_ColorAttachmentTexIndices.push_back(-1);
 			}
+
+			// TODO: 这里的Depth和Stencil共享一个render buffer的操作与FramebufferSpecification里的设置有所冲突
+			for (size_t i = 0; i < spec.depthAttachmentCnt; i++)
+			{
+				// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+				unsigned int rbo;
+				glGenRenderbuffers(1, &rbo);
+				glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+				glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, spec.width, spec.height); // use a single renderbuffer object for both a depth AND stencil buffer.
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+				m_RboAttachmentIndices.push_back(rbo);
+			}
 		}
-		// Stencil和Depth Buffer的Attachment暂时不加了
 
 		HAZEL_CORE_ASSERT((bool)(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Framebuffer incomplete");
 
@@ -87,10 +110,13 @@ namespace Hazel
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		glDeleteFramebuffers(1, &m_FramebufferId);
-		
 		for (GLuint id : m_ColorAttachmentTexIndices)
 			glDeleteTextures(1, &id);
+
+		for (GLuint id : m_RboAttachmentIndices)
+			glDeleteRenderbuffers(1, &id);
+
+		glDeleteFramebuffers(1, &m_FramebufferId);
 	}
 
 	GLuint OpenGLFramebuffer::GetColorAttachmentId(uint32_t id)

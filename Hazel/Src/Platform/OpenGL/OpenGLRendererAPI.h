@@ -14,7 +14,5 @@ namespace Hazel
 		virtual void SetClearColor(const glm::vec4 &) const override;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>&, uint32_t count) const override;
-
-		void UpdateDowngradingMSAATexture();
 	};
 }

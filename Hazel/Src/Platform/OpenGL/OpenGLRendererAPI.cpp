@@ -25,7 +25,7 @@ namespace Hazel
 	void OpenGLRendererAPI::Clear() const
 	{
 		// TODO: 后期会添加flag
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4 &color) const
@@ -39,10 +39,5 @@ namespace Hazel
 			glDrawElements(GL_TRIANGLES, vertexArr->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 		else
 			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-	}
-
-	void OpenGLRendererAPI::UpdateDowngradingMSAATexture()
-	{
-
 	}
 }
