@@ -8,9 +8,9 @@ namespace Hazel
 	{
 		uint32_t width = 800;
 		uint32_t height = 600;
-		int32_t colorAttachmentCnt = 1;
-		int32_t depthAttachmentCnt = 0;
-		int32_t stencilAttachmentCnt = 0;
+		uint32_t colorAttachmentCnt = 1;
+		uint32_t depthAttachmentCnt = 0;
+		uint32_t stencilAttachmentCnt = 0;
 		bool enableMSAA;
 	};
 

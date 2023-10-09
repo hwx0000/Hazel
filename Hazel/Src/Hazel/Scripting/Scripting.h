@@ -29,7 +29,7 @@ namespace Hazel
 		MonoClassField* GetFieldRef(MonoObject* instance, const char* fieldName);
 
 		template<class T>
-		const T& GetFieldValue(MonoObject* instance, MonoClassField* field)
+		const T GetFieldValue(MonoObject* instance, MonoClassField* field)
 		{
 			T value;
 			mono_field_get_value(instance, field, &value);

@@ -75,7 +75,7 @@ namespace Hazel
 
 	void* OpenGLTexture2D::GetTextureId()
 	{
-		return (void*)m_TextureID;// 注意是m_TextureID改为(void*), 没有取其地址
+		return (void*)(uint64_t)m_TextureID;// 注意是m_TextureID改为(void*), 没有取其地址
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot)

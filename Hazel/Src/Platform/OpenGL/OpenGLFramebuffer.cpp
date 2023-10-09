@@ -17,7 +17,7 @@ namespace Hazel
 
 		if (!m_EnableMSAA)
 		{
-			for (size_t i = 0; i < spec.colorAttachmentCnt; i++)
+			for (unsigned int i = 0; i < spec.colorAttachmentCnt; i++)
 			{
 				// 创建Texture2D作为framebuffer的output image
 				GLuint textureId;
@@ -42,7 +42,7 @@ namespace Hazel
 			}
 
 			// TODO: 这里的Depth和Stencil共享一个render buffer的操作与FramebufferSpecification里的设置有所冲突
-			for (size_t i = 0; i < spec.depthAttachmentCnt; i++)
+			for (unsigned int i = 0; i < spec.depthAttachmentCnt; i++)
 			{
 				// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
 				unsigned int rbo;
@@ -141,7 +141,7 @@ namespace Hazel
 		{
 			OpenGLShader* glShader = GetOpenGLShader();
 			if (glShader)
-				return (void*)glShader->screenTexture;
+				return (void*)(uint64_t)glShader->screenTexture;
 		}
 
 #if _WIN64

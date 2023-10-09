@@ -153,8 +153,8 @@ namespace Hazel
 
 		// 这里的TreeNodeEx会让ImGui基于输入的HashCode(GUID), 绘制一个TreeNode, 由于这里需要一个
 		// void*指针, 这里直接把GameObject的id转成void*给它即可
-		// ex应该是expanded的意思, 用于判断go对应的Node是否处于展开状态
-		bool expanded = ImGui::TreeNodeEx((void*)(id), flag, go.ToString().c_str());
+		// ex应该是expanded的意思, 用于判断go对应的Node是否处于展开状态, 转成uint64_t是为了干掉Warning
+		bool expanded = ImGui::TreeNodeEx((void*)(uint64_t)(id), flag, go.ToString().c_str());
 
 		// 如果鼠标悬浮在item上, 且点击了鼠标左键, 则返回true
 		if (ImGui::IsItemClicked())
@@ -179,9 +179,10 @@ namespace Hazel
 	void SceneHierarchyPanel::DrawComponentsForSelectedGameObject()
 	{
 		// 1. Draw name for GameObject
-		bool suc;
-		GameObject& go = m_Scene->GetGameObjectById(m_SelectedGOId, suc);
-		if (!suc) return;
+		GameObject go;
+		bool suc = m_Scene->GetGameObjectById(m_SelectedGOId, go);
+		if (!suc) 
+			return;
 
 		char buffer[256];
 		memset(buffer, 0, sizeof(buffer));

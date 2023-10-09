@@ -196,7 +196,7 @@ namespace Hazel
 		out << YAML::EndMap;
 	}
 
-	GameObject& SceneSerializer::DeserializeGameObject(YAML::Emitter& out)
+	GameObject SceneSerializer::DeserializeGameObject(YAML::Emitter& out)
 	{
 		return GameObject();
 	}

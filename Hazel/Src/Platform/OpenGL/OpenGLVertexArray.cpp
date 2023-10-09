@@ -56,7 +56,7 @@ namespace Hazel
 					GetShaderTypeDataCount(element.GetType()),
 					GetShaderDataTypeToOpenGL(element.GetType()),
 					layout.GetStride(),
-					(const void*)(element.GetOffset()));
+					(const void*)(uint64_t)(element.GetOffset()));
 			}
 			else
 			{
@@ -65,7 +65,7 @@ namespace Hazel
 					GetShaderDataTypeToOpenGL(element.GetType()),
 					element.IsNormalized() ? GL_TRUE : GL_FALSE,
 					layout.GetStride(),
-					(const void*)(element.GetOffset()));
+					(const void*)(uint64_t)(element.GetOffset()));
 			}
 
 			index++;

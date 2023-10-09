@@ -2,6 +2,11 @@
 #include "imgui.h"
 #include <typeinfo>
 
+#include <stdio.h>
+#include <memory.h>
+#include <wchar.h>
+#include <errno.h>
+
 namespace Hazel
 {
 	void ContentBrowserPanel::Init()
@@ -54,9 +59,11 @@ namespace Hazel
 					if (ImGui::BeginDragDropSource())
 					{
 						const wchar_t* itemPath = path.c_str();
-						int len = wcslen(itemPath) + 1;
+						size_t len = wcslen(itemPath) + 1;
 						// Convert w_char array to char arr(deep copy)
 						char* itemPathArr = new char[len];
+						//size_t resLength;
+						//wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
 						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
 
 						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_SCENE", itemPathArr, (len) * sizeof(char));
@@ -69,9 +76,11 @@ namespace Hazel
 					if (ImGui::BeginDragDropSource())
 					{
 						const wchar_t* itemPath = path.c_str();
-						int len = wcslen(itemPath) + 1;
+						size_t len = wcslen(itemPath) + 1;
 						// Convert w_char array to char arr(deep copy)
 						char* itemPathArr = new char[len];
+						//size_t resLength;
+						//wcsrtombs_s(&resLength, itemPathArr, len, &itemPath, len, nullptr);
 						std::wcsrtombs(itemPathArr, &itemPath, len, nullptr);
 
 						ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM_IMAGE", itemPathArr, (len) * sizeof(char));

@@ -70,16 +70,6 @@ project "Hazel"
 	    systemversion "latest"
 		defines {"HZ_PLATFORM_WINDOWS", "GLFW_INCLUDE_NONE", "HZ_ENABLE_ASSERTS"}
 		
-		
-		links
-		{
-		    -- windows needed libs for mono
-			"Ws2_32.lib",
-			"Bcrypt.lib",
-			"Version.lib",
-			"Winmm.lib"
-		}
-		
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
@@ -98,7 +88,6 @@ project "Hazel"
 		
 		links
 		{
-			"shaderc_sharedd.lib",
 			"spirv-cross-cored.lib",
 			"spirv-cross-glsld.lib",
 			"SPIRV-Toolsd.lib",
@@ -203,14 +192,36 @@ project "HazelEditor"
 	}
 
 	links { "Hazel" }
+	
 
     filter { "system:Windows" }
 	    systemversion "latest"
 		 defines { "HZ_PLATFORM_WINDOWS"}
+		 			
+		links
+		{
+		    -- windows needed libs for mono
+			"Ws2_32.lib",
+			"Bcrypt.lib",
+			"Version.lib",
+			"Winmm.lib"
+		}
+		
 
     filter { "configurations:Debug"}
         defines { "HZ_DEBUG"}
         symbols "On"
+		
+		libdirs
+		{
+			"%{VULKAN_SDK}/Lib"
+		}
+		
+		links
+		{
+			"shaderc_sharedd.lib"
+		}
+		
 
     filter { "configurations:Release"}
         defines { "HZ_RELEASE" }

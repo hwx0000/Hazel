@@ -77,7 +77,6 @@ namespace Hazel
 	{
 		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
 
-
 		if (!stream)
 		{
 			LOG_ERROR("Failed to open the file:" + filepath);
@@ -86,7 +85,7 @@ namespace Hazel
 
 		std::streampos end = stream.tellg();
 		stream.seekg(0, std::ios::beg);
-		uint32_t size = end - stream.tellg();
+		uint32_t size = (uint32_t)(end - stream.tellg());
 
 		if (!size)
 		{

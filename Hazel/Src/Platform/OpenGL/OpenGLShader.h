@@ -4,8 +4,8 @@
 
 namespace Hazel
 {
-	class glm::mat4;
-	class glm::vec4;
+	struct glm::mat4;
+	struct glm::vec4;
 
 	class OpenGLShader : public Shader
 	{
@@ -20,7 +20,7 @@ namespace Hazel
 		void UploadUniformVec4(const std::string& uniformName, const glm::vec4& vec4) override;
 		void UploadUniformI1(const std::string& uniformName, int id) override;
 		void UploadUniformF1(const std::string& uniformName, float number) override;
-		void UploadUniformIntArr(const std::string& uniformName, size_t count, int* number) override;
+		void UploadUniformIntArr(const std::string& uniformName, int count, int* number) override;
 
 		void CreateDownScaleFramebuffer();
 		void DrawDownScaleFramebuffer(uint32_t MSAAbuffer, uint32_t buffer, uint32_t width, uint32_t height);

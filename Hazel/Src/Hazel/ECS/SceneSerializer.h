@@ -12,7 +12,7 @@ namespace Hazel
 		static void Serialize(std::shared_ptr<Scene>, const char* path);
 		static bool Deserialize(std::shared_ptr<Scene> scene, const char* path);
 		static void SerializeGameObject(YAML::Emitter& out, const GameObject&);
-		static GameObject& DeserializeGameObject(YAML::Emitter& out);
+		static GameObject DeserializeGameObject(YAML::Emitter& out);
 	};
 }
 

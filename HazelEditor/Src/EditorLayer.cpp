@@ -168,7 +168,7 @@ namespace Hazel
 						float height = m_ViewportMax.y - m_ViewportMin.y;
 						p.y = height - p.y;
 
-						int id = m_ViewportFramebuffer->ReadPixel(1, p.x, p.y);
+						int id = m_ViewportFramebuffer->ReadPixel(1, (int)p.x, (int)p.y);
 						if (id > -1)
 							m_SceneHierarchyPanel.SetSelectedGameObjectId((uint32_t)id);
 					}
@@ -217,7 +217,7 @@ namespace Hazel
 
 		// Resolve to texture2d
 		if (m_EnableMSAATex)
-			m_ViewportFramebuffer->ResolveMSAATexture(m_LastViewportSize.x, m_LastViewportSize.y);
+			m_ViewportFramebuffer->ResolveMSAATexture((uint32_t)m_LastViewportSize.x, (uint32_t)m_LastViewportSize.y);
 
 		// 再渲染各个CameraComponent
 		if (m_ShowCameraComponent)
@@ -406,7 +406,7 @@ namespace Hazel
 				// 先Resize Framebuffer
 				m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 				m_EditorCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-				m_Scene->OnViewportResized(viewportSize.x, viewportSize.y);
+				m_Scene->OnViewportResized((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			}
 
 			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
@@ -425,8 +425,8 @@ namespace Hazel
 			m_LastViewportSize = viewportSize;
 
 			uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
-			bool succ;
-			GameObject& selected = m_Scene->GetGameObjectById(id, succ);
+			GameObject selected;
+			bool succ = m_Scene->GetGameObjectById(id, selected);
 			if (succ)
 			{
 				bool bOrthographic = m_EditorCameraController.GetCamera().IsOrthographicCamera();
