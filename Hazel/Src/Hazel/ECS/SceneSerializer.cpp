@@ -112,8 +112,9 @@ namespace Hazel
 					// TODO: ASSERT
 					Transform& tc = deserializedEntity.GetComponent<Transform>();
 					tc.Translation = transformComponent["Translation"].as<glm::vec3>();
+					tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
 
-					auto& src = deserializedEntity.AddComponent<Rigidbody2D>(tc.Translation.x, tc.Translation.y);
+					auto& src = deserializedEntity.AddComponent<Rigidbody2D>(tc.Translation.x, tc.Translation.y, tc.Rotation.z);
 					Rigidbody2DType type = src.GetType();
 					auto node = rigidbody2DComponent["Type"];
 					if(node)

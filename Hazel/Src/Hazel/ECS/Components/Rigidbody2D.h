@@ -33,9 +33,8 @@ namespace Hazel
 	class Rigidbody2D : public Component
 	{
 	public:
-		//Rigidbody2D() = delete;
-		Rigidbody2D(const float& x, const float& y,
-			const Rigidbody2DType& type = Rigidbody2DType::Dynamic, const Rigidbody2DShape & shape = Rigidbody2DShape::Box);
+		Rigidbody2D(const float& x, const float& y, const float& angle,
+			const Rigidbody2DType& type = Rigidbody2DType::Dynamic, const Rigidbody2DShape& shape = Rigidbody2DShape::Box);
 
 		glm::vec2 GetLocation();
 		glm::vec2& GetExtents() { return m_Extents; }
@@ -57,5 +56,6 @@ namespace Hazel
 
 		glm::vec2 m_Pos;
 		glm::vec2 m_Extents;
+		float m_Angle = 0.0f;
 	};
 }

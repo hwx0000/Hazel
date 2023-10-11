@@ -27,6 +27,12 @@ namespace Hazel
 		return GetComponent<Transform>().Translation;
 	}
 
+	glm::vec3 GameObject::GetRotation()
+	{
+		HAZEL_ASSERT(HasComponent<Transform>(), "GameObject Missing TransformComponent");
+		return GetComponent<Transform>().Rotation;
+	}
+
 	glm::vec3 GameObject::GetPosition() const
 	{
 		HAZEL_ASSERT(HasComponent<Transform>(), "GameObject Missing TransformComponent");

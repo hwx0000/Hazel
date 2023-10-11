@@ -41,8 +41,8 @@ namespace Hazel
 		}
 	}
 
-	Rigidbody2D::Rigidbody2D(const float& x, const float& y, 
-		const Rigidbody2DType& type, const Rigidbody2DShape& shape) : m_Pos(x, y), m_Type(type), m_Shape(shape)
+	Rigidbody2D::Rigidbody2D(const float& x, const float& y, const float& angle,
+		const Rigidbody2DType& type, const Rigidbody2DShape& shape) : m_Pos(x, y), m_Angle(angle), m_Type(type), m_Shape(shape)
 	{
 		// TODO: 准确的说, 这部分内容不应该在AddComponent时调用, 而应该在PlayMode下调用
 		Init();
@@ -60,6 +60,7 @@ namespace Hazel
 
 		// 注意, 调用CreateBody之前要把b2BodyDef里的参数都填好
 		m_BodyDef.position.Set(m_Pos.x, m_Pos.y);
+		m_BodyDef.angle = m_Angle;
 		m_BodyDef.type = Rigidbody2DTypeToB2BodyType(m_Type);
 		m_Body = world->CreateBody(&m_BodyDef);
 

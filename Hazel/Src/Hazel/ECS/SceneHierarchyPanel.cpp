@@ -228,9 +228,10 @@ namespace Hazel
 
 			if (ImGui::MenuItem("Rigidbody2D"))
 			{
-				auto& pos = go.GetPosition();
+				glm::vec3& pos = go.GetPosition();
+				glm::vec3& rot = go.GetRotation();
 				if (!go.HasComponent<Rigidbody2D>())
-					go.AddComponent<Rigidbody2D>(pos.x, pos.y);
+					go.AddComponent<Rigidbody2D>(pos.x, pos.y, rot.z);
 				
 				ImGui::CloseCurrentPopup();
 			}
