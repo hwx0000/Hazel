@@ -80,7 +80,7 @@ void Hazel::ImGuiLayer::OnImGuiRender()
 void Hazel::ImGuiLayer::OnEvent(Event &e)
 {
 	// 只有鼠标在Viewport窗口上、且窗口被Focus时, Viewport窗口才可以接收到Event
-	if (!(m_ViewportFocused && m_ViewportHovered))// Viewport区域以外的Event会被ImGui接受
+	if (!(m_ViewportFocused/* && m_ViewportHovered*/))// Viewport区域以外的Event会被ImGui接受
 		e.MarkHandled();
 }
 

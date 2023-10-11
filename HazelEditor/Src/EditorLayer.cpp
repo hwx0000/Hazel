@@ -194,7 +194,7 @@ namespace Hazel
 			m_Scene->Update(ts);
 		}
 
-		if (m_ViewportFocused && m_ViewportHovered)
+		if (m_ViewportFocused/* && m_ViewportHovered*/)
 			m_EditorCameraController.OnUpdate(ts);
 
 		// 每帧开始Clear
