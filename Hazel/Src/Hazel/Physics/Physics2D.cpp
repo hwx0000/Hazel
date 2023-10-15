@@ -8,7 +8,7 @@ namespace Hazel
 
 	void Physics2D::Init(float gravityX, float gravityY)
 	{
-		if (m_World == nullptr)
+		//if (m_World == nullptr)
 		{
 			// 创建世界时需要设置重力加速度
 			b2Vec2 gravity(gravityX, gravityY);

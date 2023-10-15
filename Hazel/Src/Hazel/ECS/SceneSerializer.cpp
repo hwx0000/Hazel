@@ -37,6 +37,9 @@ namespace Hazel
 		if (!data["Scene"])
 			return false;
 
+		// TODO: 准确的说, 这部分内容不应该在Deserialize时调用, 而应该在PlayMode下调用
+		Physics2D::Init();
+
 		std::string sceneName = data["Scene"].as<std::string>();
 
 		YAML::Node entities = data["GameObjects"];

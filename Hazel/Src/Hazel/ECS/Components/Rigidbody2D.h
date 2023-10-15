@@ -52,7 +52,7 @@ namespace Hazel
 		b2BodyDef m_BodyDef;
 		Rigidbody2DType m_Type;
 		Rigidbody2DShape m_Shape;
-		b2Body* m_Body;
+		b2Body* m_Body = nullptr;
 
 		glm::vec2 m_Pos;
 		glm::vec2 m_Extents;

@@ -103,7 +103,7 @@ namespace Hazel
 		if (m_Body)
 			return m_Body->GetAngle();
 
-		return 0;
+		return m_Angle;
 	}
 
 	void Rigidbody2D::SetType(const Rigidbody2DType& type)
