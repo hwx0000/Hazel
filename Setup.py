@@ -37,9 +37,14 @@ from fake_useragent import UserAgent
 
 # 创建一个帮助显示下载进度的函数
 def DownloadFile(url, filepath):
+    isExist = os.path.exists(filepath)
+    if not isExist:
+       # Create a new directory because it does not exist
+       directory_path = os.path.dirname(filepath)
+       os.makedirs(directory_path)
+       print("The new directory " + directory_path + " is created!")
     with open(filepath, 'wb') as f:
-        ua = UserAgent()
-        headers = {'User-Agent': ua.chrome}
+        headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
         response = requests.get(url, headers=headers, stream=True)
         total = response.headers.get('content-length')
 
