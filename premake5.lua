@@ -74,7 +74,7 @@ project "Hazel"
 		{
 		    -- "copy default.config bin\\project.config"
 			-- copy freom relative path to ... 注意这里的COPY前面没有%
-		    ("{COPY} %{cfg.buildtarget.relpath} ../bin/" ..outputdir.."\\Sandbox")
+		    ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" ..outputdir.."/Sandbox/\"")
 		}
 
     filter { "configurations:Debug" }
