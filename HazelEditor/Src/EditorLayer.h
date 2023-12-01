@@ -40,7 +40,9 @@ namespace Hazel
 
 		// framebuffer数组, 每个元素对应一个CameraComponent
 		std::shared_ptr<Hazel::Framebuffer> m_CameraComponentFramebuffer;
-		std::shared_ptr<Hazel::Scene> m_Scene;
+		std::shared_ptr<Hazel::Scene> m_EditorScene;
+		std::shared_ptr<Hazel::Scene> m_RuntimeScene;// Used in Play Mode
+		std::shared_ptr<Hazel::Scene> m_ActiveScene;
 
 		glm::vec4 m_FlatColor = glm::vec4(0.2, 0.3, 0.8, 1.0);
 		glm::vec2 m_LastViewportSize = { 800, 600 };

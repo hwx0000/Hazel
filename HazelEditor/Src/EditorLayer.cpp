@@ -10,6 +10,8 @@
 #include "Utils/PlatformUtils.h"
 #include "Hazel/Scripting/Scripting.h"
 #include "ImGuizmo.h"
+#include "ECS/SceneManager.h"
+#include "ECS/Components/Transform.h"
 
 namespace Hazel
 {
@@ -28,7 +30,6 @@ namespace Hazel
 	{
 		Hazel::RenderCommandRegister::Init();
 
-		//std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\HeadIcon.jpg";
 		std::string texturePath = std::filesystem::current_path().string() + "\\Resources\\TextureAtlas.png";
 		m_Texture2D = Hazel::Texture2D::Create(texturePath);
 	}
@@ -79,7 +80,8 @@ namespace Hazel
 		m_ViewportFramebuffer = Hazel::Framebuffer::Create(spec);
 		m_ViewportFramebuffer->SetShader(Hazel::RenderCommandRegister::GetCurrentShader());
 
-		m_Scene = std::make_shared<Hazel::Scene>();
+		m_EditorScene = std::make_shared<Hazel::Scene>();
+		m_ActiveScene = m_EditorScene;
 
 		// TODO: 暂时默认绑定到第一个CameraComponent上, 实际应该是点谁, 就绑定到谁
 		Hazel::FramebufferSpecification camSpec;
@@ -88,10 +90,10 @@ namespace Hazel
 		camSpec.enableMSAA = m_EnableMSAATex;
 		m_CameraComponentFramebuffer = Hazel::Framebuffer::Create(camSpec);
 
-		SceneSerializer::Deserialize(m_Scene, "Physics.scene");
+		SceneSerializer::Deserialize(m_EditorScene, "Physics.scene");
 		//SceneSerializer::Deserialize(m_Scene, "DefaultScene.scene");
 
-		m_SceneHierarchyPanel.SetContext(m_Scene);
+		m_SceneHierarchyPanel.SetContext(m_EditorScene);
 		m_ContentBrowserPanel.Init();
 
 		Scripting s;
@@ -188,8 +190,7 @@ namespace Hazel
 	{
 		if (m_PlayMode == PlayMode::Play)
 		{
-			// 更新游戏逻辑
-			m_Scene->Update(ts);
+			m_ActiveScene->Update(ts);
 		}
 
 		if (m_ViewportFocused/* && m_ViewportHovered*/)
@@ -207,9 +208,22 @@ namespace Hazel
 		Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		Hazel::RenderCommandRegister::BeginScene(m_EditorCameraController.GetCamera());
-		Render();
-		Hazel::RenderCommandRegister::EndScene();
+		if (m_PlayMode == PlayMode::Edit)
+		{
+			Hazel::RenderCommandRegister::BeginScene(m_EditorCameraController.GetCamera());
+			Render();
+			Hazel::RenderCommandRegister::EndScene();
+		}
+		else
+		{
+			if (const CameraComponent* camera = m_ActiveScene->GetMainCamera())
+			{
+				Hazel::RenderCommandRegister::BeginScene(camera);
+				Render();
+				Hazel::RenderCommandRegister::EndScene();
+			}
+		}
+
 		
 		m_ViewportFramebuffer->Unbind();
 
@@ -224,14 +238,14 @@ namespace Hazel
 			Hazel::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Hazel::RenderCommand::Clear();
 
-			auto gos = m_Scene->GetGameObjectsByComponent<CameraComponent>();
+			auto gos = m_EditorScene->GetGameObjectsByComponent<CameraComponent>();
 
 			if (gos.size() > 0)
 			{
 				const Hazel::GameObject& go = gos[0];
-				Hazel::CameraComponent& cam = m_Scene->GetComponentInGameObject<Hazel::CameraComponent>(go);
+				Hazel::CameraComponent& cam = m_EditorScene->GetComponentInGameObject<Hazel::CameraComponent>(go);
 
-				Hazel::RenderCommandRegister::BeginScene(cam, go.GetTransformMat());
+				Hazel::RenderCommandRegister::BeginScene(&cam);
 				Render();
 				Hazel::RenderCommandRegister::EndScene();
 			}
@@ -316,23 +330,23 @@ namespace Hazel
 							if (!hasEnding(path, ".scene"))
 								path = path + ".scene";
 
-							if (m_Scene)
-								SceneSerializer::Serialize(m_Scene, path.c_str());
+							if (m_EditorScene)
+								SceneSerializer::Serialize(m_EditorScene, path.c_str());
 						}
 					}
 
 					if (ImGui::MenuItem("Load Scene"))
 					{
-						if (m_Scene)
+						if (m_EditorScene)
 						{
 							std::optional<std::string> filePath = FileDialogWindowUtils::OpenFile("Hazel Scene (*.scene)\0*.scene\0");
 							if (filePath.has_value())
 							{
 								// 前面的Hazel Scene(*.scene)是展示在filter里的text, 后面的*.scene代表显示的文件后缀类型
-								if (m_Scene)
+								if (m_EditorScene)
 								{
-									m_Scene->Clear();
-									SceneSerializer::Deserialize(m_Scene, filePath.value().c_str());
+									m_EditorScene->ClearAllGameObjectsInScene();
+									SceneSerializer::Deserialize(m_EditorScene, filePath.value().c_str());
 								}
 							}
 						}
@@ -404,7 +418,7 @@ namespace Hazel
 				// 先Resize Framebuffer
 				m_ViewportFramebuffer->ResizeColorAttachment((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 				m_EditorCameraController.GetCamera().OnResize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-				m_Scene->OnViewportResized((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+				m_ActiveScene->OnViewportResized((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			}
 
 			ImGui::Image(m_ViewportFramebuffer->GetColorAttachmentTexture2DId(), size, { 0,1 }, { 1,0 });
@@ -424,7 +438,7 @@ namespace Hazel
 
 			uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
 			GameObject selected;
-			bool succ = m_Scene->GetGameObjectById(id, selected);
+			bool succ = m_PlayMode == PlayMode::Edit && m_EditorScene->GetGameObjectById(id, selected);
 			if (succ)
 			{
 				bool bOrthographic = m_EditorCameraController.GetCamera().IsOrthographicCamera();
@@ -458,7 +472,7 @@ namespace Hazel
 	// 此函数会为每个fbo都调用一次, 比如为Viewport和每个CameraComponent都调用一次
 	void EditorLayer::Render()
 	{
-		std::vector<GameObject> gos = m_Scene->GetGameObjectsByComponent<Hazel::SpriteRenderer>();
+		std::vector<GameObject> gos = m_ActiveScene->GetGameObjectsByComponent<Hazel::SpriteRenderer>();
 
 		for (size_t i = 0; i < gos.size(); i++)
 		{
@@ -564,12 +578,20 @@ namespace Hazel
 	void EditorLayer::OnScenePlay()
 	{
 		m_PlayMode = PlayMode::Play;
-		m_Scene->Begin();
+		m_RuntimeScene.reset();
+		m_RuntimeScene = SceneManager::Instance()->CopyScene(*m_EditorScene);
+		m_ActiveScene = m_RuntimeScene;
+		m_ActiveScene->Begin();
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		m_PlayMode = PlayMode::Edit;
-		m_Scene->Stop();
+		m_ActiveScene->Stop();
+		m_RuntimeScene.reset();
+		m_ActiveScene = m_EditorScene;
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 }	

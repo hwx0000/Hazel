@@ -19,8 +19,8 @@ namespace Hazel
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
 			// Hazel这里存了Scene的Raw Pointer
-			auto& com = p->GetRegistry().emplace<T>(m_InsanceId, std::forward<Args>(args)...);
-			com.InstanceId = (uint32_t)m_InsanceId;
+			auto& com = p->GetRegistry().emplace<T>(m_InstanceId, std::forward<Args>(args)...);
+			com.InstanceId = (uint32_t)m_InstanceId;
 			return com;
 		}
 
@@ -30,7 +30,7 @@ namespace Hazel
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
 			if (p)
-				return p->GetRegistry().all_of<T>(m_InsanceId);
+				return p->GetRegistry().all_of<T>(m_InstanceId);
 
 			return false;
 		}
@@ -41,7 +41,7 @@ namespace Hazel
 			std::shared_ptr<Scene> p = m_Scene.lock();
 
 			if (p)
-				return p->GetRegistry().all_of<T>(m_InsanceId);
+				return p->GetRegistry().all_of<T>(m_InstanceId);
 
 			return false;
 		}
@@ -53,7 +53,7 @@ namespace Hazel
 
 				std::shared_ptr<Scene> p = m_Scene.lock();
 
-			return p->GetRegistry().get<T>(m_InsanceId);
+			return p->GetRegistry().get<T>(m_InstanceId);
 		}
 
 		template<class T>
@@ -63,19 +63,21 @@ namespace Hazel
 
 				std::shared_ptr<Scene> p = m_Scene.lock();
 
-			return p->GetRegistry().get<T>(m_InsanceId);
+			return p->GetRegistry().get<T>(m_InstanceId);
 		}
 
 
-		operator entt::entity() { return m_InsanceId; }
-		operator entt::entity() const { return m_InsanceId; }
+		operator entt::entity() { return m_InstanceId; }
+		operator entt::entity() const { return m_InstanceId; }
 
 		void SetName(const std::string& name) { m_Name = name; }
-		const std::string& ToString() CONST { return m_Name; }
-		//std::string& ToString() { return m_Name; }
-		const uint32_t GetInstanceId() const { return (uint32_t)m_InsanceId; }
+		const std::string& ToString() const { return m_Name; }
+		const uint64_t GetInstanceId() const { return (uint32_t)m_InstanceId; }
 		const uint64_t GetUUID() const { return (*m_ID); }
+		// TODO: 不应该暴露此接口
+		void SetUUID(uint64_t id) {  *m_ID = UUID(id); }
 
+		const std::string GetName() const { return m_Name; }
 
 		glm::vec3 GetPosition();
 		glm::vec3 GetPosition() const;
@@ -88,7 +90,7 @@ namespace Hazel
 
 		void SetTransformMat(const glm::mat4& trans);
 	private:
-		entt::entity m_InsanceId;
+		entt::entity m_InstanceId;
 		std::weak_ptr<Scene> m_Scene;
 		std::string m_Name;
 		std::shared_ptr<UUID> m_ID;

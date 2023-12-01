@@ -7,6 +7,7 @@ namespace Hazel
 		friend class GameObject;
 	public:
 		UUID();
+		UUID(uint64_t id);
 
 		operator uint64_t() { return m_ID; }
 

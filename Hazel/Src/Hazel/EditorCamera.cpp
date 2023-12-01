@@ -25,8 +25,6 @@ namespace Hazel
 
 	void EditorCamera::RecalculateViewMatrix()
 	{
-		// 手动根据Camera的Position, 算出其旋转方向, 让其看向原点, 有点麻烦, 这里直接借用glm::lookat函数
-		//m_ViewMatrix = glm::translate(glm::mat4(1.0f), -m_Position) * glm::toMat4(m_Rotation);
 		m_ViewMatrix = glm::lookAt(m_Position, m_Position + GetLocalForward(), GetLocalUp());
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}

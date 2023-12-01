@@ -7,8 +7,11 @@
 namespace Hazel
 {
 	class GameObject;
+	class SceneManager;
 	class Scene
 	{
+		friend SceneManager;
+
 	public:
 		Scene();
 		~Scene();
@@ -17,7 +20,6 @@ namespace Hazel
 		void Pause();
 		void Stop();
 		void Update(const float& deltaTime);
-		void Clear();
 
 		void OnViewportResized(uint32_t width, uint32_t height);
 
@@ -29,6 +31,8 @@ namespace Hazel
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
 		bool GetGameObjectById(uint32_t id, GameObject& inOutGo);
 		
+		CameraComponent* GetMainCamera();
+
 		// TODO: 没有想到更好的办法能不用raw pointers, 如果返回shared_ptr, 则外部会在调用后, 
 		// 会因为引用计数变为0而销毁T对象
 		template<class T>
@@ -73,6 +77,13 @@ namespace Hazel
 			return res;
 		}
 
+		template<class T>
+		void CopyComponent(const entt::registry& src, entt::registry& dst)
+		{
+			T component = src.get<T>();
+			dst.emplace_or_replace(component, component.InstanceId);
+		}
+
 		entt::registry& GetRegistry() { return m_Registry; }
 		const entt::registry& GetRegistry() const { return m_Registry; }
 
@@ -82,7 +93,6 @@ namespace Hazel
 
 	private:
 		void UpdateTransformsAfterPhysicsSim();
-
 
 	private:
 		entt::registry m_Registry;

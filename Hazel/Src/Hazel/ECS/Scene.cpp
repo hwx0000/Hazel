@@ -11,6 +11,7 @@ namespace Hazel
 	Scene::~Scene()
 	{
 		m_Registry.clear();
+		ClearAllGameObjectsInScene();
 	}
 
 	void Scene::Begin()
@@ -25,14 +26,8 @@ namespace Hazel
 	{
 	}
 
-	void Scene::Clear()
-	{
-		ClearAllGameObjectsInScene();
-	}
-
 	void Scene::Update(const float& deltaTime)
 	{
-
 		// ----  Update Physics -----
 		// TODO 物理部分的更新可能得稳定一分钟固定次数
 		Physics2D::Update();
@@ -90,6 +85,19 @@ namespace Hazel
 		}
 
 		return false;
+	}
+
+	CameraComponent* Scene::GetMainCamera()
+	{
+		std::vector<CameraComponent*> cams = GetComponents<CameraComponent>();
+
+		for (CameraComponent* cam : cams)
+		{
+			if (cam->GetIsMainCamera())
+				return cam;
+		}
+
+		return nullptr;
 	}
 
 	void Scene::DestroyGameObject(const GameObject& go)

@@ -324,6 +324,8 @@ namespace Hazel
 						ImGui::Checkbox("Fixed Aspect Ratio", &cam.GetFixedAspectRatio());
 					}
 
+					ImGui::Checkbox("Main Camera", &cam.GetIsMainCamera());
+
 					if (projectionTypeChanged)
 						cam.RecalculateProjectionMat();
 				}

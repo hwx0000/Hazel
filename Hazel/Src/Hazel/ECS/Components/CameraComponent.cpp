@@ -4,18 +4,24 @@
 
 namespace Hazel
 {
-	// 这里的right和top应该是分别与left和bottom互为相反数
 	CameraComponent::CameraComponent()
 	{
 		m_OrthographicNear = -1.0f;
 		m_OrthographicFar = 1.0f;
 		RecalculateProjectionMat();
+		RecalculateViewMatrix();
 	}
 
 	void CameraComponent::SetAspectRatio(uint32_t width, uint32_t height)
 	{
 		m_AspectRatio = (float)width / (float)height;
 		RecalculateProjectionMat();
+	}
+
+	void CameraComponent::RecalculateViewMatrix()
+	{
+		m_ViewMatrix = glm::lookAt(m_Position, m_Position + GetLocalForward(), GetLocalUp());
+		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void CameraComponent::RecalculateProjectionMat()
@@ -26,12 +32,12 @@ namespace Hazel
 			float orthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
 			float orthoBottom = -m_OrthographicSize * 0.5f;
 			float orthoTop = m_OrthographicSize * 0.5f;
-			m_Projection = glm::ortho(orthoLeft, orthoRight,
+			m_ProjectionMatrix = glm::ortho(orthoLeft, orthoRight,
 				orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
 		}
 		else
 		{
-			m_Projection = glm::perspective(glm::radians(m_PerspectiveFOV), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+			m_ProjectionMatrix = glm::perspective(glm::radians(m_PerspectiveFOV), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
 		}
 	}
 }

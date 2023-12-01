@@ -22,7 +22,7 @@ namespace Hazel
 		static void Shutdown();
 
 		static void BeginScene(const EditorCamera& camera);
-		static void BeginScene(const CameraComponent& camera, const glm::mat4& transform);
+		static void BeginScene(const CameraComponent* camera);
 		static void EndScene();
 
 		// 添加各种类型的DrawQuad函数, 包含了position、rotation、texture、tiling和tintColor

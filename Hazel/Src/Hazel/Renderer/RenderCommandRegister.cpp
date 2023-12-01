@@ -145,14 +145,13 @@ namespace Hazel
 	{
 	}
 
-	void RenderCommandRegister::BeginScene(const EditorCamera & camera)
+	void RenderCommandRegister::BeginScene(const EditorCamera& camera)
 	{
 		s_SceneData.ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 
 		s_Data.Shader->Bind();
 
 		// Change from uniform to UniformBuffer
-		//s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
 		s_Data.CameraUniformBuffer->SetData(glm::value_ptr(s_SceneData.ViewProjectionMatrix), sizeof(s_SceneData.ViewProjectionMatrix), 0);
 
 		// Reset Batch
@@ -163,14 +162,16 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt = 0;
 	}
 
-	void RenderCommandRegister::BeginScene(const CameraComponent & camera, const glm::mat4& transform)
+	void RenderCommandRegister::BeginScene(const CameraComponent* camera)
 	{
-		s_SceneData.ViewProjectionMatrix = camera.GetProjectionMatrix() * glm::inverse(transform);
+		if (!camera)
+			return;
+
+		s_SceneData.ViewProjectionMatrix = camera->GetViewProjectionMatrix();
 
 		s_Data.Shader->Bind();
 
 		// Change from uniform to UniformBuffer
-		//s_Data.Shader->UploadUniformMat4("u_ViewProjection", s_SceneData.ViewProjectionMatrix);
 		s_Data.CameraUniformBuffer->SetData(glm::value_ptr(s_SceneData.ViewProjectionMatrix), sizeof(s_SceneData.ViewProjectionMatrix), 0);
 
 		// Reset Batch

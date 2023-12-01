@@ -13,4 +13,9 @@ namespace Hazel
 	{
 		 m_ID = s_UniformDistribution(s_Engine);
 	}
+
+	UUID::UUID(uint64_t id):
+		m_ID(id)
+	{
+	}
 }
