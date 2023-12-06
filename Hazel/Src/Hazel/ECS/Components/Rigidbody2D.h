@@ -44,9 +44,7 @@ namespace Hazel
 		Rigidbody2DType GetType() { return m_Type; }
 		void SetType(const Rigidbody2DType&);
 
-	protected:
 		void Init();
-
 
 	private:
 		b2BodyDef m_BodyDef;
@@ -54,7 +52,8 @@ namespace Hazel
 		Rigidbody2DShape m_Shape;
 		b2Body* m_Body = nullptr;
 
-		glm::vec2 m_Pos;
+		glm::vec2 m_Pos = { 0.5f, 0.5f };
+
 		glm::vec2 m_Extents;
 		float m_Angle = 0.0f;
 	};

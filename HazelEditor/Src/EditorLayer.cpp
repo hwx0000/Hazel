@@ -581,6 +581,8 @@ namespace Hazel
 		m_RuntimeScene.reset();
 		m_RuntimeScene = SceneManager::Instance()->CopyScene(*m_EditorScene);
 		m_ActiveScene = m_RuntimeScene;
+
+		Physics2D::Init();
 		m_ActiveScene->Begin();
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);

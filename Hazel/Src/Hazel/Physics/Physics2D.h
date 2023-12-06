@@ -8,7 +8,6 @@ namespace Hazel
 	class Collider2D;
 	class Rigidbody2D;
 
-	// Pyhisics2DWorld
 	class Physics2D
 	{
 		static const int velocityIterations = 6;

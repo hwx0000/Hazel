@@ -16,6 +16,16 @@ namespace Hazel
 
 	void Scene::Begin()
 	{
+		// TODO: EnTT does not support gettinf all Base Components from register
+		// this needs to be refactored in the future, it's ideal to call all virtual functions
+		// for all Components, like 'Awake' function in Unity or 'BeginPlay' in Unreal
+		for (GameObject& go : m_GameObjects)
+		{
+			if (go.HasComponent<Rigidbody2D>())
+			{
+				go.GetComponent<Rigidbody2D>().Init();
+			}
+		}
 	}
 
 	void Scene::Pause()
@@ -38,7 +48,7 @@ namespace Hazel
 
 	void Scene::OnViewportResized(uint32_t width, uint32_t height)
 	{
-		std::vector<CameraComponent*> cams = GetComponents<CameraComponent>();
+		std::vector<CameraComponent*> cams = GetAllComponents<CameraComponent>();
 
 		for (CameraComponent* cam : cams)
 		{
@@ -89,7 +99,7 @@ namespace Hazel
 
 	CameraComponent* Scene::GetMainCamera()
 	{
-		std::vector<CameraComponent*> cams = GetComponents<CameraComponent>();
+		std::vector<CameraComponent*> cams = GetAllComponents<CameraComponent>();
 
 		for (CameraComponent* cam : cams)
 		{

@@ -44,8 +44,6 @@ namespace Hazel
 	Rigidbody2D::Rigidbody2D(const float& x, const float& y, const float& angle,
 		const Rigidbody2DType& type, const Rigidbody2DShape& shape) : m_Pos(x, y), m_Angle(angle), m_Type(type), m_Shape(shape)
 	{
-		// TODO: 准确的说, 这部分内容不应该在AddComponent时调用, 而应该在PlayMode下调用
-		Init();
 	}
 
 	void Rigidbody2D::Init()
@@ -68,11 +66,11 @@ namespace Hazel
 		// 添加Fixture(即Collider)
 		b2FixtureDef fixtureDef;
 		b2PolygonShape dynamicBox = CreateB2Shape(m_Shape);
-		m_Extents = { 0.5f, 0.5f };
 		fixtureDef.shape = &dynamicBox;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		m_Body->CreateFixture(&fixtureDef);
+		SetExtents(m_Extents);
 	}
 
 	glm::vec2 Rigidbody2D::GetLocation()

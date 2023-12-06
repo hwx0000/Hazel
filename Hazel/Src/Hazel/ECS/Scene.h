@@ -35,10 +35,12 @@ namespace Hazel
 
 		// TODO: 没有想到更好的办法能不用raw pointers, 如果返回shared_ptr, 则外部会在调用后, 
 		// 会因为引用计数变为0而销毁T对象
+		// This function will return all GetAllComponents in scene, if T is derived type
+		// base class component will not be returned
 		template<class T>
-		std::vector<T*> GetComponents()
+		std::vector<T*> GetAllComponents()
 		{
-			std::vector<T*>res;
+			std::vector<T*> res;
 			auto& view = m_Registry.view<T>();
 			for (auto& entity : view)
 			{
