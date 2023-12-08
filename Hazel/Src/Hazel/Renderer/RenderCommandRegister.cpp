@@ -24,7 +24,7 @@ namespace Hazel
 		glm::vec4 Color;			// 加了个Color
 		uint32_t TextureId;
 		float TilingFactor = 1.0f;
-		int32_t GameObjectInstanceId;
+		uint64_t GameObjectInstanceId;
 		// TODO: texid, normal,.etc
 	};
 
@@ -190,7 +190,7 @@ namespace Hazel
 
 	// 这里的position的z值要注意在相机的near和far之间, 比如[-1,1]之间
 	// 绘制GameObject上的顶点时需要传入goId, 作为顶点属性, 渲染出离相机最近的GameObject的ID贴图buffer
-	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, uint32_t goId)
+	void RenderCommandRegister::DrawSpriteRenderer(const SpriteRenderer& spriteRenderer, const glm::mat4& transform, uint64_t goId)
 	{
 		if (spriteRenderer.GetTexture())
 			DrawQuad(goId, transform, spriteRenderer.GetTexture(), spriteRenderer.GetTilingFactor().x, spriteRenderer.GetTintColor());
@@ -198,7 +198,7 @@ namespace Hazel
 			DrawQuad(goId, transform, spriteRenderer.GetTintColor());
 	}
 
-	void RenderCommandRegister::DrawQuad(uint32_t goId, const glm::mat4& transform, const glm::vec4 & color)
+	void RenderCommandRegister::DrawQuad(uint64_t goId, const glm::mat4& transform, const glm::vec4 & color)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -230,7 +230,7 @@ namespace Hazel
 		s_Data.Stats.DrawQuadCnt++;
 	}
 
-	void RenderCommandRegister::DrawQuad(uint32_t goId, const glm::mat4 & transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawQuad(uint64_t goId, const glm::mat4 & transform, const std::shared_ptr<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{
@@ -294,7 +294,7 @@ namespace Hazel
 		s_Data.AddedTextures[s_Data.WhiteTexture] = 0;
 	}
 
-	void RenderCommandRegister::DrawQuad(uint32_t goId, const glm::mat4& transform, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
+	void RenderCommandRegister::DrawQuad(uint64_t goId, const glm::mat4& transform, const std::shared_ptr<SubTexture2D>& subTexture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		if (s_Data.DrawedVerticesCnt >= s_Data.MaxVerticesCnt)
 		{

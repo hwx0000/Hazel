@@ -29,7 +29,7 @@ namespace Hazel
 		GameObject& CreateGameObjectInScene(const std::shared_ptr<Scene>& ps, const std::string& name = "Default Name");
 		GameObject& CreateGameObjectInSceneWithUUID(const std::shared_ptr<Scene>& ps, const uint64_t& id, const std::string& name = "Default Name");
 		std::vector<GameObject>& GetGameObjects();// 一定返回的是&, 这里引起过Bug
-		bool GetGameObjectById(uint32_t id, GameObject& inOutGo);
+		bool GetGameObjectById(uint64_t id, GameObject& inOutGo);
 		
 		CameraComponent* GetMainCamera();
 
@@ -91,7 +91,7 @@ namespace Hazel
 
 		void DestroyGameObject(const GameObject& go);
 
-		void DestroyGameObjectById(uint32_t id);
+		void DestroyGameObjectById(uint64_t id);
 
 	private:
 		void UpdateTransformsAfterPhysicsSim();

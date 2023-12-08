@@ -436,7 +436,7 @@ namespace Hazel
 
 			m_LastViewportSize = viewportSize;
 
-			uint32_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
+			uint64_t id = m_SceneHierarchyPanel.GetSelectedGameObjectId();
 			GameObject selected;
 			bool succ = m_PlayMode == PlayMode::Edit && m_EditorScene->GetGameObjectById(id, selected);
 			if (succ)

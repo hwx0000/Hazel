@@ -17,13 +17,13 @@ include "Hazel/vendor/yaml-cpp"
 include "Hazel/vendor/box2D"
 
 project "Hazel"
-    location "%{prj.name}" -- 规定了targetdir和objdir还需要这个吗，需要，这里的location是生成的vcproj的位置
+    location "%{prj.name}" -- 这里的location是生成的vcproj的位置, 与targetdir和objdir不同
     kind "StaticLib"
     language "C++"
 	staticruntime "off"
 	cppdialect "C++17"
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}") --记得要加括号
-	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") --这里的中英文括号看上去好像
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}") 
+	objdir   ("bin-int/" .. outputdir .. "/%{prj.name}") 
 	links {"GLFW", "opengl32.lib", "Glad", "imgui", "YAML_CPP", "2DPhysicsEngine"}
 
     pchheader "hzpch.h"
@@ -73,7 +73,7 @@ project "Hazel"
 		postbuildcommands
 		{
 		    -- "copy default.config bin\\project.config"
-			-- copy freom relative path to ... 注意这里的COPY前面没有%
+			-- copy from relative path to ... 注意这里的COPY前面没有%
 		    ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" ..outputdir.."/Sandbox/\"")
 		}
 
@@ -176,6 +176,11 @@ project "HazelEditor"
 	objdir  ("bin-int/"..outputdir.."/%{prj.name}")
     
 	files { "%{prj.name}/Src/**.h", "%{prj.name}/Src/**.cpp"}
+
+	defines
+	{
+		"YAML_CPP_STATIC_DEFINE",
+	}
 
     includedirs
 	{

@@ -83,7 +83,7 @@ namespace Hazel
 		return m_GameObjects;
 	}
 
-	bool Scene::GetGameObjectById(uint32_t id, GameObject& inOutGo)
+	bool Scene::GetGameObjectById(uint64_t id, GameObject& inOutGo)
 	{
 		for (size_t i = 0; i < m_GameObjects.size(); i++)
 		{
@@ -122,7 +122,7 @@ namespace Hazel
 		}
 	}
 
-	void Scene::DestroyGameObjectById(uint32_t id)
+	void Scene::DestroyGameObjectById(uint64_t id)
 	{
 		GameObject go;
 		bool suc = GetGameObjectById(id, go);

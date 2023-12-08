@@ -18,7 +18,7 @@ namespace Hazel
 
 		void SetSelectedGameObject(const GameObject&);
 		void SetSelectedGameObjectId(const uint32_t&);
-		uint32_t GetSelectedGameObjectId();
+		uint64_t GetSelectedGameObjectId();
 
 	private:
 		template<class T>
@@ -69,6 +69,6 @@ namespace Hazel
 		}
 
 		std::shared_ptr<Scene> m_Scene;
-		uint32_t m_SelectedGOId = INVALID_INSTANCE_ID;
+		uint64_t m_SelectedGOId = INVALID_INSTANCE_ID;
 	};
 }

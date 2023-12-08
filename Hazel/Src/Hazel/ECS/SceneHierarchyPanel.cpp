@@ -146,7 +146,7 @@ namespace Hazel
 
 	void SceneHierarchyPanel::DrawGameObject(const GameObject& go)
 	{
-		uint32_t id = go.GetInstanceId();
+		uint64_t id = go.GetInstanceId();
 		// 每个node都自带OpenOnArrow的flag, 如果当前go正好是被选择的go, 那么还会多一个selected flag
 		ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding
 			| ((m_SelectedGOId == id) ? ImGuiTreeNodeFlags_Selected : 0);
@@ -445,7 +445,7 @@ namespace Hazel
 		m_SelectedGOId = goId;
 	}
 
-	uint32_t SceneHierarchyPanel::GetSelectedGameObjectId()
+	uint64_t SceneHierarchyPanel::GetSelectedGameObjectId()
 	{
 		return m_SelectedGOId;
 	}
