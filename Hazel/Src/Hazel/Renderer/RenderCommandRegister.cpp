@@ -24,7 +24,7 @@ namespace Hazel
 		glm::vec4 Color;			// 加了个Color
 		uint32_t TextureId;
 		float TilingFactor = 1.0f;
-		uint64_t GameObjectInstanceId;
+		int32_t  GameObjectInstanceId;
 		// TODO: texid, normal,.etc
 	};
 
@@ -216,7 +216,7 @@ namespace Hazel
 			vertices[i].Position = { v0.x, v0.y, v0.z };
 			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
 			vertices[i].TextureId = 0;
-			vertices[i].GameObjectInstanceId = goId;
+			vertices[i].GameObjectInstanceId = (int32_t)goId;
 		}
 
 		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
@@ -256,7 +256,7 @@ namespace Hazel
 			vertices[i].TexCoord = s_Data.QuadTexCoords[i];
 			vertices[i].TextureId = texId;
 			vertices[i].TilingFactor = tilingFactor;
-			vertices[i].GameObjectInstanceId = goId;
+			vertices[i].GameObjectInstanceId = (int32_t)goId;
 		}
 
 		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
@@ -321,7 +321,7 @@ namespace Hazel
 			vertices[i].TexCoord = subTexture->GetTexCoords()[i];
 			vertices[i].TextureId = texId;
 			vertices[i].TilingFactor = tilingFactor;
-			vertices[i].GameObjectInstanceId = goId;
+			vertices[i].GameObjectInstanceId = (int32_t)goId;
 		}
 
 		for (size_t i = s_Data.DrawedVerticesCnt; i < s_Data.DrawedVerticesCnt + 4; i++)
