@@ -1,15 +1,14 @@
 #include "hzpch.h"
 #include "OpenGLTexture2D.h"
 #include "glad/glad.h"
-#include "stb_image.cpp"
 #include "Core/Core.h"
+#include "Renderer/TextureLoader.h"
+#include "stb_image.cpp"
 
 namespace Hazel
 {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	{
-		stbi_set_flip_vertically_on_load(true);
-
 		glGenTextures(1, &m_TextureID);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
@@ -20,6 +19,7 @@ namespace Hazel
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		int channels;
+		//unsigned char* data = TextureLoader::Load(path.c_str(), true, m_Width, m_Height, channels);
 		unsigned char* data = stbi_load(path.c_str(), &m_Width, &m_Height, &channels, 0);
 		HAZEL_ASSERT(data, "Failed to load texture!")
 
@@ -37,8 +37,8 @@ namespace Hazel
 		}
 
 		//glGenerateMipmap(GL_TEXTURE_2D);
-
 		stbi_image_free(data);
+		//TextureLoader::Free(data);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
